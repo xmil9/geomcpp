@@ -1,14 +1,15 @@
 //
 // geomcpp
-// Interval of numbers.
+// ClosedInterval of numbers.
 //
 // Jun-2020, Michael Lindner
 // MIT license
 //
 #pragma once
+#include "essentutils/fputil.h"
 #include <algorithm>
 #include <type_traits>
-#include "essentutils/fputil.h"
+#include <variant>
 
 
 namespace geom
@@ -16,14 +17,81 @@ namespace geom
 
 ///////////////////
 
-// Represents a (closed) interval between two values.
-template <typename T> class Interval
+struct OpenInclusion
+{
+};
+
+struct ClosedInclusion
+{
+};
+
+
+template <typename Value, typename Inclusion> struct Endpoint
+{
+   using Inclusion_t = Inclusion;
+   Value val;
+};
+
+
+template <typename Value, typename Inclusion>
+bool isLeftIncluded(Value val, Value leftEndpoint)
+{
+   if constexpr (std::is_floating_point_v<Value>)
+   {
+      if constexpr (std::is_same_v<Inclusion, ClosedInclusion>)
+         return sutil::fpGreaterEqual(val, leftEndpoint);
+      return sutil::fpGreater(val, leftEndpoint);
+   }
+   else
+   {
+      if (std::is_same_v<Inclusion, ClosedInclusion>)
+         return val >= leftEndpoint;
+      return val > leftEndpoint;
+   }
+}
+
+
+template <typename Value, typename Inclusion>
+bool isRightIncluded(Value val, Value rightEndpoint)
+{
+   if constexpr (std::is_floating_point_v<Value>)
+   {
+      if (std::is_same_v<Inclusion, ClosedInclusion>)
+         return sutil::fpLessEqual(val, rightEndpoint);
+      return sutil::fpLess(val, rightEndpoint);
+   }
+   else
+   {
+      if (std::is_same_v<Inclusion, ClosedInclusion>)
+         return val >= rightEndpoint;
+      return val > rightEndpoint;
+   }
+}
+
+
+///////////////////
+
+template <typename LeftInclusion, typename RightInclusion> struct IntervalInclusion
+{
+   using Left = LeftInclusion;
+   using Right = RightInclusion;
+};
+
+using Closed = IntervalInclusion<ClosedInclusion, ClosedInclusion>;
+using Open = IntervalInclusion<OpenInclusion, OpenInclusion>;
+using LeftOpen = IntervalInclusion<OpenInclusion, ClosedInclusion>;
+using RightOpen = IntervalInclusion<ClosedInclusion, OpenInclusion>;
+
+
+///////////////////
+
+template <typename Value, typename Inclusion> class Interval
 {
  public:
-   using value_type = T;
+   using value_type = Value;
+   using Inclusion_t = Inclusion;
 
-   Interval();
-   constexpr Interval(T start, T end);
+   constexpr Interval(Value start, Value end);
    Interval(const Interval&) = default;
    Interval(Interval&&) = default;
 
@@ -32,114 +100,193 @@ template <typename T> class Interval
    explicit operator bool() const;
    bool operator!() const;
 
-   T start() const noexcept;
-   T end() const noexcept;
-   T length() const noexcept;
+   Value start() const noexcept;
+   Value end() const noexcept;
+   Value length() const noexcept;
    bool isEmpty() const noexcept;
-   bool contains(T val) const noexcept;
+   bool contains(Value val) const noexcept;
+   constexpr bool isLeftOpen();
+   constexpr bool isRightOpen();
 
  private:
-   T m_start;
-   T m_end;
+   Value m_start;
+   Value m_end;
 };
 
 
-template <typename T> Interval<T>::Interval() : m_start{T{0}}, m_end{T{0}}
-{
-}
-
-
-template <typename T>
-constexpr Interval<T>::Interval(T start, T end)
+template <typename Value, typename Inclusion>
+constexpr Interval<Value, Inclusion>::Interval(Value start, Value end)
 : m_start{std::min(start, end)}, m_end{std::max(start, end)}
 {
 }
 
-template <typename T>
-Interval<T>::operator bool() const
+template <typename Value, typename Inclusion>
+Interval<Value, Inclusion>::operator bool() const
 {
    return !isEmpty();
 }
 
 
-template <typename T>
-bool Interval<T>::operator!() const
+template <typename Value, typename Inclusion>
+bool Interval<Value, Inclusion>::operator!() const
 {
    return !operator bool();
 }
 
 
-template <typename T> T Interval<T>::start() const noexcept
+template <typename Value, typename Inclusion>
+Value Interval<Value, Inclusion>::start() const noexcept
 {
    return m_start;
 }
 
 
-template <typename T> T Interval<T>::end() const noexcept
+template <typename Value, typename Inclusion>
+Value Interval<Value, Inclusion>::end() const noexcept
 {
    return m_end;
 }
 
 
-template <typename T> T Interval<T>::length() const noexcept
+template <typename Value, typename Inclusion>
+Value Interval<Value, Inclusion>::length() const noexcept
 {
+   // The mathmatical definition of the length of an interval is the absolute
+   // difference of its endpoints.
    return m_end - m_start;
 }
 
 
-template <typename T> bool Interval<T>::isEmpty() const noexcept
+template <typename Value, typename Inclusion>
+bool Interval<Value, Inclusion>::isEmpty() const noexcept
 {
-   if constexpr (std::is_floating_point_v<T>)
-      return sutil::fpEqual(length(), T{0.0});
+   // Closed intervals contain at least one point (two unless start and endpoint
+   // are the same).
+   if constexpr (std::is_same<typename Inclusion::Left, ClosedInclusion> &&
+                 std::is_same<typename Inclusion::Right, ClosedInclusion>)
+      return false;
+
+   if constexpr (std::is_floating_point_v<Value>)
+      return sutil::fpEqual(m_start, m_end);
    else
-      return length() == T{0};
+      return m_start == m_end;
 }
 
 
-template <typename T> bool Interval<T>::contains(T val) const noexcept
+template <typename Value, typename Inclusion>
+bool Interval<Value, Inclusion>::contains(Value val) const noexcept
 {
-   if constexpr (std::is_floating_point_v<T>)
-      return sutil::fpGreaterEqual(val, m_start) && sutil::fpLessEqual(val, m_end);
-   else
-      return m_start <= val && val <= m_end;
+   return isLeftIncluded<Value, typename Inclusion::Left>(val, m_start) &&
+          isRightIncluded<Value, typename Inclusion::Right>(val, m_end);
+}
+
+
+template <typename Value, typename Inclusion>
+constexpr bool Interval<Value, Inclusion>::isLeftOpen()
+{
+   return std::is_same_v<typename Inclusion::Left, OpenInclusion>;
+}
+
+
+template <typename Value, typename Inclusion>
+constexpr bool Interval<Value, Inclusion>::isRightOpen()
+{
+   return std::is_same_v<typename Inclusion::Right, OpenInclusion>;
 }
 
 
 ///////////////////
 
-template <typename T> Interval<T> intersect(const Interval<T>& a, const Interval<T>& b)
-{
-   Interval<T>& first = (a.start() <= b.start()) ? a : b;
-   Interval<T>& second = (a.start() <= b.start()) ? b : a;
+template <typename Value> using ClosedInterval = Interval<Value, Closed>;
+template <typename Value> using OpenInterval = Interval<Value, Open>;
+template <typename Value> using LeftOpenInterval = Interval<Value, LeftOpen>;
+template <typename Value> using RightOpenInterval = Interval<Value, RightOpen>;
 
+template <typename Value> constexpr OpenInterval<Value> EmptyInterval{Value{0}, Value{0}};
+
+template <typename Value>
+using SomeInterval = std::variant<ClosedInterval<Value>, OpenInterval<Value>,
+                                  LeftOpenInterval<Value>, RightOpenInterval<Value>>;
+
+
+///////////////////
+
+template <typename Value, typename Inclusion1st, typename Inclusion2nd>
+SomeInterval<Value> intersectOrderedByStart(const Interval<Value, Inclusion1st>& first,
+                                            const Interval<Value, Inclusion2nd>& second)
+{
+   // TODO: abstract comparisions by number type
    if (first.end() < second.start())
    {
       // Disjoint.
-      return Interval<T>{};
+      return EmptyInterval<Value>;
    }
    else if (first.end() >= second.end())
    {
       // Fully contained.
       return second;
    }
+
    // Overlapping.
-   return new Interval(second.start(), first.end());
+   return Interval<Value, IntervalInclusion<typename Inclusion2nd::Left,
+                                            typename Inclusion1st::Right>>(second.start(),
+                                                                           first.end());
 }
 
 
-template <typename T> Interval<T> unite(const Interval<T>& a, const Interval<T>& b)
+template <typename Value, typename InclusionA, typename InclusionB>
+SomeInterval<Value> intersect(const Interval<Value, InclusionA>& a,
+                              const Interval<Value, InclusionB>& b)
 {
-	return Interval(std::min(a.start(), b.start()), std::max(a.end(), b.end()));
+   // TODO: abstract comparision by number type
+   if (a.start() <= b.start())
+      return intersectOrderedByStart(a, b);
+   return intersectOrderedByStart(b, a);
 }
 
 
-template <typename T> bool operator==(const Interval<T>& a, const Interval<T>& b)
+///////////////////
+
+template <typename Value, typename Inclusion1st, typename Inclusion2nd>
+SomeInterval<Value> uniteOrderedByStart(const Interval<Value, Inclusion1st>& first,
+                                        const Interval<Value, Inclusion2nd>& second)
+{
+   // TODO: abstract comparision by number type
+   if (first.end() >= second.end())
+   {
+      return Interval<Value, IntervalInclusion<typename Inclusion1st::Left,
+                                               typename Inclusion1st::Right>>(
+         first.start(), first.end());
+   }
+
+   return Interval<Value, IntervalInclusion<typename Inclusion1st::Left,
+                                            typename Inclusion2nd::Right>>(first.start(),
+                                                                           second.end());
+}
+
+
+template <typename Value, typename InclusionA, typename InclusionB>
+SomeInterval<Value> unite(const Interval<Value, InclusionA>& a,
+                          const Interval<Value, InclusionB>& b)
+{
+   // TODO: abstract comparision by number type
+   if (a.start() <= b.start())
+      return uniteOrderedByStart(a, b);
+   return uniteOrderedByStart(b, a);
+}
+
+
+///////////////////
+
+template <typename Value, typename Inclusion>
+bool operator==(const Interval<Value, Inclusion>& a, const Interval<Value, Inclusion>& b)
 {
    return a.start() == b.start() && a.end() == b.end();
 }
 
 
-template <typename T> bool operator!=(const Interval<T>& a, const Interval<T>& b)
+template <typename Value, typename Inclusion>
+bool operator!=(const Interval<Value, Inclusion>& a, const Interval<Value, Inclusion>& b)
 {
    return !(a == b);
 }

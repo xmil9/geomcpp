@@ -1,1 +1,0 @@
-D:\Projects\geomcpp\project\vs\Debug Lib\geomcpp.lib
