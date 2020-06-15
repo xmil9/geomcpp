@@ -48,6 +48,13 @@ void testCtor()
       VERIFY(iv.start() == 1.1, caseLabel);
       VERIFY(iv.end() == 1.2, caseLabel);
    }
+   {
+      const std::string caseLabel = "Interval ctor for denormalized (reversed) values";
+
+      Interval<int, RightOpen> iv(3, 1);
+      VERIFY(iv.start() == 1, caseLabel);
+      VERIFY(iv.end() == 3, caseLabel);
+   }
 }
 
 void testLength()
