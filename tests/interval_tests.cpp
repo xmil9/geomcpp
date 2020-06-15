@@ -155,6 +155,32 @@ void testContains()
    }
 }
 
+
+void testIsLeftOpen()
+{
+   {
+      const std::string caseLabel = "Interval::isLeftOpen";
+
+      VERIFY((!Interval<short, Closed>(200, 300).isLeftOpen()), caseLabel);
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).isLeftOpen()), caseLabel);
+      VERIFY((Interval<int, LeftOpen>(200, 300).isLeftOpen()), caseLabel);
+      VERIFY((!Interval<double, RightOpen>(200.0, 300.3).isLeftOpen()), caseLabel);
+   }
+}
+
+
+void testIsRightOpen()
+{
+   {
+      const std::string caseLabel = "Interval::isRightOpen";
+
+      VERIFY((!Interval<short, Closed>(200, 300).isRightOpen()), caseLabel);
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).isRightOpen()), caseLabel);
+      VERIFY((!Interval<int, LeftOpen>(200, 300).isRightOpen()), caseLabel);
+      VERIFY((Interval<double, RightOpen>(200.0, 300.3).isRightOpen()), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -166,4 +192,6 @@ void testInterval()
    testLength();
    testIsEmpty();
    testContains();
+   testIsLeftOpen();
+   testIsRightOpen();
 }
