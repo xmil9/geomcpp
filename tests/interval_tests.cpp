@@ -188,6 +188,31 @@ void testIsRightOpen()
    }
 }
 
+
+void testOperatorBool()
+{
+   {
+      const std::string caseLabel = "Interval::operator bool() for closed interval";
+
+      VERIFY((Interval<int, Closed>(200, 300).operator bool()), caseLabel);
+      VERIFY((Interval<double, Closed>(20.2, 20.2).operator bool()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::operator bool() for open interval";
+
+      VERIFY((Interval<int, Open>(200, 300).operator bool()), caseLabel);
+      VERIFY((!Interval<double, Open>(20.2, 20.2).operator bool()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::operator bool() for half-open interval";
+
+      VERIFY((Interval<int, RightOpen>(200, 300).operator bool()), caseLabel);
+      VERIFY((!Interval<double, RightOpen>(20.2, 20.2).operator bool()), caseLabel);
+      VERIFY((Interval<int, LeftOpen>(200, 300).operator bool()), caseLabel);
+      VERIFY((!Interval<double, LeftOpen>(20.2, 20.2).operator bool()), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -201,4 +226,5 @@ void testInterval()
    testContains();
    testIsLeftOpen();
    testIsRightOpen();
+   testOperatorBool();
 }
