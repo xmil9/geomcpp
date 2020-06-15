@@ -94,6 +94,67 @@ void testIsEmpty()
    }
 }
 
+
+void testContains()
+{
+   {
+      const std::string caseLabel = "Interval::contains for closed interval";
+
+      VERIFY((Interval<int, Closed>(200, 300).contains(250)), caseLabel);
+      VERIFY((!Interval<int, Closed>(200, 300).contains(400)), caseLabel);
+      VERIFY((!Interval<int, Closed>(200, 300).contains(199)), caseLabel);
+      VERIFY((Interval<int, Closed>(200, 300).contains(200)), caseLabel);
+      VERIFY((Interval<int, Closed>(200, 300).contains(300)), caseLabel);
+      VERIFY((Interval<double, Closed>(20.2, 20.3).contains(20.23)), caseLabel);
+      VERIFY((!Interval<double, Closed>(20.2, 20.3).contains(20.31)), caseLabel);
+      VERIFY((!Interval<double, Closed>(20.2, 20.3).contains(20.19)), caseLabel);
+      VERIFY((Interval<double, Closed>(20.2, 20.3).contains(20.2)), caseLabel);
+      VERIFY((Interval<double, Closed>(20.2, 20.3).contains(20.3)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::contains for open interval";
+
+      VERIFY((Interval<int, Open>(200, 300).contains(250)), caseLabel);
+      VERIFY((!Interval<int, Open>(200, 300).contains(400)), caseLabel);
+      VERIFY((!Interval<int, Open>(200, 300).contains(199)), caseLabel);
+      VERIFY((!Interval<int, Open>(200, 300).contains(200)), caseLabel);
+      VERIFY((!Interval<int, Open>(200, 300).contains(300)), caseLabel);
+      VERIFY((Interval<double, Open>(20.2, 20.3).contains(20.23)), caseLabel);
+      VERIFY((!Interval<double, Open>(20.2, 20.3).contains(20.31)), caseLabel);
+      VERIFY((!Interval<double, Open>(20.2, 20.3).contains(20.19)), caseLabel);
+      VERIFY((!Interval<double, Open>(20.2, 20.3).contains(20.2)), caseLabel);
+      VERIFY((!Interval<double, Open>(20.2, 20.3).contains(20.3)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::contains for left-open interval";
+
+      VERIFY((Interval<long, LeftOpen>(200, 300).contains(250)), caseLabel);
+      VERIFY((!Interval<long, LeftOpen>(200, 300).contains(400)), caseLabel);
+      VERIFY((!Interval<long, LeftOpen>(200, 300).contains(199)), caseLabel);
+      VERIFY((!Interval<long, LeftOpen>(200, 300).contains(200)), caseLabel);
+      VERIFY((Interval<long, LeftOpen>(200, 300).contains(300)), caseLabel);
+      VERIFY((Interval<float, LeftOpen>(20.2f, 20.3f).contains(20.23f)), caseLabel);
+      VERIFY((!Interval<float, LeftOpen>(20.2f, 20.3f).contains(20.31f)), caseLabel);
+      VERIFY((!Interval<float, LeftOpen>(20.2f, 20.3f).contains(20.19f)), caseLabel);
+      VERIFY((!Interval<float, LeftOpen>(20.2f, 20.3f).contains(20.2f)), caseLabel);
+      VERIFY((Interval<float, LeftOpen>(20.2f, 20.3f).contains(20.3f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::contains for right-open interval";
+
+      VERIFY((Interval<short, RightOpen>(200, 300).contains(250)), caseLabel);
+      VERIFY((!Interval<short, RightOpen>(200, 300).contains(400)), caseLabel);
+      VERIFY((!Interval<short, RightOpen>(200, 300).contains(199)), caseLabel);
+      VERIFY((Interval<short, RightOpen>(200, 300).contains(200)), caseLabel);
+      VERIFY((!Interval<short, RightOpen>(200, 300).contains(300)), caseLabel);
+      VERIFY((Interval<float, RightOpen>(20.2f, 20.3f).contains(20.23f)), caseLabel);
+      VERIFY((!Interval<float, RightOpen>(20.2f, 20.3f).contains(20.31f)), caseLabel);
+      VERIFY((!Interval<float, RightOpen>(20.2f, 20.3f).contains(20.19f)), caseLabel);
+      VERIFY((Interval<float, RightOpen>(20.2f, 20.3f).contains(20.2f)), caseLabel);
+      VERIFY((!Interval<float, RightOpen>(20.2f, 20.3f).contains(20.3f)), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -104,4 +165,5 @@ void testInterval()
    testCtor();
    testLength();
    testIsEmpty();
+   testContains();
 }
