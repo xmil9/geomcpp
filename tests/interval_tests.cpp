@@ -69,6 +69,31 @@ void testLength()
    }
 }
 
+
+void testIsEmpty()
+{
+   {
+      const std::string caseLabel = "Interval::isEmpty for closed interval";
+
+      VERIFY((!Interval<int, Closed>(200, 300).isEmpty()), caseLabel);
+      VERIFY((!Interval<double, Closed>(20.2, 20.2).isEmpty()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::isEmpty for open interval";
+
+      VERIFY((!Interval<int, Open>(200, 300).isEmpty()), caseLabel);
+      VERIFY((Interval<double, Open>(20.2, 20.2).isEmpty()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::isEmpty for half-open interval";
+
+      VERIFY((!Interval<int, RightOpen>(200, 300).isEmpty()), caseLabel);
+      VERIFY((Interval<double, RightOpen>(20.2, 20.2).isEmpty()), caseLabel);
+      VERIFY((!Interval<int, LeftOpen>(200, 300).isEmpty()), caseLabel);
+      VERIFY((Interval<double, LeftOpen>(20.2, 20.2).isEmpty()), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -78,4 +103,5 @@ void testInterval()
 {
    testCtor();
    testLength();
+   testIsEmpty();
 }
