@@ -40,13 +40,15 @@ bool isLeftIncluded(Value val, Value leftEndpoint)
    {
       if constexpr (std::is_same_v<Inclusion, ClosedInclusion>)
          return sutil::fpGreaterEqual(val, leftEndpoint);
-      return sutil::fpGreater(val, leftEndpoint);
+      else
+         return sutil::fpGreater(val, leftEndpoint);
    }
    else
    {
-      if (std::is_same_v<Inclusion, ClosedInclusion>)
+      if constexpr (std::is_same_v<Inclusion, ClosedInclusion>)
          return val >= leftEndpoint;
-      return val > leftEndpoint;
+      else
+         return val > leftEndpoint;
    }
 }
 
@@ -56,15 +58,17 @@ bool isRightIncluded(Value val, Value rightEndpoint)
 {
    if constexpr (std::is_floating_point_v<Value>)
    {
-      if (std::is_same_v<Inclusion, ClosedInclusion>)
+      if constexpr (std::is_same_v<Inclusion, ClosedInclusion>)
          return sutil::fpLessEqual(val, rightEndpoint);
-      return sutil::fpLess(val, rightEndpoint);
+      else
+         return sutil::fpLess(val, rightEndpoint);
    }
    else
    {
-      if (std::is_same_v<Inclusion, ClosedInclusion>)
-         return val >= rightEndpoint;
-      return val > rightEndpoint;
+      if constexpr (std::is_same_v<Inclusion, ClosedInclusion>)
+         return val <= rightEndpoint;
+      else
+         return val < rightEndpoint;
    }
 }
 
