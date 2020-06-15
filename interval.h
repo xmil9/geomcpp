@@ -162,14 +162,18 @@ bool Interval<Value, Inclusion>::isEmpty() const noexcept
 {
    // Closed intervals contain at least one point (two unless start and endpoint
    // are the same).
-   if constexpr (std::is_same<typename Inclusion::Left, ClosedInclusion> &&
-                 std::is_same<typename Inclusion::Right, ClosedInclusion>)
+   if constexpr (std::is_same_v<typename Inclusion::Left, ClosedInclusion> &&
+                 std::is_same_v<typename Inclusion::Right, ClosedInclusion>)
+   {
       return false;
-
-   if constexpr (std::is_floating_point_v<Value>)
-      return sutil::fpEqual(m_start, m_end);
+   }
    else
-      return m_start == m_end;
+   {
+      if constexpr (std::is_floating_point_v<Value>)
+         return sutil::fpEqual(m_start, m_end);
+      else
+         return m_start == m_end;
+   }
 }
 
 
