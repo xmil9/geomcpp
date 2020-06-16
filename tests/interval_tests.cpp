@@ -213,6 +213,31 @@ void testOperatorBool()
    }
 }
 
+
+void testNegationOperator()
+{
+   {
+      const std::string caseLabel = "Interval::operator!() for closed interval";
+
+      VERIFY((!Interval<int, Closed>(200, 300).operator!()), caseLabel);
+      VERIFY((!Interval<double, Closed>(20.2, 20.2).operator!()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::operator!() for open interval";
+
+      VERIFY((!Interval<int, Open>(200, 300).operator!()), caseLabel);
+      VERIFY((Interval<double, Open>(20.2, 20.2).operator!()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Interval::operator!() for half-open interval";
+
+      VERIFY((!Interval<int, RightOpen>(200, 300).operator!()), caseLabel);
+      VERIFY((Interval<double, RightOpen>(20.2, 20.2).operator!()), caseLabel);
+      VERIFY((!Interval<int, LeftOpen>(200, 300).operator!()), caseLabel);
+      VERIFY((Interval<double, LeftOpen>(20.2, 20.2).operator!()), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -227,4 +252,5 @@ void testInterval()
    testIsLeftOpen();
    testIsRightOpen();
    testOperatorBool();
+   testNegationOperator();
 }
