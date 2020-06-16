@@ -30,19 +30,19 @@ template <> struct FpTraits<double>
 
 template <> struct FpTraits<float>
 {
-   // Threshold below which two fp values are considered equal.
    static constexpr float epsilon = 0.0000001f;
 };
 
 
 template <> struct FpTraits<long double>
 {
-   // Threshold below which two fp values are considered equal.
    static constexpr long double epsilon = 0.0000001L;
 };
 
 
 ///////////////////
+
+// Comparision functions for floating point data types.
 
 template <typename FP> bool fpEqual(FP a, FP b, FP eps)
 {
@@ -123,6 +123,61 @@ template <typename FP> bool fpGreaterEqual(FP a, FP b, FP eps)
 template <typename FP, typename Traits = FpTraits<FP>> bool fpGreaterEqual(FP a, FP b)
 {
    return fpGreaterEqual(a, b, Traits::epsilon);
+}
+
+
+///////////////////
+
+// Convenience functions that use a comparison method that is appropriate for
+// the used data type.
+
+template < typename T>
+bool equal(const T& a, const T& b)
+{
+   if constexpr (std::is_floating_point_v<T>)
+      return fpEqual(a, b);
+   else
+      return a == b;
+}
+
+
+template < typename T>
+bool less(const T& a, const T& b)
+{
+   if constexpr (std::is_floating_point_v<T>)
+      return fpLess(a, b);
+   else
+      return a < b;
+}
+
+
+template < typename T>
+bool lessEqual(const T& a, const T& b)
+{
+   if constexpr (std::is_floating_point_v<T>)
+      return fpLessEqual(a, b);
+   else
+      return a <= b;
+}
+
+
+template < typename T>
+bool greater(const T& a, const T& b)
+{
+   if constexpr (std::is_floating_point_v<T>)
+      return fpGreater(a, b);
+   else
+      return a > b;
+}
+
+
+template < typename T>
+bool greaterEqual(const T& a, const T& b)
+{
+   if constexpr (std::is_floating_point_v<T>)
+      return fpGreaterEqual(a, b);
+   else
+      return a >= b;
 }
 
 } // namespace sutil
