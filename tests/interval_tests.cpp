@@ -238,6 +238,24 @@ void testNegationOperator()
    }
 }
 
+
+void testIntersect()
+{
+   {
+      const std::string caseLabel = "Intersect disjoint intervals";
+
+      const Interval<double, Closed> a{1.0, 10.4};
+      const Interval<double, Open> b{20.1, 22.09};
+
+      SomeInterval<double> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
+
+      const OpenInterval<double> resIv = std::get<OpenInterval<double>>(res);
+      VERIFY(resIv.isEmpty(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -253,4 +271,6 @@ void testInterval()
    testIsRightOpen();
    testOperatorBool();
    testNegationOperator();
+
+   testIntersect();
 }
