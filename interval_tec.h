@@ -15,27 +15,28 @@
 
 namespace geom
 {
-// Interval with type-encoded end types.
+// (t)ype-(e)n(c)oded
 namespace tec
 {
 
 ///////////////////
 
+// Types for open and closed interval ends.
 struct OpenEndType
 {
 };
-
 struct ClosedEndType
 {
 };
 
-
+// Pair of end types for the left and right endpoints of an interval.
 template <typename LeftEndType, typename RightEndType> struct EndTypePair
 {
    using Left = LeftEndType;
    using Right = RightEndType;
 };
 
+// Combinations of end types for each interval type.
 using Closed = EndTypePair<ClosedEndType, ClosedEndType>;
 using Open = EndTypePair<OpenEndType, OpenEndType>;
 using LeftOpen = EndTypePair<OpenEndType, ClosedEndType>;
@@ -44,6 +45,7 @@ using RightOpen = EndTypePair<ClosedEndType, OpenEndType>;
 
 ///////////////////
 
+// Interval with type-encoded end types.
 template <typename Value, typename EndTypes> class Interval
 {
  public:
@@ -214,13 +216,16 @@ bool Interval<Value, EndTypes>::isRightIncluded(Value val) const
 
 ///////////////////
 
+// Alias templates for each template types.
 template <typename Value> using ClosedInterval = Interval<Value, Closed>;
 template <typename Value> using OpenInterval = Interval<Value, Open>;
 template <typename Value> using LeftOpenInterval = Interval<Value, LeftOpen>;
 template <typename Value> using RightOpenInterval = Interval<Value, RightOpen>;
 
+// Variable template for an empty interval.
 template <typename Value> constexpr OpenInterval<Value> EmptyInterval{Value{0}, Value{0}};
 
+// Union of all interval types.
 template <typename Value>
 using SomeInterval = std::variant<OpenInterval<Value>, LeftOpenInterval<Value>,
                                   RightOpenInterval<Value>, ClosedInterval<Value>>;

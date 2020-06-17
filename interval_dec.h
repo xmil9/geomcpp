@@ -15,12 +15,13 @@
 
 namespace geom
 {
-// Interval with data-encoded end types.
+// (d)ata-(e)n(c)oded
 namespace dec
 {
 
 ///////////////////
 
+// Interval with data-encoded end types.
 template <typename Value> class Interval
 {
  public:
@@ -174,6 +175,7 @@ template <typename Value> bool Interval<Value>::isRightIncluded(Value val) const
 
 ///////////////////
 
+// Variable template for an empty interval.
 template <typename Value>
 constexpr Interval<Value> EmptyInterval{Value{0}, Value{0}, IntervalType::Open};
 
