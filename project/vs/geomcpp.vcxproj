@@ -39,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\geomcpp_api.h" />
-    <ClInclude Include="..\..\interval.h" />
+    <ClInclude Include="..\..\interval_tec.h" />
     <ClInclude Include="..\..\interval_dec.h" />
     <ClInclude Include="..\..\interval_types.h" />
   </ItemGroup>

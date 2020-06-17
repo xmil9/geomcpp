@@ -6,11 +6,12 @@
 // MIT license
 //
 #include "interval_tests.h"
-#include "interval.h"
+#include "interval_tec.h"
 #include "test_util.h"
 #include "essentutils/fputil.h"
 
 using namespace geom;
+using namespace geom::tec;
 using namespace sutil;
 
 
@@ -163,28 +164,54 @@ void testContains()
 }
 
 
-void testIsLeftOpen()
+void testLeftEnd()
 {
    {
-      const std::string caseLabel = "Interval::isLeftOpen";
+      const std::string caseLabel = "Interval::leftEnd";
 
-      VERIFY((!Interval<short, Closed>(200, 300).isLeftOpen()), caseLabel);
-      VERIFY((Interval<float, Open>(200.1f, 300.2f).isLeftOpen()), caseLabel);
-      VERIFY((Interval<int, LeftOpen>(200, 300).isLeftOpen()), caseLabel);
-      VERIFY((!Interval<double, RightOpen>(200.0, 300.3).isLeftOpen()), caseLabel);
+      VERIFY((Interval<short, Closed>(200, 300).leftEnd() == IntervalEnd::Closed),
+             caseLabel);
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).leftEnd() == IntervalEnd::Open),
+             caseLabel);
+      VERIFY((Interval<int, LeftOpen>(200, 300).leftEnd() == IntervalEnd::Open),
+             caseLabel);
+      VERIFY((Interval<double, RightOpen>(200.0, 300.3).leftEnd() == IntervalEnd::Closed),
+             caseLabel);
    }
 }
 
 
-void testIsRightOpen()
+void testRightEnd()
 {
    {
-      const std::string caseLabel = "Interval::isRightOpen";
+      const std::string caseLabel = "Interval::rightEnd";
 
-      VERIFY((!Interval<short, Closed>(200, 300).isRightOpen()), caseLabel);
-      VERIFY((Interval<float, Open>(200.1f, 300.2f).isRightOpen()), caseLabel);
-      VERIFY((!Interval<int, LeftOpen>(200, 300).isRightOpen()), caseLabel);
-      VERIFY((Interval<double, RightOpen>(200.0, 300.3).isRightOpen()), caseLabel);
+      VERIFY((Interval<short, Closed>(200, 300).rightEnd() == IntervalEnd::Closed),
+             caseLabel);
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).rightEnd() == IntervalEnd::Open),
+             caseLabel);
+      VERIFY((Interval<int, LeftOpen>(200, 300).rightEnd() == IntervalEnd::Closed),
+             caseLabel);
+      VERIFY((Interval<double, RightOpen>(200.0, 300.3).rightEnd() == IntervalEnd::Open),
+             caseLabel);
+   }
+}
+
+
+void testType()
+{
+   {
+      const std::string caseLabel = "Interval::type";
+
+      VERIFY((Interval<short, Closed>(200, 300).type() == IntervalType::Closed),
+             caseLabel);
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).type() == IntervalType::Open),
+             caseLabel);
+      VERIFY((Interval<int, LeftOpen>(200, 300).type() == IntervalType::LeftOpen),
+             caseLabel);
+      VERIFY(
+         (Interval<double, RightOpen>(200.0, 300.3).type() == IntervalType::RightOpen),
+         caseLabel);
    }
 }
 
@@ -267,8 +294,9 @@ void testInterval()
    testLength();
    testIsEmpty();
    testContains();
-   testIsLeftOpen();
-   testIsRightOpen();
+   testLeftEnd();
+   testRightEnd();
+   testType();
    testOperatorBool();
    testNegationOperator();
 

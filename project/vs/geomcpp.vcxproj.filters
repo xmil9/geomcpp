@@ -4,9 +4,9 @@
     <ClCompile Include="..\..\geomcpp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\interval.h" />
     <ClInclude Include="..\..\geomcpp_api.h" />
     <ClInclude Include="..\..\interval_dec.h" />
     <ClInclude Include="..\..\interval_types.h" />
+    <ClInclude Include="..\..\interval_tec.h" />
   </ItemGroup>
 </Project>

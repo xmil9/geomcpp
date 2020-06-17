@@ -49,11 +49,10 @@ inline std::pair<IntervalEnd, IntervalEnd> split(IntervalType type)
          return {IntervalEnd::Closed, IntervalEnd::Closed};
       default:
          assert(false && "Unknown interval type.");
-         [[fallthrough]]
+         [[fallthrough]];
       case IntervalType::Open:
          return {IntervalEnd::Open, IntervalEnd::Open};
    }
 }
 
 } // namespace geom
-

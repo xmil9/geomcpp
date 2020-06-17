@@ -175,6 +175,10 @@ template <typename Value> bool Interval<Value>::isRightIncluded(Value val) const
 ///////////////////
 
 template <typename Value>
+constexpr Interval<Value> EmptyInterval{Value{0}, Value{0}, IntervalType::Open};
+
+
+template <typename Value>
 bool operator==(const Interval<Value>& a, const Interval<Value>& b)
 {
    return a.start() == b.start() && a.end() == b.end() && a.type() == b.type();
@@ -191,10 +195,6 @@ bool operator!=(const Interval<Value>& a, const Interval<Value>& b)
 ///////////////////
 
 template <typename Value>
-constexpr Interval<Value> EmptyInterval{Value{0}, Value{0}, IntervalType::Open};
-
-
-template <typename Value>
 Interval<Value> intersect(const Interval<Value>& a, const Interval<Value>& b)
 {
    const bool keepOrder = sutil::lessEqual(a.start(), b.start());
@@ -208,7 +208,7 @@ Interval<Value> intersect(const Interval<Value>& a, const Interval<Value>& b)
    }
    else if (sutil::greaterEqual(first.end(), second.end()))
    {
-      // Second interval is fully contained.
+      // Second interval is fully contained in first.
       return second;
    }
 
