@@ -9,6 +9,7 @@
 #include "interval_types.h"
 #include "essentutils/fputil.h"
 #include <algorithm>
+#include <type_traits>
 #include <utility>
 
 
