@@ -29,6 +29,13 @@ struct ClosedEndType
 {
 };
 
+
+// Comparision for strictness of two end types.
+template <typename EndTypeA, typename EndTypeB>
+inline constexpr bool isStricterEndType =
+   std::is_same_v<EndTypeA, OpenEndType>&& std::is_same_v<EndTypeB, ClosedEndType>;
+
+
 // Pair of end types for the left and right endpoints of an interval.
 template <typename LeftEndType, typename RightEndType> struct EndTypePair
 {
@@ -251,12 +258,19 @@ template <typename Value, typename EndTypes1st, typename EndTypes2nd>
 SomeInterval<Value> intersectOrderedIntervals(const Interval<Value, EndTypes1st>& first,
                                               const Interval<Value, EndTypes2nd>& second)
 {
-   if (sutil::less(first.end(), second.start()))
+   if (sutil::less(first.end(), second.start()) ||
+       // End of the first interval has the same value as the start of the second interval
+       // and one of the endpoints is open.
+       (sutil::equal(first.end(), second.start()) &&
+        (std::is_same_v<typename EndTypes1st::Right, OpenEndType> ||
+         std::is_same_v<typename EndTypes2nd::Left, OpenEndType>)))
    {
       // Disjoint intervals.
       return EmptyInterval<Value>;
    }
-   else if (sutil::greaterEqual(first.end(), second.end()))
+   else if (sutil::greater(first.end(), second.end()) ||
+            (sutil::equal(first.end(), second.end()) &&
+             std::is_same_v<typename EndTypes2nd::Right, OpenEndType>))
    {
       // Second interval is fully contained in first.
       return second;
@@ -273,8 +287,11 @@ template <typename Value, typename EndTypesA, typename EndTypesB>
 SomeInterval<Value> intersect(const Interval<Value, EndTypesA>& a,
                               const Interval<Value, EndTypesB>& b)
 {
-   if (sutil::lessEqual(a.start(), b.start()))
+   if (sutil::less(a.start(), b.start()) ||
+       (sutil::equal(a.start(), b.start()) && isStricterEndType<EndTypesA, EndTypesB>))
+   {
       return intersectOrderedIntervals(a, b);
+   }
    return intersectOrderedIntervals(b, a);
 }
 
