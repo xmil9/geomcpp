@@ -7,4 +7,4 @@
 //
 #pragma once
 
-void testInterval();
+void testTecInterval();

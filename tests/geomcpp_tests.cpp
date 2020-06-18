@@ -4,13 +4,13 @@
 // Jun-2020, Michael Lindner
 // MIT license
 //
-#include "interval_tests.h"
+#include "interval_tec_tests.h"
 #include <iostream>
 
 
 int main()
 {
-   testInterval();
+   testTecInterval();
 
    std::cout << "geomcpp tests finished.\n";
    return EXIT_SUCCESS;

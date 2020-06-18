@@ -5,7 +5,7 @@
 // Jun-2020, Michael Lindner
 // MIT license
 //
-#include "interval_tests.h"
+#include "interval_tec_tests.h"
 #include "interval_tec.h"
 #include "test_util.h"
 #include "essentutils/fputil.h"
@@ -288,7 +288,7 @@ void testIntersect()
 
 ///////////////////
 
-void testInterval()
+void testTecInterval()
 {
    testCtor();
    testLength();

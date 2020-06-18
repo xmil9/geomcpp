@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\geomcpp_tests.cpp" />
-    <ClCompile Include="..\..\interval_tests.cpp" />
+    <ClCompile Include="..\..\interval_tec_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\project\vs\geomcpp.vcxproj">
@@ -44,7 +44,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\interval_tests.h" />
+    <ClInclude Include="..\..\interval_tec_tests.h" />
     <ClInclude Include="..\..\test_util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
