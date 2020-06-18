@@ -264,7 +264,7 @@ SomeInterval<Value> intersectOrderedIntervals(const Interval<Value, EndTypes1st>
 
    // Overlapping.
    return Interval<Value,
-                   EndTypePair<typename EndTypes2nd::Left, typename EndTypes2nd::Right>>(
+                   EndTypePair<typename EndTypes2nd::Left, typename EndTypes1st::Right>>(
       second.start(), first.end());
 }
 
@@ -273,7 +273,7 @@ template <typename Value, typename EndTypesA, typename EndTypesB>
 SomeInterval<Value> intersect(const Interval<Value, EndTypesA>& a,
                               const Interval<Value, EndTypesB>& b)
 {
-   if (sutil::fpLessEqual(a.start(), b.start()))
+   if (sutil::lessEqual(a.start(), b.start()))
       return intersectOrderedIntervals(a, b);
    return intersectOrderedIntervals(b, a);
 }
@@ -285,7 +285,7 @@ template <typename Value, typename EndTypes1st, typename EndTypes2nd>
 SomeInterval<Value> uniteOrderedIntervals(const Interval<Value, EndTypes1st>& first,
                                           const Interval<Value, EndTypes2nd>& second)
 {
-   if (sutil::fpGreaterEqual(first.end(), second.end()))
+   if (sutil::greaterEqual(first.end(), second.end()))
    {
       return Interval<
          Value, EndTypePair<typename EndTypes1st::Left, typename EndTypes1st::Right>>(
@@ -302,7 +302,7 @@ template <typename Value, typename EndTypesA, typename EndTypesB>
 SomeInterval<Value> unite(const Interval<Value, EndTypesA>& a,
                           const Interval<Value, EndTypesB>& b)
 {
-   if (sutil::fpLessEqual(a.start(), b.start()))
+   if (sutil::lessEqual(a.start(), b.start()))
       return uniteOrderedIntervals(a, b);
    return uniteOrderedIntervals(b, a);
 }

@@ -281,6 +281,134 @@ void testIntersect()
       const OpenInterval<double> resIv = std::get<OpenInterval<double>>(res);
       VERIFY(resIv.isEmpty(), caseLabel);
    }
+   {
+      const std::string caseLabel = "Intersect with fully contained open interval";
+
+      const Interval<double, Closed> a{1.0, 10.4};
+      const Interval<double, Open> b{2.1, 8.09};
+
+      SomeInterval<double> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
+
+      const auto resIv = std::get<OpenInterval<double>>(res);
+      VERIFY(resIv.start() == 2.1, caseLabel);
+      VERIFY(resIv.end() == 8.09, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect with fully contained left-open interval";
+
+      const Interval<int, Open> a{100, 200};
+      const Interval<int, LeftOpen> b{120, 150};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<LeftOpenInterval<int>>(res);
+      VERIFY(resIv.start() == 120, caseLabel);
+      VERIFY(resIv.end() == 150, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect with fully contained right-open interval";
+
+      const Interval<int, Open> a{100, 200};
+      const Interval<int, RightOpen> b{120, 150};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<RightOpenInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<RightOpenInterval<int>>(res);
+      VERIFY(resIv.start() == 120, caseLabel);
+      VERIFY(resIv.end() == 150, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect with fully contained closed interval";
+
+      const Interval<float, Closed> a{100.1f, 200.12f};
+      const Interval<float, Closed> b{120.1f, 150.12f};
+
+      SomeInterval<float> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<ClosedInterval<float>>(res), caseLabel);
+
+      const auto resIv = std::get<ClosedInterval<float>>(res);
+      VERIFY(resIv.start() == 120.1f, caseLabel);
+      VERIFY(resIv.end() == 150.12f, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect overlapping open intervals";
+
+      const Interval<double, Open> a{1.0, 10.4};
+      const Interval<double, Open> b{-2.1, 8.09};
+
+      SomeInterval<double> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
+
+      const auto resIv = std::get<OpenInterval<double>>(res);
+      VERIFY(resIv.start() == 1.0, caseLabel);
+      VERIFY(resIv.end() == 8.09, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect overlapping closed intervals";
+
+      const Interval<double, Closed> a{-10.0, -0.4};
+      const Interval<double, Closed> b{-1.1, 8.09};
+
+      SomeInterval<double> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<ClosedInterval<double>>(res), caseLabel);
+
+      const auto resIv = std::get<ClosedInterval<double>>(res);
+      VERIFY(resIv.start() == -1.1, caseLabel);
+      VERIFY(resIv.end() == -0.4, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect overlapping closed and left-open intervals";
+
+      const Interval<int, Closed> a{0, 10};
+      const Interval<int, LeftOpen> b{2, 12};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<LeftOpenInterval<int>>(res);
+      VERIFY(resIv.start() == 2, caseLabel);
+      VERIFY(resIv.end() == 10, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect overlapping open and right-open intervals";
+
+      const Interval<int, Open> a{2, 12};
+      const Interval<int, RightOpen> b{0, 10};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<OpenInterval<int>>(res);
+      VERIFY(resIv.start() == 2, caseLabel);
+      VERIFY(resIv.end() == 10, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect overlapping left- and right-open "
+                                    "intervals creating a closed interval";
+
+      const Interval<int, LeftOpen> a{0, 10};
+      const Interval<int, RightOpen> b{2, 12};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<ClosedInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<ClosedInterval<int>>(res);
+      VERIFY(resIv.start() == 2, caseLabel);
+      VERIFY(resIv.end() == 10, caseLabel);
+   }
 }
 
 } // namespace
