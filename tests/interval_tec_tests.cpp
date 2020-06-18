@@ -411,6 +411,11 @@ void testIntersect()
    }
 }
 
+
+void testUnite()
+{
+}
+
 } // namespace
 
 
@@ -429,4 +434,5 @@ void testTecInterval()
    testNegationOperator();
 
    testIntersect();
+   testUnite();
 }

@@ -20,6 +20,12 @@ enum class IntervalEnd
 };
 
 
+inline bool isStricter(IntervalEnd a, IntervalEnd b)
+{
+   return a == IntervalEnd::Open && b == IntervalEnd::Closed;
+}
+
+
 enum class IntervalType
 {
    Open,
