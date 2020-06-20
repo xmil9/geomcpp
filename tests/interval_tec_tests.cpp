@@ -19,6 +19,407 @@ namespace
 {
 ///////////////////
 
+void testEndpointEqual()
+{
+   {
+      const std::string caseLabel = "Equality for equal open integer endpoints";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(a == b, caseLabel);
+      VERIFY(b == a, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.22};
+      VERIFY(a == b, caseLabel);
+      VERIFY(b == a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{-2};
+      VERIFY(!(a == b), caseLabel);
+      VERIFY(!(b == a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.33};
+      VERIFY(!(a == b), caseLabel);
+      VERIFY(!(b == a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for integer endpoints with different inclusion types";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> b{2};
+      VERIFY(!(a == b), caseLabel);
+      VERIFY(!(b == a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for floating point endpoints with different inclusion types";
+
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> a{10.11};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{10.11};
+      VERIFY(!(a == b), caseLabel);
+      VERIFY(!(b == a), caseLabel);
+   }
+}
+
+
+void testEndpointUnequal()
+{
+   {
+      const std::string caseLabel = "Inequality for equal open integer endpoints";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(!(a != b), caseLabel);
+      VERIFY(!(b != a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.22};
+      VERIFY(!(a != b), caseLabel);
+      VERIFY(!(b != a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{-2};
+      VERIFY(a != b, caseLabel);
+      VERIFY(b != a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.33};
+      VERIFY(a != b, caseLabel);
+      VERIFY(b != a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for integer endpoints with different inclusion types";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> b{2};
+      VERIFY(a != b, caseLabel);
+      VERIFY(b != a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for floating point endpoints with different inclusion types";
+
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> a{10.11};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{10.11};
+      VERIFY(a != b, caseLabel);
+      VERIFY(b != a, caseLabel);
+   }
+}
+
+
+void testEndpointLess()
+{
+   {
+      const std::string caseLabel =
+         "Less-than for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{3};
+      VERIFY(a < b, caseLabel);
+      VERIFY(!(b < a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-than for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.23};
+      VERIFY(a < b, caseLabel);
+      VERIFY(!(b < a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-than for open integer endpoints with different inclusions";
+
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(a < b, caseLabel);
+      VERIFY(!(b < a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-than for closed floating point endpoints with different inclusions";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> b{2.22};
+      VERIFY(b < a, caseLabel);
+      VERIFY(!(a < b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Less-than for equal open integer endpoints";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{2};
+      VERIFY(!(a < b), caseLabel);
+      VERIFY(!(b < a), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Less-than for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.45};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.45};
+      VERIFY(!(a < b), caseLabel);
+      VERIFY(!(b < a), caseLabel);
+   }
+}
+
+
+void testEndpointLessEqual()
+{
+   {
+      const std::string caseLabel =
+         "Less-equal-than for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{3};
+      VERIFY(a <= b, caseLabel);
+      VERIFY(!(b <= a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-equal-than for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.23};
+      VERIFY(a <= b, caseLabel);
+      VERIFY(!(b <= a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-equal-than for open integer endpoints with different inclusions";
+
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(a <= b, caseLabel);
+      VERIFY(!(b <= a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-equal-than for closed floating point endpoints with different inclusions";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> b{2.22};
+      VERIFY(b <= a, caseLabel);
+      VERIFY(!(a <= b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Less-equal-than for equal open integer endpoints";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{2};
+      VERIFY(a <= b, caseLabel);
+      VERIFY(b <= a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Less-equal-than for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.45};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.45};
+      VERIFY(a <= b, caseLabel);
+      VERIFY(b <= a, caseLabel);
+   }
+}
+
+
+void testEndpointGreater()
+{
+   {
+      const std::string caseLabel =
+         "Greater-than for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{3};
+      VERIFY(!(a > b), caseLabel);
+      VERIFY(b > a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-than for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.23};
+      VERIFY(!(a > b), caseLabel);
+      VERIFY(b > a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-than for open integer endpoints with different inclusions";
+
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(!(a > b), caseLabel);
+      VERIFY(b > a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-than for closed floating point endpoints with different inclusions";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> b{2.22};
+      VERIFY(!(b > a), caseLabel);
+      VERIFY(a > b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Greater-than for equal open integer endpoints";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{2};
+      VERIFY(!(a > b), caseLabel);
+      VERIFY(!(b > a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-than for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.45};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.45};
+      VERIFY(!(a > b), caseLabel);
+      VERIFY(!(b > a), caseLabel);
+   }
+}
+
+
+void testEndpointGreaterEqual()
+{
+   {
+      const std::string caseLabel =
+         "Greater-equal-than for open integer endpoints with different values";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{3};
+      VERIFY(!(a >= b), caseLabel);
+      VERIFY(b >= a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-equal-than for closed floating point endpoints with different values";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> b{2.23};
+      VERIFY(!(a >= b), caseLabel);
+      VERIFY(b >= a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-equal-than for open integer endpoints with different inclusions";
+
+      const Endpoint<int, EndType<LeftEnd, ClosedEnd>> a{2};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{2};
+      VERIFY(!(a >= b), caseLabel);
+      VERIFY(b >= a, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Greater-equal-than for closed floating point "
+                                    "endpoints with different inclusions";
+
+      const Endpoint<double, EndType<RightEnd, ClosedEnd>> a{2.22};
+      const Endpoint<double, EndType<RightEnd, OpenEnd>> b{2.22};
+      VERIFY(!(b >= a), caseLabel);
+      VERIFY(a >= b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Greater-equal-than for equal open integer endpoints";
+
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> a{2};
+      const Endpoint<int, EndType<RightEnd, OpenEnd>> b{2};
+      VERIFY(a >= b, caseLabel);
+      VERIFY(b >= a, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Greater-equal-than for equal closed floating point endpoints";
+
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> a{2.45};
+      const Endpoint<double, EndType<LeftEnd, ClosedEnd>> b{2.45};
+      VERIFY(a >= b, caseLabel);
+      VERIFY(b >= a, caseLabel);
+   }
+}
+
+
+void testEndpointOverlapping()
+{
+   {
+      const std::string caseLabel =
+         "overlapping() for endpoints with the same orientation";
+
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> a{-1000};
+      const Endpoint<int, EndType<LeftEnd, OpenEnd>> b{30000000};
+      VERIFY(overlapping(a, b), caseLabel);
+      VERIFY(overlapping(b, a), caseLabel);
+   }
+   {
+      const std::string caseLabel = "overlapping() for endpoints with the different "
+                                    "orientations and overlapping value ranges";
+
+      const Endpoint<float, EndType<LeftEnd, OpenEnd>> a{1.1f};
+      const Endpoint<float, EndType<RightEnd, OpenEnd>> b{3.6f};
+      VERIFY(overlapping(a, b), caseLabel);
+      VERIFY(overlapping(b, a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "overlapping() for endpoints with the different "
+         "orientations and touching value ranges with one endpoint closed";
+
+      const Endpoint<float, EndType<LeftEnd, OpenEnd>> a{1};
+      const Endpoint<float, EndType<RightEnd, ClosedEnd>> b{1};
+      VERIFY(!overlapping(a, b), caseLabel);
+      VERIFY(!overlapping(b, a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "overlapping() for endpoints with the different "
+         "orientations and touching value ranges with both endpoints closed";
+
+      const Endpoint<float, EndType<LeftEnd, ClosedEnd>> a{1};
+      const Endpoint<float, EndType<RightEnd, ClosedEnd>> b{1};
+      VERIFY(overlapping(a, b), caseLabel);
+      VERIFY(overlapping(b, a), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "overlapping() for endpoints with the different "
+         "orientations and touching value ranges with both endpoints open";
+
+      const Endpoint<float, EndType<LeftEnd, OpenEnd>> a{1};
+      const Endpoint<float, EndType<RightEnd, OpenEnd>> b{1};
+      VERIFY(!overlapping(a, b), caseLabel);
+      VERIFY(!overlapping(b, a), caseLabel);
+   }
+}
+
+
+///////////////////
+
 void testCtor()
 {
    {
@@ -175,8 +576,9 @@ void testLeftEnd()
              caseLabel);
       VERIFY((Interval<int, LeftOpen>(200, 300).leftEndType() == IntervalEnd::Open),
              caseLabel);
-      VERIFY((Interval<double, RightOpen>(200.0, 300.3).leftEndType() == IntervalEnd::Closed),
-             caseLabel);
+      VERIFY(
+         (Interval<double, RightOpen>(200.0, 300.3).leftEndType() == IntervalEnd::Closed),
+         caseLabel);
    }
 }
 
@@ -192,8 +594,9 @@ void testRightEnd()
              caseLabel);
       VERIFY((Interval<int, LeftOpen>(200, 300).rightEndType() == IntervalEnd::Closed),
              caseLabel);
-      VERIFY((Interval<double, RightOpen>(200.0, 300.3).rightEndType() == IntervalEnd::Open),
-             caseLabel);
+      VERIFY(
+         (Interval<double, RightOpen>(200.0, 300.3).rightEndType() == IntervalEnd::Open),
+         caseLabel);
    }
 }
 
@@ -269,17 +672,47 @@ void testNegationOperator()
 void testIntersect()
 {
    {
-      const std::string caseLabel = "Intersect disjoint intervals";
+      const std::string caseLabel = "Intersect [1, 10] and [20, 22]";
 
-      const Interval<double, Closed> a{1.0, 10.4};
-      const Interval<double, Open> b{20.1, 22.09};
+      const Interval<int, Closed> a{1, 10};
+      const Interval<int, Open> b{20, 22};
 
-      SomeInterval<double> res = intersect(a, b);
+      const SomeInterval<int> res = intersect(a, b);
 
-      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
+      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
 
-      const OpenInterval<double> resIv = std::get<OpenInterval<double>>(res);
+      const OpenInterval<int> resIv = std::get<OpenInterval<int>>(res);
       VERIFY(resIv.isEmpty(), caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
+
+      const OpenInterval<int> resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.isEmpty(), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect disjoint intervals that have the same "
+                                    "endpoint but the endpoint is open for one interval";
+
+      const Interval<int, RightOpen> a{1, 10};
+      const Interval<int, Closed> b{10, 22};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
+
+      const OpenInterval<int> resIv = std::get<OpenInterval<int>>(res);
+      VERIFY(resIv.isEmpty(), caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
+
+      const OpenInterval<int> resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.isEmpty(), caseLabel);
    }
    {
       const std::string caseLabel = "Intersect with fully contained open interval";
@@ -294,6 +727,15 @@ void testIntersect()
       const auto resIv = std::get<OpenInterval<double>>(res);
       VERIFY(resIv.start() == 2.1, caseLabel);
       VERIFY(resIv.end() == 8.09, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<double> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<OpenInterval<double>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<OpenInterval<double>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 2.1, caseLabel);
+      VERIFY(resIvFlipped.end() == 8.09, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect with fully contained left-open interval";
@@ -308,6 +750,15 @@ void testIntersect()
       const auto resIv = std::get<LeftOpenInterval<int>>(res);
       VERIFY(resIv.start() == 120, caseLabel);
       VERIFY(resIv.end() == 150, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<LeftOpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 120, caseLabel);
+      VERIFY(resIvFlipped.end() == 150, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect with fully contained right-open interval";
@@ -322,6 +773,15 @@ void testIntersect()
       const auto resIv = std::get<RightOpenInterval<int>>(res);
       VERIFY(resIv.start() == 120, caseLabel);
       VERIFY(resIv.end() == 150, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<RightOpenInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<RightOpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 120, caseLabel);
+      VERIFY(resIvFlipped.end() == 150, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect with fully contained closed interval";
@@ -336,6 +796,15 @@ void testIntersect()
       const auto resIv = std::get<ClosedInterval<float>>(res);
       VERIFY(resIv.start() == 120.1f, caseLabel);
       VERIFY(resIv.end() == 150.12f, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<float> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<ClosedInterval<float>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<ClosedInterval<float>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 120.1f, caseLabel);
+      VERIFY(resIvFlipped.end() == 150.12f, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect overlapping open intervals";
@@ -350,6 +819,15 @@ void testIntersect()
       const auto resIv = std::get<OpenInterval<double>>(res);
       VERIFY(resIv.start() == 1.0, caseLabel);
       VERIFY(resIv.end() == 8.09, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<double> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<OpenInterval<double>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<OpenInterval<double>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 1.0, caseLabel);
+      VERIFY(resIvFlipped.end() == 8.09, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect overlapping closed intervals";
@@ -364,6 +842,15 @@ void testIntersect()
       const auto resIv = std::get<ClosedInterval<double>>(res);
       VERIFY(resIv.start() == -1.1, caseLabel);
       VERIFY(resIv.end() == -0.4, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<double> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<ClosedInterval<double>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<ClosedInterval<double>>(resFlipped);
+      VERIFY(resIvFlipped.start() == -1.1, caseLabel);
+      VERIFY(resIvFlipped.end() == -0.4, caseLabel);
    }
    {
       const std::string caseLabel =
@@ -379,6 +866,15 @@ void testIntersect()
       const auto resIv = std::get<LeftOpenInterval<int>>(res);
       VERIFY(resIv.start() == 2, caseLabel);
       VERIFY(resIv.end() == 10, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<LeftOpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 2, caseLabel);
+      VERIFY(resIvFlipped.end() == 10, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect overlapping open and right-open intervals";
@@ -393,6 +889,15 @@ void testIntersect()
       const auto resIv = std::get<OpenInterval<int>>(res);
       VERIFY(resIv.start() == 2, caseLabel);
       VERIFY(resIv.end() == 10, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 2, caseLabel);
+      VERIFY(resIvFlipped.end() == 10, caseLabel);
    }
    {
       const std::string caseLabel = "Intersect overlapping left- and right-open "
@@ -408,10 +913,19 @@ void testIntersect()
       const auto resIv = std::get<ClosedInterval<int>>(res);
       VERIFY(resIv.start() == 2, caseLabel);
       VERIFY(resIv.end() == 10, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<ClosedInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFlipped = std::get<ClosedInterval<int>>(resFlipped);
+      VERIFY(resIvFlipped.start() == 2, caseLabel);
+      VERIFY(resIvFlipped.end() == 10, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Intersect intervals have the same start value but one's left end is closed";
+      const std::string caseLabel = "Intersect intervals that have the same start value "
+                                    "but one's left end is closed";
 
       const Interval<int, Open> a{2, 12};
       const Interval<int, Closed> b{2, 10};
@@ -419,12 +933,21 @@ void testIntersect()
       SomeInterval<int> res = intersect(a, b);
 
       // The left end of the intersection should be open because when the start values
-      // are equal the open interval is considered greater in order.
+      // are equal the open interval is evaluates to 'greater' when compared.
       VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
 
       const auto resIv = std::get<LeftOpenInterval<int>>(res);
       VERIFY(resIv.start() == 2, caseLabel);
       VERIFY(resIv.end() == 10, caseLabel);
+
+      // Flip the arguments. The outcome should be he same.
+      SomeInterval<int> resFlipped = intersect(b, a);
+
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
+
+      const auto resIvFLipped = std::get<LeftOpenInterval<int>>(resFlipped);
+      VERIFY(resIvFLipped.start() == 2, caseLabel);
+      VERIFY(resIvFLipped.end() == 10, caseLabel);
    }
 }
 
@@ -440,6 +963,14 @@ void testUnite()
 
 void testTecInterval()
 {
+   testEndpointEqual();
+   testEndpointUnequal();
+   testEndpointLess();
+   testEndpointLessEqual();
+   testEndpointGreater();
+   testEndpointGreaterEqual();
+   testEndpointOverlapping();
+
    testCtor();
    testLength();
    testIsEmpty();
