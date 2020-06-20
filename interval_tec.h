@@ -22,31 +22,27 @@ namespace tec
 ///////////////////
 
 // Types for open and closed interval ends.
-struct OpenEndType
+struct OpenEnd
+{
+};
+struct ClosedEnd
 {
 };
 
-struct ClosedEndType
+// Direction of interval ends.
+struct LeftEnd
+{
+};
+struct RightEnd
 {
 };
 
-
-// Define ordering for end types.
-// closed < open
-
-template <typename ET1, typename ET2> constexpr bool isEqualET = std::is_same_v<ET1, ET2>;
-
-template <typename ET1, typename ET2>
-constexpr bool isLessET = isEqualET<ET1, ClosedEndType>&& isEqualET<ET2, OpenEndType>;
-
-template <typename ET1, typename ET2>
-constexpr bool isLessEqualET = isLessET<ET1, ET2> || isEqualET<ET1, ET2>;
-
-template <typename ET1, typename ET2>
-constexpr bool isGreaterET = !isLessEqualET<ET1, ET2>;
-
-template <typename ET1, typename ET2>
-constexpr bool isGreaterEqualET = !isLessET<ET1, ET2>;
+// Each end type is define by its orientation and inclusion properties.
+template <typename Orient, typename Incl> struct EndType
+{
+   using Orientation = Orient;
+   using Inclusion = Incl;
+};
 
 
 ///////////////////
@@ -54,15 +50,47 @@ constexpr bool isGreaterEqualET = !isLessET<ET1, ET2>;
 // Endpoint of an interval.
 template <typename Value, typename ET> struct Endpoint
 {
-   Value val;
+   Value val = Value(0);
 };
 
 
-// Define ordering for endpoints.
+// Implements a helper concept for comparing endpoints.
+// When endpoint values are equal the ordering of the endpoints is determined
+// by extending the endpoint's value towards the outside of its orientation.
+// If the endpoint is closed the value is extended by one, if the endpoint is
+// open the value is not extended.
+template <typename Value, typename ET> Value extendedValue(Endpoint<Value, ET> ep)
+{
+   if constexpr (std::is_same_v<typename ET::Inclusion, ClosedEnd>)
+   {
+      if constexpr (std::is_same_v<typename ET::Orientation, LeftEnd>)
+         return ep.val - Value(1);
+      else
+         return ep.val + Value(1);
+   }
+   else
+   {
+      return ep.val;
+   }
+}
+
+
+// Define ordering for endpoints that have the same direction.
+// The ordering has the following principles:
+// - First compare the values.
+// - If the values are unequal use their order.
+// - If the values are equal, then the end type is examined:
+//    - Closed end types are thought of as to extend the value range by 1 to the
+//      outside direction of the end point.
+//    - Open end types are thought of as to not extend the value range.
+//    - The extended values are compared.
 template <typename Value, typename ET1, typename ET2>
 bool operator==(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   return sutil::equal(a.val, b.val) && isEqualET<ET1, ET2>;
+   static_assert(std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>,
+                 "Cannot compare endpoints with different orientation.");
+   return sutil::equal(a.val, b.val) &&
+          std::is_same_v<typename ET1::Inclusion, typename ET2::Inclusion>;
 }
 
 template <typename Value, typename ET1, typename ET2>
@@ -74,7 +102,10 @@ bool operator!=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 template <typename Value, typename ET1, typename ET2>
 bool operator<(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   return sutil::less(a.val, b.val) || (sutil::equal(a.val, b.val) && isLessET<ET1, ET2>);
+   static_assert(std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>,
+                 "Cannot compare endpoints with different orientation.");
+   return sutil::less(a.val, b.val) ||
+          (sutil::equal(a.val, b.val) && sutil::less(extendedValue(a), extendedValue(b)));
 }
 
 template <typename Value, typename ET1, typename ET2>
@@ -96,6 +127,28 @@ bool operator>=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 }
 
 
+// Checks if two endpoints have overlapping value ranges.
+template <typename Value, typename ET1, typename ET2>
+bool overlapping(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   static_assert(!std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>);
+
+   Value left = a.val;
+   Value right = b.val;
+   if constexpr (std::is_same_v<typename ET1::Orientation, RightEnd>)
+   {
+      left = b.val;
+      right = a.val;
+   }
+
+   // To overlap the left endpoint needs to be less than the right endpoint
+   // or, if their values are equal, they both need to be closed.
+   return sutil::less(left, right) ||
+          (sutil::equal(left, right) &&
+           std::is_same_v<typename ET1::Inclusion, ClosedEnd> &&
+           std::is_same_v<typename ET2::Inclusion, ClosedEnd>);
+}
+
 ///////////////////
 
 // Pair of end types for the left and right endpoints of an interval.
@@ -106,10 +159,10 @@ template <typename LeftET, typename RightET> struct EndTypePair
 };
 
 // Combinations of end types for each interval type.
-using Closed = EndTypePair<ClosedEndType, ClosedEndType>;
-using Open = EndTypePair<OpenEndType, OpenEndType>;
-using LeftOpen = EndTypePair<OpenEndType, ClosedEndType>;
-using RightOpen = EndTypePair<ClosedEndType, OpenEndType>;
+using Open = EndTypePair<EndType<LeftEnd, OpenEnd>, EndType<RightEnd, OpenEnd>>;
+using LeftOpen = EndTypePair<EndType<LeftEnd, OpenEnd>, EndType<RightEnd, ClosedEnd>>;
+using RightOpen = EndTypePair<EndType<LeftEnd, ClosedEnd>, EndType<RightEnd, OpenEnd>>;
+using Closed = EndTypePair<EndType<LeftEnd, ClosedEnd>, EndType<RightEnd, ClosedEnd>>;
 
 
 // Interval with type-encoded end types.
@@ -162,7 +215,7 @@ constexpr Interval<Value, ETs>::Interval(Value start, Value end)
 template <typename Value, typename ETs>
 constexpr IntervalEnd Interval<Value, ETs>::leftEndType() const noexcept
 {
-   if constexpr (isEqualET<LeftEndType, ClosedEndType>)
+   if constexpr (std::is_same_v<typename LeftEndType::Inclusion, ClosedEnd>)
       return IntervalEnd::Closed;
    else
       return IntervalEnd::Open;
@@ -172,7 +225,7 @@ constexpr IntervalEnd Interval<Value, ETs>::leftEndType() const noexcept
 template <typename Value, typename ETs>
 constexpr IntervalEnd Interval<Value, ETs>::rightEndType() const noexcept
 {
-   if constexpr (isEqualET<RightEndType, ClosedEndType>)
+   if constexpr (std::is_same_v<typename RightEndType::Inclusion, ClosedEnd>)
       return IntervalEnd::Closed;
    else
       return IntervalEnd::Open;
@@ -241,7 +294,7 @@ bool Interval<Value, ETs>::contains(Value val) const noexcept
 template <typename Value, typename ETs>
 bool Interval<Value, ETs>::containsLeft(Value val) const noexcept
 {
-   if constexpr (isEqualET<LeftEndType, ClosedEndType>)
+   if constexpr (std::is_same_v<typename LeftEndType::Inclusion, ClosedEnd>)
       return sutil::greaterEqual(val, start());
    else
       return sutil::greater(val, start());
@@ -251,7 +304,7 @@ bool Interval<Value, ETs>::containsLeft(Value val) const noexcept
 template <typename Value, typename ETs>
 bool Interval<Value, ETs>::containsRight(Value val) const noexcept
 {
-   if constexpr (isEqualET<RightEndType, ClosedEndType>)
+   if constexpr (std::is_same_v<typename RightEndType::Inclusion, ClosedEnd>)
       return sutil::lessEqual(val, end());
    else
       return sutil::less(val, end());
@@ -299,7 +352,7 @@ template <typename Value, typename ETs1, typename ETs2>
 SomeInterval<Value> intersectOrderedIntervals(const Interval<Value, ETs1>& first,
                                               const Interval<Value, ETs2>& second)
 {
-   if (first.rightEndpoint() < second.leftEndpoint())
+   if (!overlapping(first.rightEndpoint(), second.leftEndpoint()))
    {
       // Disjoint intervals.
       return EmptyInterval<Value>;
