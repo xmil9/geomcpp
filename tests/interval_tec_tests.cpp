@@ -17,6 +17,37 @@ using namespace sutil;
 
 namespace
 {
+
+///////////////////
+
+template <typename IvType, typename Value>
+void verifyInterval(const SomeInterval<Value>& ivVar, Value start, Value end,
+                    const std::string& caseLabel)
+{
+   const bool hasExpectedType = std::holds_alternative<IvType>(ivVar);
+   VERIFY(hasExpectedType, caseLabel);
+   if (hasExpectedType)
+   {
+      const auto iv = std::get<IvType>(ivVar);
+      VERIFY(iv.start() == start, caseLabel);
+      VERIFY(iv.end() == end, caseLabel);
+   }
+}
+
+
+template <typename IvType, typename Value>
+void verifyEmptyInterval(const SomeInterval<Value>& ivVar, const std::string& caseLabel)
+{
+   const bool hasExpectedType = std::holds_alternative<IvType>(ivVar);
+   VERIFY(hasExpectedType, caseLabel);
+   if (hasExpectedType)
+   {
+      const auto iv = std::get<IvType>(ivVar);
+      VERIFY(iv.isEmpty(), caseLabel);
+   }
+}
+
+
 ///////////////////
 
 void testEndpointEqual()
@@ -677,277 +708,143 @@ void testIntersect()
       const Interval<int, Closed> a{1, 10};
       const Interval<int, Open> b{20, 22};
 
-      const SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
-
-      const OpenInterval<int> resIv = std::get<OpenInterval<int>>(res);
-      VERIFY(resIv.isEmpty(), caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
-
-      const OpenInterval<int> resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.isEmpty(), caseLabel);
+      verifyEmptyInterval<OpenInterval<int>>(intersect(a, b), caseLabel);
+      verifyEmptyInterval<OpenInterval<int>>(intersect(b, a), caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect disjoint intervals that have the same "
-                                    "endpoint but the endpoint is open for one interval";
+      const std::string caseLabel = "Intersect [1, 10] and (10, 22]";
+
+      const Interval<int, Closed> a{1, 10};
+      const Interval<int, LeftOpen> b{10, 22};
+
+      verifyEmptyInterval<OpenInterval<int>>(intersect(a, b), caseLabel);
+      verifyEmptyInterval<OpenInterval<int>>(intersect(b, a), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect [1, 10) and [10, 22]";
 
       const Interval<int, RightOpen> a{1, 10};
       const Interval<int, Closed> b{10, 22};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
-
-      const OpenInterval<int> resIv = std::get<OpenInterval<int>>(res);
-      VERIFY(resIv.isEmpty(), caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
-
-      const OpenInterval<int> resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.isEmpty(), caseLabel);
+      verifyEmptyInterval<OpenInterval<int>>(intersect(a, b), caseLabel);
+      verifyEmptyInterval<OpenInterval<int>>(intersect(b, a), caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect with fully contained open interval";
+      const std::string caseLabel = "Intersect [1, 10] and [10, 22]";
 
-      const Interval<double, Closed> a{1.0, 10.4};
-      const Interval<double, Open> b{2.1, 8.09};
+      const Interval<int, Closed> a{1, 10};
+      const Interval<int, Closed> b{10, 22};
 
-      SomeInterval<double> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
-
-      const auto resIv = std::get<OpenInterval<double>>(res);
-      VERIFY(resIv.start() == 2.1, caseLabel);
-      VERIFY(resIv.end() == 8.09, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<double> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<OpenInterval<double>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<OpenInterval<double>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 2.1, caseLabel);
-      VERIFY(resIvFlipped.end() == 8.09, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(a, b), 10, 10, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(b, a), 10, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect with fully contained left-open interval";
+      const std::string caseLabel = "Intersect [1, 10] and [5, 8]";
 
-      const Interval<int, Open> a{100, 200};
-      const Interval<int, LeftOpen> b{120, 150};
+      const Interval<int, Closed> a{1, 10};
+      const Interval<int, Closed> b{5, 8};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
-
-      const auto resIv = std::get<LeftOpenInterval<int>>(res);
-      VERIFY(resIv.start() == 120, caseLabel);
-      VERIFY(resIv.end() == 150, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<LeftOpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 120, caseLabel);
-      VERIFY(resIvFlipped.end() == 150, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(a, b), 5, 8, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(b, a), 5, 8, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect with fully contained right-open interval";
+      const std::string caseLabel = "Intersect (1, 10] and [5, 8)";
 
-      const Interval<int, Open> a{100, 200};
-      const Interval<int, RightOpen> b{120, 150};
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, RightOpen> b{5, 8};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<RightOpenInterval<int>>(res), caseLabel);
-
-      const auto resIv = std::get<RightOpenInterval<int>>(res);
-      VERIFY(resIv.start() == 120, caseLabel);
-      VERIFY(resIv.end() == 150, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<RightOpenInterval<int>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<RightOpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 120, caseLabel);
-      VERIFY(resIvFlipped.end() == 150, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(a, b), 5, 8, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(b, a), 5, 8, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect with fully contained closed interval";
+      const std::string caseLabel = "Intersect (1, 10] and [5, 10)";
 
-      const Interval<float, Closed> a{100.1f, 200.12f};
-      const Interval<float, Closed> b{120.1f, 150.12f};
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, RightOpen> b{5, 10};
 
-      SomeInterval<float> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<ClosedInterval<float>>(res), caseLabel);
-
-      const auto resIv = std::get<ClosedInterval<float>>(res);
-      VERIFY(resIv.start() == 120.1f, caseLabel);
-      VERIFY(resIv.end() == 150.12f, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<float> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<ClosedInterval<float>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<ClosedInterval<float>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 120.1f, caseLabel);
-      VERIFY(resIvFlipped.end() == 150.12f, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect overlapping open intervals";
+      const std::string caseLabel = "Intersect (1, 10] and [5, 10]";
 
-      const Interval<double, Open> a{1.0, 10.4};
-      const Interval<double, Open> b{-2.1, 8.09};
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, Closed> b{5, 10};
 
-      SomeInterval<double> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<OpenInterval<double>>(res), caseLabel);
-
-      const auto resIv = std::get<OpenInterval<double>>(res);
-      VERIFY(resIv.start() == 1.0, caseLabel);
-      VERIFY(resIv.end() == 8.09, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<double> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<OpenInterval<double>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<OpenInterval<double>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 1.0, caseLabel);
-      VERIFY(resIvFlipped.end() == 8.09, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect overlapping closed intervals";
+      const std::string caseLabel = "Intersect (1, 10) and [5, 10)";
 
-      const Interval<double, Closed> a{-10.0, -0.4};
-      const Interval<double, Closed> b{-1.1, 8.09};
+      const Interval<int, Open> a{1, 10};
+      const Interval<int, RightOpen> b{5, 10};
 
-      SomeInterval<double> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<ClosedInterval<double>>(res), caseLabel);
-
-      const auto resIv = std::get<ClosedInterval<double>>(res);
-      VERIFY(resIv.start() == -1.1, caseLabel);
-      VERIFY(resIv.end() == -0.4, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<double> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<ClosedInterval<double>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<ClosedInterval<double>>(resFlipped);
-      VERIFY(resIvFlipped.start() == -1.1, caseLabel);
-      VERIFY(resIvFlipped.end() == -0.4, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Intersect overlapping closed and left-open intervals";
+      const std::string caseLabel = "Intersect (1, 10) and (5, 12)";
 
-      const Interval<int, Closed> a{0, 10};
-      const Interval<int, LeftOpen> b{2, 12};
+      const Interval<int, Open> a{1, 10};
+      const Interval<int, Open> b{5, 12};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
-
-      const auto resIv = std::get<LeftOpenInterval<int>>(res);
-      VERIFY(resIv.start() == 2, caseLabel);
-      VERIFY(resIv.end() == 10, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<LeftOpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 2, caseLabel);
-      VERIFY(resIvFlipped.end() == 10, caseLabel);
+      verifyInterval<OpenInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<OpenInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect overlapping open and right-open intervals";
+      const std::string caseLabel = "Intersect (1, 10] and (5, 12)";
 
-      const Interval<int, Open> a{2, 12};
-      const Interval<int, RightOpen> b{0, 10};
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, Open> b{5, 12};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(res), caseLabel);
-
-      const auto resIv = std::get<OpenInterval<int>>(res);
-      VERIFY(resIv.start() == 2, caseLabel);
-      VERIFY(resIv.end() == 10, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<OpenInterval<int>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<OpenInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 2, caseLabel);
-      VERIFY(resIvFlipped.end() == 10, caseLabel);
+      verifyInterval<LeftOpenInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<LeftOpenInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect overlapping left- and right-open "
-                                    "intervals creating a closed interval";
+      const std::string caseLabel = "Intersect (1, 10] and [5, 12)";
 
-      const Interval<int, LeftOpen> a{0, 10};
-      const Interval<int, RightOpen> b{2, 12};
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, RightOpen> b{5, 12};
 
-      SomeInterval<int> res = intersect(a, b);
-
-      VERIFY(std::holds_alternative<ClosedInterval<int>>(res), caseLabel);
-
-      const auto resIv = std::get<ClosedInterval<int>>(res);
-      VERIFY(resIv.start() == 2, caseLabel);
-      VERIFY(resIv.end() == 10, caseLabel);
-
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
-
-      VERIFY(std::holds_alternative<ClosedInterval<int>>(resFlipped), caseLabel);
-
-      const auto resIvFlipped = std::get<ClosedInterval<int>>(resFlipped);
-      VERIFY(resIvFlipped.start() == 2, caseLabel);
-      VERIFY(resIvFlipped.end() == 10, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<ClosedInterval<int>>(intersect(b, a), 5, 10, caseLabel);
    }
    {
-      const std::string caseLabel = "Intersect intervals that have the same start value "
-                                    "but one's left end is closed";
+      const std::string caseLabel = "Intersect (1, 10) and [5, 12)";
 
-      const Interval<int, Open> a{2, 12};
-      const Interval<int, Closed> b{2, 10};
+      const Interval<int, Open> a{1, 10};
+      const Interval<int, RightOpen> b{5, 12};
 
-      SomeInterval<int> res = intersect(a, b);
+      verifyInterval<RightOpenInterval<int>>(intersect(a, b), 5, 10, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(intersect(b, a), 5, 10, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect (1, 10) and (1, 10)";
 
-      // The left end of the intersection should be open because when the start values
-      // are equal the open interval is evaluates to 'greater' when compared.
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
+      const Interval<int, Open> a{1, 10};
+      const Interval<int, Open> b{1, 10};
 
-      const auto resIv = std::get<LeftOpenInterval<int>>(res);
-      VERIFY(resIv.start() == 2, caseLabel);
-      VERIFY(resIv.end() == 10, caseLabel);
+      verifyInterval<OpenInterval<int>>(intersect(a, b), 1, 10, caseLabel);
+      verifyInterval<OpenInterval<int>>(intersect(b, a), 1, 10, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect (-1.11, 10.78] and (5.01, 12.83)";
 
-      // Flip the arguments. The outcome should be he same.
-      SomeInterval<int> resFlipped = intersect(b, a);
+      const Interval<double, LeftOpen> a{-1.11, 10.78};
+      const Interval<double, Open> b{5.01, 12.83};
 
-      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(resFlipped), caseLabel);
+      verifyInterval<LeftOpenInterval<double>>(intersect(a, b), 5.01, 10.78, caseLabel);
+      verifyInterval<LeftOpenInterval<double>>(intersect(b, a), 5.01, 10.78, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect [-10.45, -1.003] and (-8.7, -2.0]";
 
-      const auto resIvFLipped = std::get<LeftOpenInterval<int>>(resFlipped);
-      VERIFY(resIvFLipped.start() == 2, caseLabel);
-      VERIFY(resIvFLipped.end() == 10, caseLabel);
+      const Interval<double, Closed> a{-10.45, -1.003};
+      const Interval<double, LeftOpen> b{-8.7, -2.0};
+
+      verifyInterval<LeftOpenInterval<double>>(intersect(a, b), -8.7, -2.0, caseLabel);
+      verifyInterval<LeftOpenInterval<double>>(intersect(b, a), -8.7, -2.0, caseLabel);
    }
 }
 
