@@ -131,22 +131,28 @@ bool operator>=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 template <typename Value, typename ET1, typename ET2>
 bool overlapping(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   static_assert(!std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>);
-
-   Value left = a.val;
-   Value right = b.val;
-   if constexpr (std::is_same_v<typename ET1::Orientation, RightEnd>)
+   if (std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>)
    {
-      left = b.val;
-      right = a.val;
+      // Endpoints with the same orientation always overlap.
+      return true;
    }
+   else
+   {
+      Value left = a.val;
+      Value right = b.val;
+      if constexpr (std::is_same_v<typename ET1::Orientation, RightEnd>)
+      {
+         left = b.val;
+         right = a.val;
+      }
 
-   // To overlap the left endpoint needs to be less than the right endpoint
-   // or, if their values are equal, they both need to be closed.
-   return sutil::less(left, right) ||
-          (sutil::equal(left, right) &&
-           std::is_same_v<typename ET1::Inclusion, ClosedEnd> &&
-           std::is_same_v<typename ET2::Inclusion, ClosedEnd>);
+      // To overlap the left endpoint needs to be less than the right endpoint
+      // or, if their values are equal, they both need to be closed.
+      return sutil::less(left, right) ||
+             (sutil::equal(left, right) &&
+              std::is_same_v<typename ET1::Inclusion, ClosedEnd> &&
+              std::is_same_v<typename ET2::Inclusion, ClosedEnd>);
+   }
 }
 
 ///////////////////
