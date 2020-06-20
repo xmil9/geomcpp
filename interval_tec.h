@@ -29,7 +29,7 @@ struct ClosedEnd
 {
 };
 
-// Direction of interval ends.
+// Side of interval ends.
 struct LeftEnd
 {
 };
@@ -37,10 +37,10 @@ struct RightEnd
 {
 };
 
-// Each end type is define by its orientation and inclusion properties.
-template <typename Orient, typename Incl> struct EndType
+// Each end type is define by its side and inclusion properties.
+template <typename Side_, typename Incl> struct EndType
 {
-   using Orientation = Orient;
+   using Side = Side_;
    using Inclusion = Incl;
 };
 
@@ -56,14 +56,14 @@ template <typename Value, typename ET> struct Endpoint
 
 // Implements a helper concept for comparing endpoints.
 // When endpoint values are equal the ordering of the endpoints is determined
-// by extending the endpoint's value towards the outside of its orientation.
+// by extending the endpoint's value towards the outside of its side.
 // If the endpoint is closed the value is extended by one, if the endpoint is
 // open the value is not extended.
 template <typename Value, typename ET> Value extendedValue(Endpoint<Value, ET> ep)
 {
    if constexpr (std::is_same_v<typename ET::Inclusion, ClosedEnd>)
    {
-      if constexpr (std::is_same_v<typename ET::Orientation, LeftEnd>)
+      if constexpr (std::is_same_v<typename ET::Side, LeftEnd>)
          return ep.val - Value(1);
       else
          return ep.val + Value(1);
@@ -87,8 +87,8 @@ template <typename Value, typename ET> Value extendedValue(Endpoint<Value, ET> e
 template <typename Value, typename ET1, typename ET2>
 bool operator==(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   static_assert(std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>,
-                 "Cannot compare endpoints with different orientation.");
+   static_assert(std::is_same_v<typename ET1::Side, typename ET2::Side>,
+                 "Cannot compare endpoints with different side.");
    return sutil::equal(a.val, b.val) &&
           std::is_same_v<typename ET1::Inclusion, typename ET2::Inclusion>;
 }
@@ -102,8 +102,8 @@ bool operator!=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 template <typename Value, typename ET1, typename ET2>
 bool operator<(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   static_assert(std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>,
-                 "Cannot compare endpoints with different orientation.");
+   static_assert(std::is_same_v<typename ET1::Side, typename ET2::Side>,
+                 "Cannot compare endpoints with different side.");
    return sutil::less(a.val, b.val) ||
           (sutil::equal(a.val, b.val) && sutil::less(extendedValue(a), extendedValue(b)));
 }
@@ -131,16 +131,16 @@ bool operator>=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 template <typename Value, typename ET1, typename ET2>
 bool overlapping(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   if (std::is_same_v<typename ET1::Orientation, typename ET2::Orientation>)
+   if (std::is_same_v<typename ET1::Side, typename ET2::Side>)
    {
-      // Endpoints with the same orientation always overlap.
+      // Endpoints with the same side always overlap.
       return true;
    }
    else
    {
       Value left = a.val;
       Value right = b.val;
-      if constexpr (std::is_same_v<typename ET1::Orientation, RightEnd>)
+      if constexpr (std::is_same_v<typename ET1::Side, RightEnd>)
       {
          left = b.val;
          right = a.val;
