@@ -167,15 +167,15 @@ void testContains()
 void testLeftEnd()
 {
    {
-      const std::string caseLabel = "Interval::leftEnd";
+      const std::string caseLabel = "Interval::leftEndType";
 
-      VERIFY((Interval<short, Closed>(200, 300).leftEnd() == IntervalEnd::Closed),
+      VERIFY((Interval<short, Closed>(200, 300).leftEndType() == IntervalEnd::Closed),
              caseLabel);
-      VERIFY((Interval<float, Open>(200.1f, 300.2f).leftEnd() == IntervalEnd::Open),
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).leftEndType() == IntervalEnd::Open),
              caseLabel);
-      VERIFY((Interval<int, LeftOpen>(200, 300).leftEnd() == IntervalEnd::Open),
+      VERIFY((Interval<int, LeftOpen>(200, 300).leftEndType() == IntervalEnd::Open),
              caseLabel);
-      VERIFY((Interval<double, RightOpen>(200.0, 300.3).leftEnd() == IntervalEnd::Closed),
+      VERIFY((Interval<double, RightOpen>(200.0, 300.3).leftEndType() == IntervalEnd::Closed),
              caseLabel);
    }
 }
@@ -184,15 +184,15 @@ void testLeftEnd()
 void testRightEnd()
 {
    {
-      const std::string caseLabel = "Interval::rightEnd";
+      const std::string caseLabel = "Interval::rightEndType";
 
-      VERIFY((Interval<short, Closed>(200, 300).rightEnd() == IntervalEnd::Closed),
+      VERIFY((Interval<short, Closed>(200, 300).rightEndType() == IntervalEnd::Closed),
              caseLabel);
-      VERIFY((Interval<float, Open>(200.1f, 300.2f).rightEnd() == IntervalEnd::Open),
+      VERIFY((Interval<float, Open>(200.1f, 300.2f).rightEndType() == IntervalEnd::Open),
              caseLabel);
-      VERIFY((Interval<int, LeftOpen>(200, 300).rightEnd() == IntervalEnd::Closed),
+      VERIFY((Interval<int, LeftOpen>(200, 300).rightEndType() == IntervalEnd::Closed),
              caseLabel);
-      VERIFY((Interval<double, RightOpen>(200.0, 300.3).rightEnd() == IntervalEnd::Open),
+      VERIFY((Interval<double, RightOpen>(200.0, 300.3).rightEndType() == IntervalEnd::Open),
              caseLabel);
    }
 }
@@ -406,6 +406,23 @@ void testIntersect()
       VERIFY(std::holds_alternative<ClosedInterval<int>>(res), caseLabel);
 
       const auto resIv = std::get<ClosedInterval<int>>(res);
+      VERIFY(resIv.start() == 2, caseLabel);
+      VERIFY(resIv.end() == 10, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect intervals have the same start value but one's left end is closed";
+
+      const Interval<int, Open> a{2, 12};
+      const Interval<int, Closed> b{2, 10};
+
+      SomeInterval<int> res = intersect(a, b);
+
+      // The left end of the intersection should be open because when the start values
+      // are equal the open interval is considered greater in order.
+      VERIFY(std::holds_alternative<LeftOpenInterval<int>>(res), caseLabel);
+
+      const auto resIv = std::get<LeftOpenInterval<int>>(res);
       VERIFY(resIv.start() == 2, caseLabel);
       VERIFY(resIv.end() == 10, caseLabel);
    }

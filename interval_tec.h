@@ -1,6 +1,6 @@
 //
 // geomcpp
-// ClosedInterval of numbers.
+// Mathematical interval encoding the open/closed state as part of the type.
 //
 // Jun-2020, Michael Lindner
 // MIT license
@@ -25,22 +25,84 @@ namespace tec
 struct OpenEndType
 {
 };
+
 struct ClosedEndType
 {
 };
 
 
-// Comparision for strictness of two end types.
-template <typename EndTypeA, typename EndTypeB>
-inline constexpr bool isStricterEndType =
-   std::is_same_v<EndTypeA, OpenEndType>&& std::is_same_v<EndTypeB, ClosedEndType>;
+// Define ordering for end types.
+// closed < open
 
+template <typename ET1, typename ET2> constexpr bool isEqualET = std::is_same_v<ET1, ET2>;
+
+template <typename ET1, typename ET2>
+constexpr bool isLessET = isEqualET<ET1, ClosedEndType>&& isEqualET<ET2, OpenEndType>;
+
+template <typename ET1, typename ET2>
+constexpr bool isLessEqualET = isLessET<ET1, ET2> || isEqualET<ET1, ET2>;
+
+template <typename ET1, typename ET2>
+constexpr bool isGreaterET = !isLessEqualET<ET1, ET2>;
+
+template <typename ET1, typename ET2>
+constexpr bool isGreaterEqualET = !isLessET<ET1, ET2>;
+
+
+///////////////////
+
+// Endpoint of an interval.
+template <typename Value, typename ET> struct Endpoint
+{
+   Value val;
+};
+
+
+// Define ordering for endpoints.
+template <typename Value, typename ET1, typename ET2>
+bool operator==(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return sutil::equal(a.val, b.val) && isEqualET<ET1, ET2>;
+}
+
+template <typename Value, typename ET1, typename ET2>
+bool operator!=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return !(a == b);
+}
+
+template <typename Value, typename ET1, typename ET2>
+bool operator<(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return sutil::less(a.val, b.val) || (sutil::equal(a.val, b.val) && isLessET<ET1, ET2>);
+}
+
+template <typename Value, typename ET1, typename ET2>
+bool operator<=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return a < b || a == b;
+}
+
+template <typename Value, typename ET1, typename ET2>
+bool operator>(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return !(a <= b);
+}
+
+template <typename Value, typename ET1, typename ET2>
+bool operator>=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
+{
+   return !(a < b);
+}
+
+
+///////////////////
 
 // Pair of end types for the left and right endpoints of an interval.
-template <typename LeftEndType, typename RightEndType> struct EndTypePair
+template <typename LeftET, typename RightET> struct EndTypePair
 {
-   using Left = LeftEndType;
-   using Right = RightEndType;
+   using Left = LeftET;
+   using Right = RightET;
 };
 
 // Combinations of end types for each interval type.
@@ -50,14 +112,14 @@ using LeftOpen = EndTypePair<OpenEndType, ClosedEndType>;
 using RightOpen = EndTypePair<ClosedEndType, OpenEndType>;
 
 
-///////////////////
-
 // Interval with type-encoded end types.
-template <typename Value, typename EndTypes> class Interval
+template <typename Value, typename ETs> class Interval
 {
  public:
    using value_type = Value;
-   using EndTypes_t = EndTypes;
+   using EndTypes = ETs;
+   using LeftEndType = typename ETs::Left;
+   using RightEndType = typename ETs::Right;
 
    constexpr Interval(Value start, Value end);
    Interval(const Interval&) = default;
@@ -65,72 +127,81 @@ template <typename Value, typename EndTypes> class Interval
 
    Interval& operator=(const Interval&) = default;
    Interval& operator=(Interval&&) = default;
-   explicit operator bool() const;
-   bool operator!() const;
+   explicit operator bool() const { return !isEmpty(); }
+   bool operator!() const { return !operator bool(); }
 
-   Value start() const noexcept;
-   Value end() const noexcept;
+   Value start() const noexcept { return m_left.val; }
+   Value end() const noexcept { return m_right.val; }
+   Endpoint<Value, LeftEndType> leftEndpoint() const noexcept { return m_left; }
+   Endpoint<Value, RightEndType> rightEndpoint() const noexcept { return m_right; }
+   constexpr IntervalEnd leftEndType() const noexcept;
+   constexpr IntervalEnd rightEndType() const noexcept;
+
+   constexpr IntervalType type() const noexcept;
    Value length() const noexcept;
    bool isEmpty() const noexcept;
    bool contains(Value val) const noexcept;
-   IntervalEnd leftEnd() const noexcept;
-   IntervalEnd rightEnd() const noexcept;
-   IntervalType type() const noexcept;
 
  private:
-   bool isLeftIncluded(Value val) const;
-   bool isRightIncluded(Value val) const;
+   bool containsLeft(Value val) const noexcept;
+   bool containsRight(Value val) const noexcept;
 
  private:
-   std::pair<Value, Value> m_endPoints;
+   Endpoint<Value, LeftEndType> m_left;
+   Endpoint<Value, RightEndType> m_right;
 };
 
 
-template <typename Value, typename EndTypes>
-constexpr Interval<Value, EndTypes>::Interval(Value start, Value end)
-: m_endPoints{std::min(start, end), std::max(start, end)}
+template <typename Value, typename ETs>
+constexpr Interval<Value, ETs>::Interval(Value start, Value end)
+: m_left{std::min(start, end)}, m_right{std::max(start, end)}
 {
 }
 
-template <typename Value, typename EndTypes>
-Interval<Value, EndTypes>::operator bool() const
+
+template <typename Value, typename ETs>
+constexpr IntervalEnd Interval<Value, ETs>::leftEndType() const noexcept
 {
-   return !isEmpty();
+   if constexpr (isEqualET<LeftEndType, ClosedEndType>)
+      return IntervalEnd::Closed;
+   else
+      return IntervalEnd::Open;
 }
 
 
-template <typename Value, typename EndTypes>
-bool Interval<Value, EndTypes>::operator!() const
+template <typename Value, typename ETs>
+constexpr IntervalEnd Interval<Value, ETs>::rightEndType() const noexcept
 {
-   return !operator bool();
+   if constexpr (isEqualET<RightEndType, ClosedEndType>)
+      return IntervalEnd::Closed;
+   else
+      return IntervalEnd::Open;
 }
 
 
-template <typename Value, typename EndTypes>
-Value Interval<Value, EndTypes>::start() const noexcept
+template <typename Value, typename ETs>
+constexpr IntervalType Interval<Value, ETs>::type() const noexcept
 {
-   return m_endPoints.first;
+   if constexpr (std::is_same_v<ETs, Open>)
+      return IntervalType::Open;
+   else if constexpr (std::is_same_v<ETs, LeftOpen>)
+      return IntervalType::LeftOpen;
+   else if constexpr (std::is_same_v<ETs, RightOpen>)
+      return IntervalType::RightOpen;
+   else
+      return IntervalType::Closed;
 }
 
-
-template <typename Value, typename EndTypes>
-Value Interval<Value, EndTypes>::end() const noexcept
-{
-   return m_endPoints.second;
-}
-
-
-template <typename Value, typename EndTypes>
-Value Interval<Value, EndTypes>::length() const noexcept
+template <typename Value, typename ETs>
+Value Interval<Value, ETs>::length() const noexcept
 {
    // The mathmatical definition of the length of an interval is the absolute
    // difference of its endpoints.
    return end() - start();
 }
 
-
-template <typename Value, typename EndTypes>
-bool Interval<Value, EndTypes>::isEmpty() const noexcept
+template <typename Value, typename ETs>
+bool Interval<Value, ETs>::isEmpty() const noexcept
 {
    switch (type())
    {
@@ -160,61 +231,27 @@ bool Interval<Value, EndTypes>::isEmpty() const noexcept
 }
 
 
-template <typename Value, typename EndTypes>
-bool Interval<Value, EndTypes>::contains(Value val) const noexcept
+template <typename Value, typename ETs>
+bool Interval<Value, ETs>::contains(Value val) const noexcept
 {
-   return isLeftIncluded(val) && isRightIncluded(val);
+   return containsLeft(val) && containsRight(val);
 }
 
 
-template <typename Value, typename EndTypes>
-IntervalEnd Interval<Value, EndTypes>::leftEnd() const noexcept
+template <typename Value, typename ETs>
+bool Interval<Value, ETs>::containsLeft(Value val) const noexcept
 {
-   if constexpr (std::is_same_v<typename EndTypes::Left, ClosedEndType>)
-      return IntervalEnd::Closed;
-   else
-      return IntervalEnd::Open;
-}
-
-
-template <typename Value, typename EndTypes>
-IntervalEnd Interval<Value, EndTypes>::rightEnd() const noexcept
-{
-   if constexpr (std::is_same_v<typename EndTypes::Right, ClosedEndType>)
-      return IntervalEnd::Closed;
-   else
-      return IntervalEnd::Open;
-}
-
-
-template <typename Value, typename EndTypes>
-IntervalType Interval<Value, EndTypes>::type() const noexcept
-{
-   if constexpr (std::is_same_v<EndTypes, Open>)
-      return IntervalType::Open;
-   else if constexpr (std::is_same_v<EndTypes, LeftOpen>)
-      return IntervalType::LeftOpen;
-   else if constexpr (std::is_same_v<EndTypes, RightOpen>)
-      return IntervalType::RightOpen;
-   else
-      return IntervalType::Closed;
-}
-
-
-template <typename Value, typename EndTypes>
-bool Interval<Value, EndTypes>::isLeftIncluded(Value val) const
-{
-   if constexpr (std::is_same_v<typename EndTypes::Left, ClosedEndType>)
+   if constexpr (isEqualET<LeftEndType, ClosedEndType>)
       return sutil::greaterEqual(val, start());
    else
       return sutil::greater(val, start());
 }
 
 
-template <typename Value, typename EndTypes>
-bool Interval<Value, EndTypes>::isRightIncluded(Value val) const
+template <typename Value, typename ETs>
+bool Interval<Value, ETs>::containsRight(Value val) const noexcept
 {
-   if constexpr (std::is_same_v<typename EndTypes::Right, ClosedEndType>)
+   if constexpr (isEqualET<RightEndType, ClosedEndType>)
       return sutil::lessEqual(val, end());
    else
       return sutil::less(val, end());
@@ -238,15 +275,19 @@ using SomeInterval = std::variant<OpenInterval<Value>, LeftOpenInterval<Value>,
                                   RightOpenInterval<Value>, ClosedInterval<Value>>;
 
 
-template <typename Value, typename EndTypes>
-bool operator==(const Interval<Value, EndTypes>& a, const Interval<Value, EndTypes>& b)
+///////////////////
+
+// Equality of intervals.
+
+template <typename Value, typename ETsA, typename ETsB>
+bool operator==(const Interval<Value, ETsA>& a, const Interval<Value, ETsB>& b)
 {
-   return a.start() == b.start() && a.end() == b.end();
+   return a.leftEndpoint() == b.leftEndpoint() && a.rightEndpoint() == b.rightEndpoint();
 }
 
 
-template <typename Value, typename EndTypes>
-bool operator!=(const Interval<Value, EndTypes>& a, const Interval<Value, EndTypes>& b)
+template <typename Value, typename ETsA, typename ETsB>
+bool operator!=(const Interval<Value, ETsA>& a, const Interval<Value, ETsB>& b)
 {
    return !(a == b);
 }
@@ -254,72 +295,55 @@ bool operator!=(const Interval<Value, EndTypes>& a, const Interval<Value, EndTyp
 
 ///////////////////
 
-template <typename Value, typename EndTypes1st, typename EndTypes2nd>
-SomeInterval<Value> intersectOrderedIntervals(const Interval<Value, EndTypes1st>& first,
-                                              const Interval<Value, EndTypes2nd>& second)
+template <typename Value, typename ETs1, typename ETs2>
+SomeInterval<Value> intersectOrderedIntervals(const Interval<Value, ETs1>& first,
+                                              const Interval<Value, ETs2>& second)
 {
-   if (sutil::less(first.end(), second.start()) ||
-       // End of the first interval has the same value as the start of the second interval
-       // and one of the endpoints is open.
-       (sutil::equal(first.end(), second.start()) &&
-        (std::is_same_v<typename EndTypes1st::Right, OpenEndType> ||
-         std::is_same_v<typename EndTypes2nd::Left, OpenEndType>)))
+   if (first.rightEndpoint() < second.leftEndpoint())
    {
       // Disjoint intervals.
       return EmptyInterval<Value>;
    }
-   else if (sutil::greater(first.end(), second.end()) ||
-            (sutil::equal(first.end(), second.end()) &&
-             std::is_same_v<typename EndTypes2nd::Right, OpenEndType>))
+   else if (first.rightEndpoint() >= second.rightEndpoint())
    {
       // Second interval is fully contained in first.
       return second;
    }
 
    // Overlapping.
-   return Interval<Value,
-                   EndTypePair<typename EndTypes2nd::Left, typename EndTypes1st::Right>>(
+   return Interval<Value, EndTypePair<typename ETs2::Left, typename ETs1::Right>>(
       second.start(), first.end());
 }
 
 
-template <typename Value, typename EndTypesA, typename EndTypesB>
-SomeInterval<Value> intersect(const Interval<Value, EndTypesA>& a,
-                              const Interval<Value, EndTypesB>& b)
+template <typename Value, typename ETsA, typename ETsB>
+SomeInterval<Value> intersect(const Interval<Value, ETsA>& a,
+                              const Interval<Value, ETsB>& b)
 {
-   if (sutil::less(a.start(), b.start()) ||
-       (sutil::equal(a.start(), b.start()) && isStricterEndType<EndTypesA, EndTypesB>))
-   {
+   if (a.leftEndpoint() <= b.leftEndpoint())
       return intersectOrderedIntervals(a, b);
-   }
    return intersectOrderedIntervals(b, a);
 }
 
 
 ///////////////////
 
-template <typename Value, typename EndTypes1st, typename EndTypes2nd>
-SomeInterval<Value> uniteOrderedIntervals(const Interval<Value, EndTypes1st>& first,
-                                          const Interval<Value, EndTypes2nd>& second)
+template <typename Value, typename ETs1, typename ETs2>
+SomeInterval<Value> uniteOrderedIntervals(const Interval<Value, ETs1>& first,
+                                          const Interval<Value, ETs2>& second)
 {
-   if (sutil::greaterEqual(first.end(), second.end()))
-   {
-      return Interval<
-         Value, EndTypePair<typename EndTypes1st::Left, typename EndTypes1st::Right>>(
-         first.start(), first.end());
-   }
+   if (first.rightEndpoint() >= second.rightEndpoint())
+      return first;
 
-   return Interval<Value,
-                   EndTypePair<typename EndTypes1st::Left, typename EndTypes2nd::Right>>(
+   return Interval<Value, EndTypePair<typename ETs1::Left, typename ETs2::Right>>(
       first.start(), second.end());
 }
 
 
-template <typename Value, typename EndTypesA, typename EndTypesB>
-SomeInterval<Value> unite(const Interval<Value, EndTypesA>& a,
-                          const Interval<Value, EndTypesB>& b)
+template <typename Value, typename ETsA, typename ETsB>
+SomeInterval<Value> unite(const Interval<Value, ETsA>& a, const Interval<Value, ETsB>& b)
 {
-   if (sutil::lessEqual(a.start(), b.start()))
+   if (a.leftEndpoint() <= b.leftEndpoint())
       return uniteOrderedIntervals(a, b);
    return uniteOrderedIntervals(b, a);
 }
