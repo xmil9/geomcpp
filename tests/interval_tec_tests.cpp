@@ -706,7 +706,7 @@ void testIntersect()
       const std::string caseLabel = "Intersect [1, 10] and [20, 22]";
 
       const Interval<int, Closed> a{1, 10};
-      const Interval<int, Open> b{20, 22};
+      const Interval<int, Closed> b{20, 22};
 
       verifyEmptyInterval<OpenInterval<int>>(intersect(a, b), caseLabel);
       verifyEmptyInterval<OpenInterval<int>>(intersect(b, a), caseLabel);
@@ -851,6 +851,96 @@ void testIntersect()
 
 void testUnite()
 {
+   {
+      const std::string caseLabel = "Unite [1, 10] and [20, 22]";
+
+      const Interval<int, Closed> a{1, 10};
+      const Interval<int, Closed> b{20, 22};
+
+      verifyInterval<ClosedInterval<int>>(unite(a, b), 1, 22, caseLabel);
+      verifyInterval<ClosedInterval<int>>(unite(b, a), 1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite (1, 10] and [20, 22)";
+
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, RightOpen> b{20, 22};
+
+      verifyInterval<OpenInterval<int>>(unite(a, b), 1, 22, caseLabel);
+      verifyInterval<OpenInterval<int>>(unite(b, a), 1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite (1, 10] and (20, 22]";
+
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, LeftOpen> b{20, 22};
+
+      verifyInterval<LeftOpenInterval<int>>(unite(a, b), 1, 22, caseLabel);
+      verifyInterval<LeftOpenInterval<int>>(unite(b, a), 1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite (1, 10] and (5, 22]";
+
+      const Interval<int, LeftOpen> a{1, 10};
+      const Interval<int, LeftOpen> b{5, 22};
+
+      verifyInterval<LeftOpenInterval<int>>(unite(a, b), 1, 22, caseLabel);
+      verifyInterval<LeftOpenInterval<int>>(unite(b, a), 1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite [-1, 10] and (5, 22)";
+
+      const Interval<int, Closed> a{-1, 10};
+      const Interval<int, Open> b{5, 22};
+
+      verifyInterval<RightOpenInterval<int>>(unite(a, b), -1, 22, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(unite(b, a), -1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite [-1, 30] and (5, 22)";
+
+      const Interval<int, Closed> a{-1, 30};
+      const Interval<int, Open> b{5, 22};
+
+      verifyInterval<ClosedInterval<int>>(unite(a, b), -1, 30, caseLabel);
+      verifyInterval<ClosedInterval<int>>(unite(b, a), -1, 30, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite [-1, 22] and (5, 22)";
+
+      const Interval<int, Closed> a{-1, 22};
+      const Interval<int, Open> b{5, 22};
+
+      verifyInterval<ClosedInterval<int>>(unite(a, b), -1, 22, caseLabel);
+      verifyInterval<ClosedInterval<int>>(unite(b, a), -1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite [-1, 22) and (5, 22)";
+
+      const Interval<int, RightOpen> a{-1, 22};
+      const Interval<int, Open> b{5, 22};
+
+      verifyInterval<RightOpenInterval<int>>(unite(a, b), -1, 22, caseLabel);
+      verifyInterval<RightOpenInterval<int>>(unite(b, a), -1, 22, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite [-1.1, 22.2) and (-1.1, 22.2)";
+
+      const Interval<double, RightOpen> a{-1.1, 22.2};
+      const Interval<double, Open> b{-1.1, 22.2};
+
+      verifyInterval<RightOpenInterval<double>>(unite(b, a), -1.1, 22.2, caseLabel);
+      verifyInterval<RightOpenInterval<double>>(unite(a, b), -1.1, 22.2, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite (-1.1, 22.2) and (-1.1, 22.2]";
+
+      const Interval<double, Open> a{-1.1, 22.2};
+      const Interval<double, LeftOpen> b{-1.1, 22.2};
+
+      verifyInterval<LeftOpenInterval<double>>(unite(b, a), -1.1, 22.2, caseLabel);
+      verifyInterval<LeftOpenInterval<double>>(unite(a, b), -1.1, 22.2, caseLabel);
+   }
 }
 
 } // namespace
