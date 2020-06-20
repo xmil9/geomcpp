@@ -155,6 +155,7 @@ bool overlapping(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
    }
 }
 
+
 ///////////////////
 
 // Pair of end types for the left and right endpoints of an interval.

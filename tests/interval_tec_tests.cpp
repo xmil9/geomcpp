@@ -420,7 +420,7 @@ void testEndpointOverlapping()
 
 ///////////////////
 
-void testCtor()
+void testIntervalCtor()
 {
    {
       const std::string caseLabel = "Interval ctor for double";
@@ -459,7 +459,7 @@ void testCtor()
    }
 }
 
-void testLength()
+void testIntervalLength()
 {
    {
       const std::string caseLabel = "Interval::length";
@@ -479,7 +479,7 @@ void testLength()
 }
 
 
-void testIsEmpty()
+void testIntervalIsEmpty()
 {
    {
       const std::string caseLabel = "Interval::isEmpty for closed interval";
@@ -504,7 +504,7 @@ void testIsEmpty()
 }
 
 
-void testContains()
+void testIntervalContains()
 {
    {
       const std::string caseLabel = "Interval::contains for closed interval";
@@ -565,7 +565,7 @@ void testContains()
 }
 
 
-void testLeftEnd()
+void testIntervalLeftEnd()
 {
    {
       const std::string caseLabel = "Interval::leftEndType";
@@ -583,7 +583,7 @@ void testLeftEnd()
 }
 
 
-void testRightEnd()
+void testIntervalRightEnd()
 {
    {
       const std::string caseLabel = "Interval::rightEndType";
@@ -601,7 +601,7 @@ void testRightEnd()
 }
 
 
-void testType()
+void testIntervalType()
 {
    {
       const std::string caseLabel = "Interval::type";
@@ -619,7 +619,7 @@ void testType()
 }
 
 
-void testOperatorBool()
+void testIntervalOperatorBool()
 {
    {
       const std::string caseLabel = "Interval::operator bool() for closed interval";
@@ -644,7 +644,7 @@ void testOperatorBool()
 }
 
 
-void testNegationOperator()
+void testIntervalNegationOperator()
 {
    {
       const std::string caseLabel = "Interval::operator!() for closed interval";
@@ -971,15 +971,15 @@ void testTecInterval()
    testEndpointGreaterEqual();
    testEndpointOverlapping();
 
-   testCtor();
-   testLength();
-   testIsEmpty();
-   testContains();
-   testLeftEnd();
-   testRightEnd();
-   testType();
-   testOperatorBool();
-   testNegationOperator();
+   testIntervalCtor();
+   testIntervalLength();
+   testIntervalIsEmpty();
+   testIntervalContains();
+   testIntervalLeftEnd();
+   testIntervalRightEnd();
+   testIntervalType();
+   testIntervalOperatorBool();
+   testIntervalNegationOperator();
 
    testIntersect();
    testUnite();
