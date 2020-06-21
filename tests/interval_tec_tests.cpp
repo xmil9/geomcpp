@@ -1,6 +1,6 @@
 //
 // geomcpp tests
-// Tests for interval functionality.
+// Tests for type-encoded intervals.
 //
 // Jun-2020, Michael Lindner
 // MIT license

@@ -3,9 +3,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\geomcpp_tests.cpp" />
     <ClCompile Include="..\..\interval_tec_tests.cpp" />
+    <ClCompile Include="..\..\interval_dec_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test_util.h" />
     <ClInclude Include="..\..\interval_tec_tests.h" />
+    <ClInclude Include="..\..\interval_dec_tests.h" />
   </ItemGroup>
 </Project>
