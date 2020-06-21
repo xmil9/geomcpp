@@ -75,20 +75,20 @@ template <typename Value, typename ET> Value extendedValue(Endpoint<Value, ET> e
 }
 
 
-// Define ordering for endpoints that have the same direction.
+// Define ordering for endpoints that have the same side.
 // The ordering has the following principles:
 // - First compare the values.
 // - If the values are unequal use their order.
 // - If the values are equal, then the end type is examined:
 //    - Closed end types are thought of as to extend the value range by 1 to the
-//      outside direction of the end point.
+//      outside side of the end point.
 //    - Open end types are thought of as to not extend the value range.
 //    - The extended values are compared.
 template <typename Value, typename ET1, typename ET2>
 bool operator==(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
    static_assert(std::is_same_v<typename ET1::Side, typename ET2::Side>,
-                 "Cannot compare endpoints with different side.");
+                 "Cannot compare endpoints with different sides.");
    return sutil::equal(a.val, b.val) &&
           std::is_same_v<typename ET1::Inclusion, typename ET2::Inclusion>;
 }
@@ -103,7 +103,7 @@ template <typename Value, typename ET1, typename ET2>
 bool operator<(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
    static_assert(std::is_same_v<typename ET1::Side, typename ET2::Side>,
-                 "Cannot compare endpoints with different side.");
+                 "Cannot compare endpoints with different sides.");
    return sutil::less(a.val, b.val) ||
           (sutil::equal(a.val, b.val) && sutil::less(extendedValue(a), extendedValue(b)));
 }
@@ -131,7 +131,7 @@ bool operator>=(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 template <typename Value, typename ET1, typename ET2>
 bool overlapping(Endpoint<Value, ET1> a, Endpoint<Value, ET2> b)
 {
-   if (std::is_same_v<typename ET1::Side, typename ET2::Side>)
+   if constexpr (std::is_same_v<typename ET1::Side, typename ET2::Side>)
    {
       // Endpoints with the same side always overlap.
       return true;
