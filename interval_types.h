@@ -13,6 +13,13 @@
 namespace geom
 {
 
+enum class IntervalSide
+{
+   Left,
+   Right,
+};
+
+
 enum class IntervalEnd
 {
    Open,
@@ -29,7 +36,7 @@ enum class IntervalType
 };
 
 
-inline IntervalType combine(IntervalEnd left, IntervalEnd right)
+inline constexpr IntervalType combine(IntervalEnd left, IntervalEnd right)
 {
    if (left == IntervalEnd::Open)
       return (right == IntervalEnd::Open) ? IntervalType::Open : IntervalType::LeftOpen;
@@ -37,21 +44,40 @@ inline IntervalType combine(IntervalEnd left, IntervalEnd right)
 }
 
 
-inline std::pair<IntervalEnd, IntervalEnd> split(IntervalType type)
+inline constexpr IntervalEnd extractLeft(IntervalType type)
 {
    switch (type)
    {
+      case IntervalType::Open:
       case IntervalType::LeftOpen:
-         return {IntervalEnd::Open, IntervalEnd::Closed};
-      case IntervalType::RightOpen:
-         return {IntervalEnd::Closed, IntervalEnd::Open};
+         return IntervalEnd::Open;
+
       case IntervalType::Closed:
-         return {IntervalEnd::Closed, IntervalEnd::Closed};
+      case IntervalType::RightOpen:
+         return IntervalEnd::Closed;
+      
       default:
          assert(false && "Unknown interval type.");
-         [[fallthrough]];
+         return IntervalEnd::Open;
+   }
+}
+
+
+inline constexpr IntervalEnd extractRight(IntervalType type)
+{
+   switch (type)
+   {
       case IntervalType::Open:
-         return {IntervalEnd::Open, IntervalEnd::Open};
+      case IntervalType::RightOpen:
+         return IntervalEnd::Open;
+
+      case IntervalType::Closed:
+      case IntervalType::LeftOpen:
+         return IntervalEnd::Closed;
+      
+      default:
+         assert(false && "Unknown interval type.");
+         return IntervalEnd::Open;
    }
 }
 
