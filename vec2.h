@@ -43,16 +43,6 @@ template <typename T> class Vec2
    T y() const noexcept { return m_y; }
    FpType<T> lengthSquared() const;
    FpType<T> length() const;
-	// Calculates the dot product with a given vector.
-	// Also called inner or scalar product.
-	// Meaning:
-	//   v.dot(w) - The length of the projection of v onto w.
-	// Properties:
-	//   v.dot(w) == 0 => v and w are perpendicular
-	//   v.dot(w) > 0  => angle between v and w is acute, i.e abs(angle) < 90
-	//   v.dot(w) < 0  => angle between v and w is obtuse, i.e abs(angle) > 90
-	// Source:
-	//   http://geomalgorithms.com/vector_products.html
    template <typename U> FpType<T> dot(const Vec2<U>& w) const;
 
  private:
@@ -93,11 +83,21 @@ template <typename T> FpType<T> Vec2<T>::length() const
 }
 
 
+// Calculates the dot product with a given vector.
+// Also called inner or scalar product.
+// Meaning:
+//   v.dot(w) - The length of the projection of v onto w.
+// Properties:
+//   v.dot(w) == 0 => v and w are perpendicular
+//   v.dot(w) > 0  => angle between v and w is acute, i.e abs(angle) < 90
+//   v.dot(w) < 0  => angle between v and w is obtuse, i.e abs(angle) > 90
+// Source:
+//   http://geomalgorithms.com/vector_products.html
 template <typename T>
 template <typename U>
 FpType<T> Vec2<T>::dot(const Vec2<U>& w) const
 {
-   return x() * w.x() + y() + w.y();
+   return x() * w.x() + y() * w.y();
 }
 
 

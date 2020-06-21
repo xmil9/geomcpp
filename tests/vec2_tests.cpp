@@ -30,6 +30,17 @@ void testVec2DefaultCtor()
    }
 }
 
+
+void testVec2Length()
+{
+   {
+      const std::string caseLabel = "Vec2::length for float";
+
+      const Vec2<float> v{2.0f, 3.0f};
+      VERIFY(fpEqual(v.length(), 3.60555124f), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -38,4 +49,5 @@ void testVec2DefaultCtor()
 void testVector2D()
 {
    testVec2DefaultCtor();
+   testVec2Length();
 }
