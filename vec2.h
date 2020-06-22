@@ -100,6 +100,15 @@ template <typename T, typename U> bool operator!=(const Vec2<T>& a, const Vec2<U
    return !(a == b);
 }
 
+
+///////////////////
+
+template <typename T, typename U>
+sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
+{
+   return a.dot(b);
+}
+
 } // namespace geom
 
 

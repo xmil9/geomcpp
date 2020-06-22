@@ -227,6 +227,49 @@ void testVec2Dot()
       const Vec2<float> w{-2.0f, 1.0f};
       VERIFY(fpEqual(v.dot(w), -3.0f), caseLabel);
    }
+   {
+      const std::string caseLabel = "Vec2::dot for other vectors with mixed value types";
+
+      const Vec2<float> v{3.0f, 3.0f};
+      const Vec2<int> w{-2, 1};
+      VERIFY(fpEqual(v.dot(w), -3.0f), caseLabel);
+      VERIFY(fpEqual(w.dot(v), -3.0), caseLabel);
+   }
+}
+
+
+void testVec2DotOperator()
+{
+   {
+      const std::string caseLabel = "Dot product operator for vectors in same direction";
+
+      const Vec2<double> v{2.0, 3.0};
+      const Vec2<double> w{3.0, 4.5};
+      VERIFY(fpEqual(v * w, 19.5), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Dot product operator for perpendicular vectors";
+
+      const Vec2<float> v{2.0f, 3.0f};
+      const Vec2<float> w{3.0f, -2.0f};
+      VERIFY(fpEqual(v * w, 0.0f), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Dot product operator for vectors at acute angle";
+
+      const Vec2<int> v{3, 3};
+      const Vec2<int> w{3, 4};
+      VERIFY(fpEqual(v * w, 21.0), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Dot product operator for vectors with mixed value types";
+
+      const Vec2<float> v{3.0f, 3.0f};
+      const Vec2<int> w{-2, 1};
+      VERIFY(fpEqual(v * w, -3.0f), caseLabel);
+      VERIFY(fpEqual(w * v, -3.0), caseLabel);
+   }
 }
 
 } // namespace
@@ -242,4 +285,5 @@ void testVector2D()
    testVec2LengthSquared();
    testVec2Length();
    testVec2Dot();
+   testVec2DotOperator();
 }
