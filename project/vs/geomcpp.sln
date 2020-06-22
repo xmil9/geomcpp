@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geomcpp", "geomcpp.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geomcpp_tests", "..\..\tests\project\vs\geomcpp_tests.vcxproj", "{8B0EE08E-6034-472A-BF36-0E8B13B7F8F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essentutils", "..\..\dependencies\essentutils\project\vs\essentutils.vcxproj", "{1C70FF5C-CDC9-426E-9C6A-922919183BAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug DLL|x64 = Debug DLL|x64
@@ -71,6 +73,30 @@ Global
 		{8B0EE08E-6034-472A-BF36-0E8B13B7F8F6}.Release|x64.Build.0 = Release DLL|x64
 		{8B0EE08E-6034-472A-BF36-0E8B13B7F8F6}.Release|x86.ActiveCfg = Release DLL|Win32
 		{8B0EE08E-6034-472A-BF36-0E8B13B7F8F6}.Release|x86.Build.0 = Release DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug DLL|x64.ActiveCfg = Debug DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug DLL|x64.Build.0 = Debug DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug DLL|x86.ActiveCfg = Debug DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug DLL|x86.Build.0 = Debug DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug Lib|x64.ActiveCfg = Debug Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug Lib|x64.Build.0 = Debug Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug Lib|x86.ActiveCfg = Debug Lib|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug Lib|x86.Build.0 = Debug Lib|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug|x64.ActiveCfg = Debug DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug|x64.Build.0 = Debug DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug|x86.ActiveCfg = Debug DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Debug|x86.Build.0 = Debug DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release DLL|x64.ActiveCfg = Release DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release DLL|x64.Build.0 = Release DLL|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release DLL|x86.ActiveCfg = Release DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release DLL|x86.Build.0 = Release DLL|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release Lib|x64.ActiveCfg = Release Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release Lib|x64.Build.0 = Release Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release Lib|x86.ActiveCfg = Release Lib|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release Lib|x86.Build.0 = Release Lib|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release|x64.ActiveCfg = Release Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release|x64.Build.0 = Release Lib|x64
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release|x86.ActiveCfg = Release Lib|Win32
+		{1C70FF5C-CDC9-426E-9C6A-922919183BAB}.Release|x86.Build.0 = Release Lib|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,6 +45,11 @@
     <ClInclude Include="..\..\point2.h" />
     <ClInclude Include="..\..\vec2.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\dependencies\essentutils\project\vs\essentutils.vcxproj">
+      <Project>{1c70ff5c-cdc9-426e-9c6a-922919183bab}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{C0775A08-A664-4682-8732-100A71F5DFE3}</ProjectGuid>
