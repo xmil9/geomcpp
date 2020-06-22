@@ -190,4 +190,14 @@ template <typename T> bool greaterEqual(const T& a, const T& b)
       return a >= b;
 }
 
+
+// Convenience function to call the appropriate sqrt version for a given
+// value type. Floating point types will use their respective traits,
+// other type can specify the version explicitly, e.g. sqrt<float>(5).
+template<typename T>
+T sqrt(T val)
+{
+   return FpTraits<T>::sqrt(val);
+}
+
 } // namespace sutil
