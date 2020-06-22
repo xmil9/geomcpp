@@ -22,7 +22,7 @@ template <typename T> class Vec2
    using value_type = T;
 
    Vec2() = default;
-   template <typename U> constexpr Vec2(U x, U y);
+   constexpr Vec2(T x, T y);
    template <typename U> constexpr Vec2(const Point2<U>& from, const Point2<U>& to);
    Vec2(const Vec2&) = default;
    Vec2(Vec2&&) = default;
@@ -42,9 +42,7 @@ template <typename T> class Vec2
 };
 
 
-template <typename T>
-template <typename U>
-constexpr Vec2<T>::Vec2(U x, U y) : m_x(x), m_y(y)
+template <typename T> constexpr Vec2<T>::Vec2(T x, T y) : m_x{x}, m_y{y}
 {
 }
 
@@ -52,7 +50,7 @@ constexpr Vec2<T>::Vec2(U x, U y) : m_x(x), m_y(y)
 template <typename T>
 template <typename U>
 constexpr Vec2<T>::Vec2(const Point2<U>& from, const Point2<U>& to)
-: m_x(to.x() - from.x()), m_y(to.y() - from.y())
+: m_x{static_cast<T>(to.x() - from.x())}, m_y{static_cast<T>(to.y() - from.y())}
 {
 }
 

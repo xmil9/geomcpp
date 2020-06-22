@@ -22,7 +22,7 @@ template <typename T> class Point2
    using value_type = T;
 
    Point2() = default;
-   template <typename U> constexpr Point2(U x, U y);
+   constexpr Point2(T x, T y);
    Point2(const Point2&) = default;
    Point2(Point2&&) = default;
 
@@ -41,8 +41,7 @@ template <typename T> class Point2
 
 
 template <typename T>
-template <typename U>
-constexpr Point2<T>::Point2(U x, U y) : m_x(x), m_y(y)
+constexpr Point2<T>::Point2(T x, T y) : m_x{x}, m_y{y}
 {
 }
 
