@@ -7,21 +7,12 @@
 //
 #pragma once
 #include "point2.h"
+#include "essentutils/fputil.h"
 #include <type_traits>
 
 
 namespace geom
 {
-
-///////////////////
-
-// Select a floating point type based on a given type.
-// Default to double.
-template <typename T>
-using FpType = std::conditional_t<
-   std::is_same_v<T, float>, float,
-   std::conditional_t<std::is_same_v<T, long double>, long double, double>>;
-
 
 ///////////////////
 
@@ -41,9 +32,9 @@ template <typename T> class Vec2
 
    T x() const noexcept { return m_x; }
    T y() const noexcept { return m_y; }
-   FpType<T> lengthSquared() const;
-   FpType<T> length() const;
-   template <typename U> FpType<T> dot(const Vec2<U>& w) const;
+   sutil::FpType<T> lengthSquared() const;
+   sutil::FpType<T> length() const;
+   template <typename U> sutil::FpType<T> dot(const Vec2<U>& w) const;
 
  private:
    T m_x = T(0);
@@ -66,20 +57,15 @@ constexpr Vec2<T>::Vec2(const Point2<U>& from, const Point2<U>& to)
 }
 
 
-template <typename T> FpType<T> Vec2<T>::lengthSquared() const
+template <typename T> sutil::FpType<T> Vec2<T>::lengthSquared() const
 {
    return dot(*this);
 }
 
 
-template <typename T> FpType<T> Vec2<T>::length() const
+template <typename T> sutil::FpType<T> Vec2<T>::length() const
 {
-   if constexpr (std::is_same_v<FpType<T>, float>)
-      return std::sqrt(lengthSquared());
-   else if constexpr (std::is_same_v<FpType<T>, long double>)
-      return std::sqrtl(lengthSquared());
-   else
-      return std::sqrt(lengthSquared());
+   return sutil::sqrt<sutil::FpType<T>>(lengthSquared());
 }
 
 
@@ -95,7 +81,7 @@ template <typename T> FpType<T> Vec2<T>::length() const
 //   http://geomalgorithms.com/vector_products.html
 template <typename T>
 template <typename U>
-FpType<T> Vec2<T>::dot(const Vec2<U>& w) const
+sutil::FpType<T> Vec2<T>::dot(const Vec2<U>& w) const
 {
    return x() * w.x() + y() * w.y();
 }

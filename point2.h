@@ -6,6 +6,7 @@
 // MIT license
 //
 #pragma once
+#include "essentutils/fputil.h"
 #include <functional>
 #include <type_traits>
 
@@ -86,22 +87,10 @@ template <typename T> inline T distSquared(const Point2<T>& a, const Point2<T>& 
 }
 
 
-inline float dist(const Point2<float>& a, const Point2<float>& b)
-{
-   return std::sqrtf(distSquared(a, b));
-}
-
-
-inline long double dist(const Point2<long double>& a, const Point2<long double>& b)
-{
-   return std::sqrtl(distSquared(a, b));
-}
-
-
 template <typename T>
-double dist(const Point2<T>& a, const Point2<T>& b)
+sutil::FpType<T> dist(const Point2<T>& a, const Point2<T>& b)
 {
-   return std::sqrt(distSquared(a, b));
+   return sutil::sqrt<sutil::FpType<T>>(distSquared(a, b));
 }
 
 } // namespace geom
