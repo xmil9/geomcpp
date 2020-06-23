@@ -350,61 +350,107 @@ void testVec2PerpDot()
       VERIFY(equal(v.perpDot(w), 0.0), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector in opposite direction";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector in opposite direction";
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{-2.0, -3.0};
       VERIFY(fpEqual(v.perpDot(w), 0.0), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector perpendicular to left";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector perpendicular to left";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{-3.0f, 2.0f};
       VERIFY(equal(v.perpDot(w), 13.0f), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector perpendicular to right";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector perpendicular to right";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{3.0f, -2.0f};
       VERIFY(equal(v.perpDot(w), -13.0f), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector to right at acute angle";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector to right at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{4, 3};
       VERIFY(equal(v.perpDot(w), -3.0), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector to left at acute angle";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector to left at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{3, 4};
       VERIFY(equal(v.perpDot(w), 3.0), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector to right at obtuse angle";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector to right at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-3.0f, -4.0f};
       VERIFY(equal(v.perpDot(w), -3.0f), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector to left at obtuse angle";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vector to left at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-2.0f, 1.0f};
       VERIFY(equal(v.perpDot(w), 9.0f), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::perpDot for other vectors with mixed value types";
+      const std::string caseLabel =
+         "Vec2::perpDot for other vectors with mixed value types";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
       VERIFY(equal(v.perpDot(w), 9.0f), caseLabel);
       VERIFY(equal(w.perpDot(v), -9.0), caseLabel);
+   }
+}
+
+
+void testVec2PerpDotFreeFunction()
+{
+   {
+      const std::string caseLabel =
+         "Perpendicular dot product free function for vectors in same direction";
+
+      const Vec2<double> v{2.0, 3.0};
+      const Vec2<double> w{3.0, 4.5};
+      VERIFY(equal(perpDot(v, w), 0.0), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Perpendicular dot product free function for perpendicular vectors";
+
+      const Vec2<float> v{2.0, 3.0};
+      const Vec2<float> w{-2.0, -3.0};
+      VERIFY(fpEqual(perpDot(v, w), 0.0f), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Perpendicular dot product free function for vectors at acute angle";
+
+      const Vec2<int> v{3, 3};
+      const Vec2<int> w{3, 4};
+      VERIFY(equal(perpDot(v, w), 3.0), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Perpendicular dot product free function for vectors with mixed value types";
+
+      const Vec2<float> v{3.0f, 3.0f};
+      const Vec2<int> w{-2, 1};
+      VERIFY(equal(perpDot(v, w), 9.0f), caseLabel);
+      VERIFY(equal(perpDot(w, v), -9.0), caseLabel);
    }
 }
 
@@ -425,4 +471,5 @@ void testVector2D()
    testVec2Dot();
    testVec2DotOperator();
    testVec2PerpDot();
+   testVec2PerpDotFreeFunction();
 }

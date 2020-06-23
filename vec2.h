@@ -155,6 +155,13 @@ sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
    return a.dot(b);
 }
 
+
+template <typename T, typename U>
+sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
+{
+   return a.perpDot(b);
+}
+
 } // namespace geom
 
 
