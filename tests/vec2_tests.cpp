@@ -454,6 +454,162 @@ void testVec2PerpDotFreeFunction()
    }
 }
 
+
+void testVec2IsPerpendicular()
+{
+   {
+      const std::string caseLabel = "Vec2::isPerpendicular for perpendicular vector";
+
+      const Vec2<double> v{2.0, 3.0};
+      const Vec2<double> w{-3.0, 2.0};
+      VERIFY(v.isPerpendicular(w), caseLabel);
+      VERIFY(w.isPerpendicular(v), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::isPerpendicular for not perpendicular vector";
+
+      const Vec2<float> v{2.0f, 3.0f};
+      const Vec2<int> w{2, 4};
+      VERIFY(!v.isPerpendicular(w), caseLabel);
+      VERIFY(!w.isPerpendicular(v), caseLabel);
+   }
+}
+
+
+void testVec2IsOrthogonal()
+{
+   {
+      const std::string caseLabel = "Vec2::isOrthogonal for orthogonal vector";
+
+      const Vec2<double> v{2.0, 3.0};
+      const Vec2<double> w{-3.0, 2.0};
+      VERIFY(v.isOrthogonal(w), caseLabel);
+      VERIFY(w.isOrthogonal(v), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::isOrthogonal for not orthogonal vector";
+
+      const Vec2<float> v{2.0f, 3.0f};
+      const Vec2<int> w{2, 4};
+      VERIFY(!v.isOrthogonal(w), caseLabel);
+      VERIFY(!w.isOrthogonal(v), caseLabel);
+   }
+}
+
+
+void testVec2HasSameDirection()
+{
+   {
+      const std::string caseLabel =
+         "Vec2::hasSameDirection for vector with same direction";
+
+      const Vec2<float> v{2.0f, 2.0f};
+      const Vec2<float> w{4.0f, 4.0f};
+      VERIFY(v.hasSameDirection(w), caseLabel);
+      VERIFY(w.hasSameDirection(v), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Vec2::hasSameDirection for vector with opposite direction";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<int> w{-4, -4};
+      VERIFY(!v.hasSameDirection(w), caseLabel);
+      VERIFY(!w.hasSameDirection(v), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Vec2::hasSameDirection for vector with different direction";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<float> w{-3.0f, -4.0f};
+      VERIFY(!v.hasSameDirection(w), caseLabel);
+      VERIFY(!w.hasSameDirection(v), caseLabel);
+   }
+}
+
+
+void testVec2IsParallel()
+{
+   {
+      const std::string caseLabel = "Vec2::isParallel for vector with same direction";
+
+      const Vec2<float> v{2.0f, 2.0f};
+      const Vec2<float> w{4.0f, 4.0f};
+      VERIFY(v.isParallel(w), caseLabel);
+      VERIFY(w.isParallel(v), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::isParallel for vector with opposite direction";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<int> w{-4, -4};
+      VERIFY(v.isParallel(w), caseLabel);
+      VERIFY(w.isParallel(v), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Vec2::isParallel for vector with different direction";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<float> w{-3.0f, -4.0f};
+      VERIFY(!v.isParallel(w), caseLabel);
+      VERIFY(!w.isParallel(v), caseLabel);
+   }
+}
+
+
+void testVec2HasAcuteAngle()
+{
+   {
+      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with acute angle";
+
+      const Vec2<float> v{2.0f, 2.0f};
+      const Vec2<float> w{3.0f, 4.0f};
+      VERIFY(v.hasAcuteAngle(w), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with obtuse angle";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<int> w{-3, -4};
+      VERIFY(!v.hasAcuteAngle(w), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with right angle";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<float> w{-2.0f, 2.0f};
+      VERIFY(!v.hasAcuteAngle(w), caseLabel);
+   }
+}
+
+
+void testVec2HasObtuseAngle()
+{
+   {
+      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with acute angle";
+
+      const Vec2<float> v{2.0f, 2.0f};
+      const Vec2<float> w{3.0f, 4.0f};
+      VERIFY(!v.hasObtuseAngle(w), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with obtuse angle";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<int> w{-3, -4};
+      VERIFY(v.hasObtuseAngle(w), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with right angle";
+
+      const Vec2<double> v{2.0, 2.0};
+      const Vec2<float> w{-2.0f, 2.0f};
+      VERIFY(!v.hasObtuseAngle(w), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -472,4 +628,10 @@ void testVector2D()
    testVec2DotOperator();
    testVec2PerpDot();
    testVec2PerpDotFreeFunction();
+   testVec2IsPerpendicular();
+   testVec2IsOrthogonal();
+   testVec2HasSameDirection();
+   testVec2IsParallel();
+   testVec2HasAcuteAngle();
+   testVec2HasObtuseAngle();
 }

@@ -39,6 +39,12 @@ template <typename T> class Vec2
 
    template <typename U> sutil::FpType<T> dot(const Vec2<U>& w) const;
    template <typename U> sutil::FpType<T> perpDot(const Vec2<U>& w) const;
+   template <typename U> bool isPerpendicular(const Vec2<U>& w) const;
+   template <typename U> bool isOrthogonal(const Vec2<U>& w) const;
+   template <typename U> bool hasSameDirection(const Vec2<U>& w) const;
+   template <typename U> bool isParallel(const Vec2<U>& w) const;
+   template <typename U> bool hasAcuteAngle(const Vec2<U>& w) const;
+   template <typename U> bool hasObtuseAngle(const Vec2<U>& w) const;
 
  private:
    T m_x = T(0);
@@ -100,7 +106,7 @@ template <typename T>
 template <typename U>
 sutil::FpType<T> Vec2<T>::dot(const Vec2<U>& w) const
 {
-   return x() * w.x() + y() * w.y();
+   return static_cast<sutil::FpType<T>>(x() * w.x() + y() * w.y());
 }
 
 
@@ -127,7 +133,54 @@ template <typename T>
 template <typename U>
 sutil::FpType<T> Vec2<T>::perpDot(const Vec2<U>& w) const
 {
-   return x() * w.y() - y() * w.x();
+   return static_cast<sutil::FpType<T>>(x() * w.y() - y() * w.x());
+}
+
+
+template <typename T>
+template <typename U> bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
+{
+   return sutil::equal(dot(w), sutil::FpType<T>(0));
+}
+
+
+// Orthogonal describes the same concept as perpendicular but can be applied to
+// other geometric objects, too. For lines it is the same as perpendicular.
+template <typename T>
+template <typename U> bool Vec2<T>::isOrthogonal(const Vec2<U>& w) const
+{
+   return isPerpendicular(w);
+}
+
+
+template <typename T>
+template <typename U> bool Vec2<T>::hasSameDirection(const Vec2<U>& w) const
+{
+   return isParallel(w) && hasAcuteAngle(w);
+}
+
+
+// Could be pointing in the same or opposite direction.
+template <typename T>
+template <typename U> bool Vec2<T>::isParallel(const Vec2<U>& w) const
+{
+   return sutil::equal(perpDot(w), sutil::FpType<T>(0));
+}
+
+
+// Checks if the angle between 'this' and a given vector is < 90.
+template <typename T>
+template <typename U> bool Vec2<T>::hasAcuteAngle(const Vec2<U>& w) const
+{
+   return sutil::greater(dot(w), sutil::FpType<T>(0));
+}
+
+
+// Checks if the angle between 'this' and a given vector is > 90.
+template <typename T>
+template <typename U> bool Vec2<T>::hasObtuseAngle(const Vec2<U>& w) const
+{
+   return sutil::less(dot(w), sutil::FpType<T>(0));
 }
 
 
