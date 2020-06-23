@@ -34,6 +34,8 @@ template <typename T> class Vec2
    T y() const noexcept { return m_y; }
    sutil::FpType<T> lengthSquared() const;
    sutil::FpType<T> length() const;
+   [[nodiscard]] Vec2 normalize() const;
+   template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
    template <typename U> sutil::FpType<T> dot(const Vec2<U>& w) const;
 
  private:
@@ -64,6 +66,21 @@ template <typename T> sutil::FpType<T> Vec2<T>::lengthSquared() const
 template <typename T> sutil::FpType<T> Vec2<T>::length() const
 {
    return sutil::sqrt<sutil::FpType<T>>(lengthSquared());
+}
+
+
+template <typename T> Vec2<T> Vec2<T>::normalize() const
+{
+   const auto len = length();
+   if (sutil::equal(len, sutil::FpType<T>(0)))
+      return *this;
+   return scale(sutil::FpType<T>(1) / len);
+}
+
+
+template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) const
+{
+   return Vec2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
 }
 
 

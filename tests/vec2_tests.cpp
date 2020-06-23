@@ -117,13 +117,13 @@ void testVec2LengthSquared()
       const std::string caseLabel = "Vec2::lengthSquared for float";
 
       const Vec2<float> v{2.0f, 3.0f};
-      VERIFY(fpEqual(v.lengthSquared(), 13.0f), caseLabel);
+      VERIFY(equal(v.lengthSquared(), 13.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::lengthSquared for double";
 
       const Vec2<double> v{2.0, 3.0};
-      VERIFY(fpEqual(v.lengthSquared(), 13.0), caseLabel);
+      VERIFY(equal(v.lengthSquared(), 13.0), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::lengthSquared for integer";
@@ -135,7 +135,7 @@ void testVec2LengthSquared()
       const std::string caseLabel = "Vec2::lengthSquared when length is zero";
 
       const Vec2<double> v{0.0, 0.0};
-      VERIFY(fpEqual(v.lengthSquared(), 0.0), caseLabel);
+      VERIFY(equal(v.lengthSquared(), 0.0), caseLabel);
    }
 }
 
@@ -146,25 +146,25 @@ void testVec2Length()
       const std::string caseLabel = "Vec2::length for float";
 
       const Vec2<float> v{2.0f, 3.0f};
-      VERIFY(fpEqual(v.length(), 3.60555124f), caseLabel);
+      VERIFY(equal(v.length(), 3.60555124f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::length for double";
 
       const Vec2<double> v{2.0, 3.0};
-      VERIFY(fpEqual(v.length(), 3.60555124), caseLabel);
+      VERIFY(equal(v.length(), 3.60555124), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::length for integer";
 
       const Vec2<int> v{2, 3};
-      VERIFY(fpEqual(v.length(), 3.60555124), caseLabel);
+      VERIFY(equal(v.length(), 3.60555124), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::length when length is zero";
 
       const Vec2<double> v{0.0, 0.0};
-      VERIFY(fpEqual(v.length(), 0.0), caseLabel);
+      VERIFY(equal(v.length(), 0.0), caseLabel);
    }
 }
 
@@ -176,7 +176,7 @@ void testVec2Dot()
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{3.0, 4.5};
-      VERIFY(fpEqual(v.dot(w), 19.5), caseLabel);
+      VERIFY(equal(v.dot(w), 19.5), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector in opposite direction";
@@ -190,50 +190,50 @@ void testVec2Dot()
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{-3.0f, 2.0f};
-      VERIFY(fpEqual(v.dot(w), 0.0f), caseLabel);
+      VERIFY(equal(v.dot(w), 0.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector perpendicular to right";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{3.0f, -2.0f};
-      VERIFY(fpEqual(v.dot(w), 0.0f), caseLabel);
+      VERIFY(equal(v.dot(w), 0.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector to right at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{4, 3};
-      VERIFY(fpEqual(v.dot(w), 21.0), caseLabel);
+      VERIFY(equal(v.dot(w), 21.0), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector to left at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{3, 4};
-      VERIFY(fpEqual(v.dot(w), 21.0), caseLabel);
+      VERIFY(equal(v.dot(w), 21.0), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector to right at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-3.0f, -4.0f};
-      VERIFY(fpEqual(v.dot(w), -21.0f), caseLabel);
+      VERIFY(equal(v.dot(w), -21.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vector to left at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-2.0f, 1.0f};
-      VERIFY(fpEqual(v.dot(w), -3.0f), caseLabel);
+      VERIFY(equal(v.dot(w), -3.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Vec2::dot for other vectors with mixed value types";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(fpEqual(v.dot(w), -3.0f), caseLabel);
-      VERIFY(fpEqual(w.dot(v), -3.0), caseLabel);
+      VERIFY(equal(v.dot(w), -3.0f), caseLabel);
+      VERIFY(equal(w.dot(v), -3.0), caseLabel);
    }
 }
 
@@ -245,21 +245,21 @@ void testVec2DotOperator()
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{3.0, 4.5};
-      VERIFY(fpEqual(v * w, 19.5), caseLabel);
+      VERIFY(equal(v * w, 19.5), caseLabel);
    }
    {
       const std::string caseLabel = "Dot product operator for perpendicular vectors";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{3.0f, -2.0f};
-      VERIFY(fpEqual(v * w, 0.0f), caseLabel);
+      VERIFY(equal(v * w, 0.0f), caseLabel);
    }
    {
       const std::string caseLabel = "Dot product operator for vectors at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{3, 4};
-      VERIFY(fpEqual(v * w, 21.0), caseLabel);
+      VERIFY(equal(v * w, 21.0), caseLabel);
    }
    {
       const std::string caseLabel =
@@ -267,8 +267,75 @@ void testVec2DotOperator()
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(fpEqual(v * w, -3.0f), caseLabel);
-      VERIFY(fpEqual(w * v, -3.0), caseLabel);
+      VERIFY(equal(v * w, -3.0f), caseLabel);
+      VERIFY(equal(w * v, -3.0), caseLabel);
+   }
+}
+
+
+void testVec2Scale()
+{
+   {
+      const std::string caseLabel = "Vec2::scale for float";
+
+      const Vec2<float> v{2.0f, 3.0f};
+      const auto scaled = v.scale(2.5f);
+      VERIFY(equal(scaled.x(), 5.0f), caseLabel);
+      VERIFY(equal(scaled.y(), 7.5f), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::scale for double with integer factor";
+
+      const Vec2<double> v{2.0, 3.0};
+      const auto scaled = v.scale(2);
+      VERIFY(equal(scaled.x(), 4.0), caseLabel);
+      VERIFY(equal(scaled.y(), 6.0), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::scale for integer with floating point factor";
+
+      const Vec2<int> v{2, 3};
+      const auto scaled = v.scale(2.6);
+      // Coordinates get truncated to integers.
+      VERIFY(equal(scaled.x(), static_cast<int>(2 * 2.6)), caseLabel);
+      VERIFY(equal(scaled.y(), static_cast<int>(3 * 2.6)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::scale with zero";
+
+      const Vec2<double> v{2.0, 3.0};
+      const auto scaled = v.scale(0.0);
+      VERIFY(equal(scaled.x(), 0.0), caseLabel);
+      VERIFY(equal(scaled.y(), 0.0), caseLabel);
+   }
+}
+
+
+void testVec2Normalize()
+{
+   {
+      const std::string caseLabel = "Vec2::normalize for float";
+
+      const Vec2<float> v{4.0f, 3.0f};
+      const auto normed = v.normalize();
+      VERIFY(equal(normed.x(), 4.0f / v.length()), caseLabel);
+      VERIFY(equal(normed.y(), 3.0f / v.length()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::normalize for integer";
+
+      const Vec2<long> v{4L, 3L};
+      const auto normed = v.normalize();
+      VERIFY(equal(normed.x(), static_cast<long>(4L / v.length())), caseLabel);
+      VERIFY(equal(normed.y(), static_cast<long>(3L / v.length())), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2::normalize for vector with zero length";
+
+      const Vec2<double> v{0.0, 0.0};
+      const auto normed = v.normalize();
+      VERIFY(equal(normed.x(), 0.0), caseLabel);
+      VERIFY(equal(normed.y(), 0.0), caseLabel);
    }
 }
 
@@ -284,6 +351,8 @@ void testVector2D()
    testVec2PointCtor();
    testVec2LengthSquared();
    testVec2Length();
+   testVec2Scale();
+   testVec2Normalize();
    testVec2Dot();
    testVec2DotOperator();
 }
