@@ -6,6 +6,7 @@
 // MIT license
 //
 #pragma once
+#include "coordsys.h"
 #include "point2.h"
 #include "essentutils/fputil.h"
 #include <type_traits>
@@ -45,6 +46,10 @@ template <typename T> class Vec2
    template <typename U> bool isParallel(const Vec2<U>& w) const;
    template <typename U> bool hasAcuteAngle(const Vec2<U>& w) const;
    template <typename U> bool hasObtuseAngle(const Vec2<U>& w) const;
+   template <typename U>
+   bool isCcw(const Vec2<U>& w, CoordSys cs = CoordSys::Screen) const;
+   template <typename U>
+   bool isCw(const Vec2<U>& w, CoordSys cs = CoordSys::Screen) const;
 
  private:
    T m_x = T(0);
@@ -138,7 +143,8 @@ sutil::FpType<T> Vec2<T>::perpDot(const Vec2<U>& w) const
 
 
 template <typename T>
-template <typename U> bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
 {
    return sutil::equal(dot(w), sutil::FpType<T>(0));
 }
@@ -147,14 +153,16 @@ template <typename U> bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
 // Orthogonal describes the same concept as perpendicular but can be applied to
 // other geometric objects, too. For lines it is the same as perpendicular.
 template <typename T>
-template <typename U> bool Vec2<T>::isOrthogonal(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::isOrthogonal(const Vec2<U>& w) const
 {
    return isPerpendicular(w);
 }
 
 
 template <typename T>
-template <typename U> bool Vec2<T>::hasSameDirection(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::hasSameDirection(const Vec2<U>& w) const
 {
    return isParallel(w) && hasAcuteAngle(w);
 }
@@ -162,7 +170,8 @@ template <typename U> bool Vec2<T>::hasSameDirection(const Vec2<U>& w) const
 
 // Could be pointing in the same or opposite direction.
 template <typename T>
-template <typename U> bool Vec2<T>::isParallel(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::isParallel(const Vec2<U>& w) const
 {
    return sutil::equal(perpDot(w), sutil::FpType<T>(0));
 }
@@ -170,7 +179,8 @@ template <typename U> bool Vec2<T>::isParallel(const Vec2<U>& w) const
 
 // Checks if the angle between 'this' and a given vector is < 90.
 template <typename T>
-template <typename U> bool Vec2<T>::hasAcuteAngle(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::hasAcuteAngle(const Vec2<U>& w) const
 {
    return sutil::greater(dot(w), sutil::FpType<T>(0));
 }
@@ -178,9 +188,34 @@ template <typename U> bool Vec2<T>::hasAcuteAngle(const Vec2<U>& w) const
 
 // Checks if the angle between 'this' and a given vector is > 90.
 template <typename T>
-template <typename U> bool Vec2<T>::hasObtuseAngle(const Vec2<U>& w) const
+template <typename U>
+bool Vec2<T>::hasObtuseAngle(const Vec2<U>& w) const
 {
    return sutil::less(dot(w), sutil::FpType<T>(0));
+}
+
+
+// Checks if a given vector is counter-clockwise of 'this' when facing into
+// the direction of 'this'. This depends on the coordinate system used.
+template <typename T>
+template <typename U>
+bool Vec2<T>::isCcw(const Vec2<U>& w, CoordSys cs) const
+{
+	if (cs == CoordSys::Screen)
+		return sutil::less(perpDot(w), sutil::FpType<T>(0));
+	return sutil::greater(perpDot(w), sutil::FpType<T>(0));
+}
+
+
+// Checks if a given vector is clockwise of 'this' when facing into the
+// direction of 'this'. This depends on the coordinate system used.
+template <typename T>
+template <typename U>
+bool Vec2<T>::isCw(const Vec2<U>& w, CoordSys cs) const
+{
+	if (cs == CoordSys::Screen)
+		return sutil::greater(perpDot(w), sutil::FpType<T>(0));
+	return sutil::less(perpDot(w), sutil::FpType<T>(0));
 }
 
 
@@ -233,4 +268,5 @@ template <typename T> struct hash<geom::Vec2<T>>
       return h1 ^ (h2 << 3);
    }
 };
+
 } // namespace std
