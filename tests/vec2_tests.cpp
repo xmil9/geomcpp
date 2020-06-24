@@ -700,6 +700,19 @@ void testVec2CwNormal()
    }
 }
 
+
+void testVec2Negation()
+{
+   {
+      const std::string caseLabel = "Vec2 negation";
+
+		const auto v = Vec2(2.0, -3.0);
+		const auto negated = -v;
+		VERIFY(negated.x() == -v.x(), caseLabel);
+		VERIFY(negated.y() == -v.y(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -728,4 +741,5 @@ void testVector2D()
    testVec2IsCw();
    testVec2CcwNormal();
    testVec2CwNormal();
+   testVec2Negation();
 }

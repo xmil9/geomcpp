@@ -54,6 +54,8 @@ template <typename T> class Vec2
    Vec2 ccwNormal(CoordSys cs = CoordSys::Screen) const;
    Vec2 cwNormal(CoordSys cs = CoordSys::Screen) const;
 
+	Vec2 operator-() const;
+
  private:
    T m_x = T(0);
    T m_y = T(0);
@@ -241,6 +243,13 @@ Vec2<T> Vec2<T>::cwNormal(CoordSys cs) const
 	if (cs == CoordSys::Screen)
 		return Vec2(-y(), x());
 	return Vec2(y(), -x());
+}
+
+
+template <typename T>
+Vec2<T> Vec2<T>::operator-() const
+{
+   return Vec2(-x(), -y());
 }
 
 
