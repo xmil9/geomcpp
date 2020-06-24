@@ -713,6 +713,23 @@ void testVec2Negation()
    }
 }
 
+
+void testVec2Subtraction()
+{
+   {
+      const std::string caseLabel = "Vec2 subtraction";
+
+		const Vec2<double> v = Vec2(2.0, -3.0);
+		const Vec2<int> w = Vec2(1, 5);
+      const auto res = v - w;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, double>);
+		VERIFY(res.x() == 1.0, caseLabel);
+		VERIFY(res.y() == -8.0, caseLabel);
+   }
+
+}
+
 } // namespace
 
 
@@ -742,4 +759,5 @@ void testVector2D()
    testVec2CcwNormal();
    testVec2CwNormal();
    testVec2Negation();
+   testVec2Subtraction();
 }

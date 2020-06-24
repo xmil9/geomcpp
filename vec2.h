@@ -54,7 +54,7 @@ template <typename T> class Vec2
    Vec2 ccwNormal(CoordSys cs = CoordSys::Screen) const;
    Vec2 cwNormal(CoordSys cs = CoordSys::Screen) const;
 
-	Vec2 operator-() const;
+   Vec2 operator-() const;
 
  private:
    T m_x = T(0);
@@ -206,9 +206,9 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::isCcw(const Vec2<U>& w, CoordSys cs) const
 {
-	if (cs == CoordSys::Screen)
-		return sutil::less(perpDot(w), sutil::FpType<T>(0));
-	return sutil::greater(perpDot(w), sutil::FpType<T>(0));
+   if (cs == CoordSys::Screen)
+      return sutil::less(perpDot(w), sutil::FpType<T>(0));
+   return sutil::greater(perpDot(w), sutil::FpType<T>(0));
 }
 
 
@@ -218,36 +218,33 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::isCw(const Vec2<U>& w, CoordSys cs) const
 {
-	if (cs == CoordSys::Screen)
-		return sutil::greater(perpDot(w), sutil::FpType<T>(0));
-	return sutil::less(perpDot(w), sutil::FpType<T>(0));
+   if (cs == CoordSys::Screen)
+      return sutil::greater(perpDot(w), sutil::FpType<T>(0));
+   return sutil::less(perpDot(w), sutil::FpType<T>(0));
 }
 
 
 // Returns a vector that is a counter-clockwise perpendicular to 'this'. This
-// depends on the coordinate system used. 
-template <typename T>
-Vec2<T> Vec2<T>::ccwNormal(CoordSys cs) const
+// depends on the coordinate system used.
+template <typename T> Vec2<T> Vec2<T>::ccwNormal(CoordSys cs) const
 {
-	if (cs == CoordSys::Screen)
-		return Vec2(y(), -x());
-	return Vec2(-y(), x());
+   if (cs == CoordSys::Screen)
+      return Vec2(y(), -x());
+   return Vec2(-y(), x());
 }
 
 
 // Returns a vector that is a clockwise perpendicular to 'this'. This depends
 // on the coordinate system used.
-template <typename T>
-Vec2<T> Vec2<T>::cwNormal(CoordSys cs) const
+template <typename T> Vec2<T> Vec2<T>::cwNormal(CoordSys cs) const
 {
-	if (cs == CoordSys::Screen)
-		return Vec2(-y(), x());
-	return Vec2(y(), -x());
+   if (cs == CoordSys::Screen)
+      return Vec2(-y(), x());
+   return Vec2(y(), -x());
 }
 
 
-template <typename T>
-Vec2<T> Vec2<T>::operator-() const
+template <typename T> Vec2<T> Vec2<T>::operator-() const
 {
    return Vec2(-x(), -y());
 }
@@ -282,6 +279,15 @@ template <typename T, typename U>
 sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
 {
    return a.perpDot(b);
+}
+
+
+template <typename T, typename U>
+Vec2<std::common_type_t<T, U>> operator-(const Vec2<T>& a, const Vec2<U>& b)
+{
+   using R = std::common_type_t<T, U>;
+   return Vec2<R>(static_cast<R>(a.x()) - static_cast<R>(b.x()),
+                  static_cast<R>(a.y()) - static_cast<R>(b.y()));
 }
 
 } // namespace geom
