@@ -661,10 +661,42 @@ void testVec2IsCw()
    {
       const std::string caseLabel = "Vec2::isCw for vector in same direction";
 
-      const Vec2<double> v{2.0, 2.0};
+      Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{3, 3};
       VERIFY(!v.isCw(w, CoordSys::Screen), caseLabel);
       VERIFY(!v.isCw(w, CoordSys::Cartesian), caseLabel);
+   }
+}
+
+
+void testVec2CcwNormal()
+{
+   {
+      const std::string caseLabel = "Vec2::ccwNormal";
+
+		const Vec2<float> v = Vec2(2.0f, 3.0f);
+
+      const Vec2<float> ccwScreen = v.ccwNormal(CoordSys::Screen);
+		VERIFY(v.isCcw(ccwScreen, CoordSys::Screen), caseLabel);
+
+      const Vec2<float> ccwCart = v.ccwNormal(CoordSys::Cartesian);
+		VERIFY(v.isCcw(ccwCart, CoordSys::Cartesian), caseLabel);
+   }
+}
+
+
+void testVec2CwNormal()
+{
+   {
+      const std::string caseLabel = "Vec2::cwNormal";
+
+		const Vec2<int> v = Vec2(2, 3);
+
+      const Vec2<int> cwScreen = v.cwNormal(CoordSys::Screen);
+		VERIFY(v.isCw(cwScreen, CoordSys::Screen), caseLabel);
+
+      const Vec2<int> cwCart = v.cwNormal(CoordSys::Cartesian);
+		VERIFY(v.isCw(cwCart, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -694,4 +726,6 @@ void testVector2D()
    testVec2HasObtuseAngle();
    testVec2IsCcw();
    testVec2IsCw();
+   testVec2CcwNormal();
+   testVec2CwNormal();
 }

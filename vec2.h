@@ -51,6 +51,9 @@ template <typename T> class Vec2
    template <typename U>
    bool isCw(const Vec2<U>& w, CoordSys cs = CoordSys::Screen) const;
 
+   Vec2 ccwNormal(CoordSys cs = CoordSys::Screen) const;
+   Vec2 cwNormal(CoordSys cs = CoordSys::Screen) const;
+
  private:
    T m_x = T(0);
    T m_y = T(0);
@@ -216,6 +219,28 @@ bool Vec2<T>::isCw(const Vec2<U>& w, CoordSys cs) const
 	if (cs == CoordSys::Screen)
 		return sutil::greater(perpDot(w), sutil::FpType<T>(0));
 	return sutil::less(perpDot(w), sutil::FpType<T>(0));
+}
+
+
+// Returns a vector that is a counter-clockwise perpendicular to 'this'. This
+// depends on the coordinate system used. 
+template <typename T>
+Vec2<T> Vec2<T>::ccwNormal(CoordSys cs) const
+{
+	if (cs == CoordSys::Screen)
+		return Vec2(y(), -x());
+	return Vec2(-y(), x());
+}
+
+
+// Returns a vector that is a clockwise perpendicular to 'this'. This depends
+// on the coordinate system used.
+template <typename T>
+Vec2<T> Vec2<T>::cwNormal(CoordSys cs) const
+{
+	if (cs == CoordSys::Screen)
+		return Vec2(-y(), x());
+	return Vec2(y(), -x());
 }
 
 
