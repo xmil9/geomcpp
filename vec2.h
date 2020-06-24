@@ -9,6 +9,7 @@
 #include "coordsys.h"
 #include "point2.h"
 #include "essentutils/fputil.h"
+#include <stdexcept>
 #include <type_traits>
 
 
@@ -288,6 +289,39 @@ Vec2<std::common_type_t<T, U>> operator-(const Vec2<T>& a, const Vec2<U>& b)
    using R = std::common_type_t<T, U>;
    return Vec2<R>(static_cast<R>(a.x()) - static_cast<R>(b.x()),
                   static_cast<R>(a.y()) - static_cast<R>(b.y()));
+}
+
+
+template <typename T, typename U>
+Vec2<std::common_type_t<T, U>> operator+(const Vec2<T>& a, const Vec2<U>& b)
+{
+   using R = std::common_type_t<T, U>;
+   return Vec2<R>(static_cast<R>(a.x()) + static_cast<R>(b.x()),
+                  static_cast<R>(a.y()) + static_cast<R>(b.y()));
+}
+
+
+template <typename T, typename S>
+Vec2<T> operator*(const Vec2<T>& v, S scalar)
+{
+   return v.scale(scalar);
+}
+
+
+template <typename T, typename S>
+Vec2<T> operator*(S scalar, const Vec2<T>& v)
+{
+   return v.scale(scalar);
+}
+
+
+template <typename T, typename S>
+Vec2<T> operator/(const Vec2<T>& v, S scalar)
+{
+   if (scalar == S(0))
+      throw std::runtime_error("Division by zero.");
+   using FP = sutil::FpType<T>;
+   return v.scale(FP(1.0) / scalar);
 }
 
 } // namespace geom

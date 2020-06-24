@@ -674,13 +674,13 @@ void testVec2CcwNormal()
    {
       const std::string caseLabel = "Vec2::ccwNormal";
 
-		const Vec2<float> v = Vec2(2.0f, 3.0f);
+      const Vec2<float> v = Vec2(2.0f, 3.0f);
 
       const Vec2<float> ccwScreen = v.ccwNormal(CoordSys::Screen);
-		VERIFY(v.isCcw(ccwScreen, CoordSys::Screen), caseLabel);
+      VERIFY(v.isCcw(ccwScreen, CoordSys::Screen), caseLabel);
 
       const Vec2<float> ccwCart = v.ccwNormal(CoordSys::Cartesian);
-		VERIFY(v.isCcw(ccwCart, CoordSys::Cartesian), caseLabel);
+      VERIFY(v.isCcw(ccwCart, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -690,13 +690,13 @@ void testVec2CwNormal()
    {
       const std::string caseLabel = "Vec2::cwNormal";
 
-		const Vec2<int> v = Vec2(2, 3);
+      const Vec2<int> v = Vec2(2, 3);
 
       const Vec2<int> cwScreen = v.cwNormal(CoordSys::Screen);
-		VERIFY(v.isCw(cwScreen, CoordSys::Screen), caseLabel);
+      VERIFY(v.isCw(cwScreen, CoordSys::Screen), caseLabel);
 
       const Vec2<int> cwCart = v.cwNormal(CoordSys::Cartesian);
-		VERIFY(v.isCw(cwCart, CoordSys::Cartesian), caseLabel);
+      VERIFY(v.isCw(cwCart, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -706,10 +706,10 @@ void testVec2Negation()
    {
       const std::string caseLabel = "Vec2 negation";
 
-		const auto v = Vec2(2.0, -3.0);
-		const auto negated = -v;
-		VERIFY(negated.x() == -v.x(), caseLabel);
-		VERIFY(negated.y() == -v.y(), caseLabel);
+      const auto v = Vec2(2.0, -3.0);
+      const auto negated = -v;
+      VERIFY(negated.x() == -v.x(), caseLabel);
+      VERIFY(negated.y() == -v.y(), caseLabel);
    }
 }
 
@@ -719,15 +719,117 @@ void testVec2Subtraction()
    {
       const std::string caseLabel = "Vec2 subtraction";
 
-		const Vec2<double> v = Vec2(2.0, -3.0);
-		const Vec2<int> w = Vec2(1, 5);
+      const Vec2<double> v = Vec2(2.0, -3.0);
+      const Vec2<int> w = Vec2(1, 5);
       const auto res = v - w;
 
       static_assert(std::is_same_v<decltype(res)::value_type, double>);
-		VERIFY(res.x() == 1.0, caseLabel);
-		VERIFY(res.y() == -8.0, caseLabel);
+      VERIFY(res.x() == 1.0, caseLabel);
+      VERIFY(res.y() == -8.0, caseLabel);
    }
+}
 
+
+void testVec2Addition()
+{
+   {
+      const std::string caseLabel = "Vec2 addition";
+
+      const Vec2<double> v = Vec2(2.0, -3.0);
+      const Vec2<int> w = Vec2(1, 5);
+      const auto res = v + w;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, double>);
+      VERIFY(res.x() == 3.0, caseLabel);
+      VERIFY(res.y() == 2.0, caseLabel);
+   }
+}
+
+
+void testVec2MultiplicationWithScalarAsSecondOperand()
+{
+   {
+      const std::string caseLabel = "Vec2 multiplication with scalar as second operand";
+
+      const Vec2<double> v = Vec2(2.0, -3.0);
+      const auto res = v * 1.5;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, double>);
+      VERIFY(sutil::equal(res.x(), 3.0), caseLabel);
+      VERIFY(sutil::equal(res.y(), -4.5), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Vec2 multiplication with scalar as second operand for mixed types";
+
+      const Vec2<int> v = Vec2(2, -3);
+      const auto res = v * 1.5;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, int>);
+      VERIFY(sutil::equal(res.x(), 3), caseLabel);
+      VERIFY(sutil::equal(res.y(), -4), caseLabel);
+   }
+}
+
+
+void testVec2MultiplicationWithScalarAsFirstOperand()
+{
+   {
+      const std::string caseLabel = "Vec2 multiplication with scalar as first operand";
+
+      const Vec2<double> v = Vec2(2.0, -3.0);
+      const auto res = 1.5 * v;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, double>);
+      VERIFY(sutil::equal(res.x(), 3.0), caseLabel);
+      VERIFY(sutil::equal(res.y(), -4.5), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Vec2 multiplication with scalar as first operand for mixed types";
+
+      const Vec2<int> v = Vec2(2, -3);
+      const auto res = 1.5 * v;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, int>);
+      VERIFY(sutil::equal(res.x(), 3), caseLabel);
+      VERIFY(sutil::equal(res.y(), -4), caseLabel);
+   }
+}
+
+
+void testVec2DivisionByScalar()
+{
+   {
+      const std::string caseLabel = "Vec2 division by scalar";
+
+      const Vec2<double> v = Vec2(2.0, -3.0);
+      const auto res = v / 2.0;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, double>);
+      VERIFY(sutil::equal(res.x(), 1.0), caseLabel);
+      VERIFY(sutil::equal(res.y(), -1.5), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2 division by scalar";
+
+      const Vec2<int> v = Vec2(2, -3);
+      const auto res = v / 2.0;
+
+      static_assert(std::is_same_v<decltype(res)::value_type, int>);
+      VERIFY(sutil::equal(res.x(), 1), caseLabel);
+      VERIFY(sutil::equal(res.y(), -1), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Vec2 division by zero";
+
+      VERIFY_THROW(
+         [&]() {
+            const Vec2<double> v = Vec2(2.0, -3.0);
+            const auto res = v / 0.0;
+         },
+         std::runtime_error, caseLabel);
+   }
 }
 
 } // namespace
@@ -760,4 +862,8 @@ void testVector2D()
    testVec2CwNormal();
    testVec2Negation();
    testVec2Subtraction();
+   testVec2Addition();
+   testVec2MultiplicationWithScalarAsSecondOperand();
+   testVec2MultiplicationWithScalarAsFirstOperand();
+   testVec2DivisionByScalar();
 }
