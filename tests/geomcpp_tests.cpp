@@ -6,6 +6,7 @@
 //
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
+#include "point2_tests.h"
 #include "vec2_tests.h"
 #include <iostream>
 
@@ -13,6 +14,7 @@
 int main()
 {
    testDecInterval();
+   testPoint2D();
    testTecInterval();
    testVector2D();
 
