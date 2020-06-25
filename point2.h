@@ -77,17 +77,22 @@ template <typename T, typename U> bool operator!=(const Point2<T>& a, const Poin
 
 // Distance between points.
 
-template <typename T> inline T distSquared(const Point2<T>& a, const Point2<T>& b)
+template <typename T, typename U>
+inline std::common_type_t<T, U> distSquared(const Point2<T>& a, const Point2<U>& b)
 {
-   const T dx = b.x() - a.x();
-   const T dy = b.y() - a.y();
+   using R = std::common_type_t<T, U>;
+   const R dx = static_cast<R>(b.x()) - static_cast<R>(a.x());
+   const R dy = static_cast<R>(b.y()) - static_cast<R>(a.y());
    return dx * dx + dy * dy;
 }
 
 
-template <typename T> sutil::FpType<T> dist(const Point2<T>& a, const Point2<T>& b)
+template <typename T, typename U>
+std::common_type_t<sutil::FpType<T>, sutil::FpType<U>> dist(const Point2<T>& a,
+                                                            const Point2<U>& b)
 {
-   return sutil::sqrt<sutil::FpType<T>>(distSquared(a, b));
+   using R = std::common_type_t<sutil::FpType<T>, sutil::FpType<U>>;
+   return sutil::sqrt<sutil::FpType<R>>(distSquared(a, b));
 }
 
 } // namespace geom
