@@ -18,6 +18,7 @@ namespace geom
 
 ///////////////////
 
+// Mathematical 2D vector.
 template <typename T> class Vec2
 {
  public:
@@ -34,6 +35,7 @@ template <typename T> class Vec2
 
    T x() const noexcept { return m_x; }
    T y() const noexcept { return m_y; }
+   Vec2 operator-() const;
    sutil::FpType<T> lengthSquared() const;
    sutil::FpType<T> length() const;
    [[nodiscard]] Vec2 normalize() const;
@@ -54,8 +56,6 @@ template <typename T> class Vec2
 
    Vec2 ccwNormal(CoordSys cs = CoordSys::Screen) const;
    Vec2 cwNormal(CoordSys cs = CoordSys::Screen) const;
-
-   Vec2 operator-() const;
 
  private:
    T m_x = T(0);
