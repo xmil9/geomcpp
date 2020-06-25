@@ -76,6 +76,12 @@ constexpr Vec2<T>::Vec2(const Point2<U>& from, const Point2<U>& to)
 }
 
 
+template <typename T> Vec2<T> Vec2<T>::operator-() const
+{
+   return Vec2(-x(), -y());
+}
+
+
 template <typename T> sutil::FpType<T> Vec2<T>::lengthSquared() const
 {
    return dot(*this);
@@ -245,19 +251,13 @@ template <typename T> Vec2<T> Vec2<T>::cwNormal(CoordSys cs) const
 }
 
 
-template <typename T> Vec2<T> Vec2<T>::operator-() const
-{
-   return Vec2(-x(), -y());
-}
-
-
 ///////////////////
 
 // Comparisions.
 
 template <typename T, typename U> bool operator==(const Vec2<T>& a, const Vec2<U>& b)
 {
-   return a.x() == b.x() && a.y() == b.y();
+   return sutil::equal(a.x(), b.x()) && sutil::equal(a.y(), b.y());
 }
 
 

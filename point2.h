@@ -31,8 +31,8 @@ template <typename T> class Point2
 
    T x() const noexcept { return m_x; }
    T y() const noexcept { return m_y; }
-   template <typename U> Point2<T> offset(U x, U y) const;
-   template <typename U> Point2<T> scale(U factor) const;
+   template <typename U>[[nodiscard]] Point2<T> offset(U dx, U dy) const;
+   template <typename U>[[nodiscard]] Point2<T> scale(U factor) const;
 
  private:
    T m_x = T(0);
@@ -40,21 +40,20 @@ template <typename T> class Point2
 };
 
 
-template <typename T>
-constexpr Point2<T>::Point2(T x, T y) : m_x{x}, m_y{y}
+template <typename T> constexpr Point2<T>::Point2(T x, T y) : m_x{x}, m_y{y}
 {
 }
 
 
-template <typename T> template <typename U> Point2<T> Point2<T>::offset(U x, U y) const
+template <typename T> template <typename U> Point2<T> Point2<T>::offset(U dx, U dy) const
 {
-   return Point2(x() + x, y() + y);
+   return Point2(static_cast<T>(x() + dx), static_cast<T>(y() + dy));
 }
 
 
 template <typename T> template <typename U> Point2<T> Point2<T>::scale(U factor) const
 {
-   return Point2(x() * factor, y() * factor);
+   return Point2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
 }
 
 
@@ -64,7 +63,7 @@ template <typename T> template <typename U> Point2<T> Point2<T>::scale(U factor)
 
 template <typename T, typename U> bool operator==(const Point2<T>& a, const Point2<U>& b)
 {
-   return a.x() == b.x() && a.y() == b.y();
+   return sutil::equal(a.x(), b.x()) && sutil::equal(a.y(), b.y());
 }
 
 
@@ -86,8 +85,7 @@ template <typename T> inline T distSquared(const Point2<T>& a, const Point2<T>& 
 }
 
 
-template <typename T>
-sutil::FpType<T> dist(const Point2<T>& a, const Point2<T>& b)
+template <typename T> sutil::FpType<T> dist(const Point2<T>& a, const Point2<T>& b)
 {
    return sutil::sqrt<sutil::FpType<T>>(distSquared(a, b));
 }
