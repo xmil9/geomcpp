@@ -242,6 +242,90 @@ void testPoint2Inequality()
    }
 }
 
+
+void testPoint2DistanceSquared()
+{
+   {
+      const std::string caseLabel = "Point distSquared for float";
+
+      const Point2<float> p{2.0f, 3.0f};
+      const Point2<float> q{6.0f, 1.0f};
+
+      auto res = distSquared(p, q);
+      static_assert(std::is_same_v<decltype(res), float>);
+      VERIFY(equal(res, 20.0f), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point distSquared for mixed types";
+
+      const Point2<double> p{2.0, 3.0};
+      const Point2<int> q{12, 1};
+
+      auto res = distSquared(p, q);
+      static_assert(std::is_same_v<decltype(res), double>);
+      VERIFY(equal(res, 104.0), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point distSquared for integer";
+
+      const Point2<int> p{2, 3};
+      const Point2<int> q{-1, -2};
+
+      auto res = distSquared(p, q);
+      static_assert(std::is_same_v<decltype(res), int>);
+      VERIFY(equal(res, 34), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point distSquared when distance is zero";
+
+      const Point2<double> p{1.5, 4.0};
+      const Point2<double> q = p;
+      VERIFY(equal(distSquared(p, q), 0.0), caseLabel);
+   }
+}
+
+
+void testPoint2Distance()
+{
+   {
+      const std::string caseLabel = "Point dist for float";
+
+      const Point2<float> p{2.0f, 3.0f};
+      const Point2<float> q{6.0f, 1.0f};
+
+      auto res = dist(p, q);
+      static_assert(std::is_same_v<decltype(res), float>);
+      VERIFY(equal(res, std::sqrtf(20.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point dist for mixed types";
+
+      const Point2<double> p{2.0, 3.0};
+      const Point2<int> q{12, 1};
+
+      auto res = dist(p, q);
+      static_assert(std::is_same_v<decltype(res), double>);
+      VERIFY(equal(res, std::sqrt(104.0)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point dist for integer";
+
+      const Point2<int> p{2, 3};
+      const Point2<int> q{-1, -2};
+
+      auto res = dist(p, q);
+      static_assert(std::is_same_v<decltype(res), double>);
+      VERIFY(equal(res, std::sqrt(34)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Point dist when distance is zero";
+
+      const Point2<double> p{1.5, 4.0};
+      const Point2<double> q = p;
+      VERIFY(equal(dist(p, q), 0.0), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -255,4 +339,6 @@ void testPoint2D()
    testPoint2Scale();
    testPoint2Equality();
    testPoint2Inequality();
+   testPoint2DistanceSquared();
+   testPoint2Distance();
 }
