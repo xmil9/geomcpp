@@ -31,8 +31,9 @@ template <typename T> class Point2
 
    T x() const noexcept { return m_x; }
    T y() const noexcept { return m_y; }
-   template <typename U>[[nodiscard]] Point2<T> offset(U dx, U dy) const;
-   template <typename U>[[nodiscard]] Point2<T> scale(U factor) const;
+   Point2 operator-() const;
+   template <typename U>[[nodiscard]] Point2 offset(U dx, U dy) const;
+   template <typename U>[[nodiscard]] Point2 scale(U factor) const;
 
  private:
    T m_x = T(0);
@@ -42,6 +43,12 @@ template <typename T> class Point2
 
 template <typename T> constexpr Point2<T>::Point2(T x, T y) : m_x{x}, m_y{y}
 {
+}
+
+
+template <typename T> Point2<T> Point2<T>::operator-() const
+{
+   return Point2(-x(), -y());
 }
 
 

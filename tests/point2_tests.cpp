@@ -77,6 +77,19 @@ void testPoint2ValueCtor()
 }
 
 
+void testPoint2Negation()
+{
+   {
+      const std::string caseLabel = "Point2 negation";
+
+      const auto v = Point2(2.0, -3.0);
+      const auto negated = -v;
+      VERIFY(negated.x() == -v.x(), caseLabel);
+      VERIFY(negated.y() == -v.y(), caseLabel);
+   }
+}
+
+
 void testPoint2Offset()
 {
    {
@@ -335,6 +348,7 @@ void testPoint2D()
 {
    testPoint2DefaultCtor();
    testPoint2ValueCtor();
+   testPoint2Negation();
    testPoint2Offset();
    testPoint2Scale();
    testPoint2Equality();
