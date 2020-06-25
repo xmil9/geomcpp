@@ -832,6 +832,94 @@ void testVec2DivisionByScalar()
    }
 }
 
+
+void testVec2Equality()
+{
+   {
+      const std::string caseLabel = "Equality for equal float vectors";
+
+      const Vec2<float> a{0.011f, -345.78f};
+      const Vec2<float> b = a;
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for equal integer vectors";
+
+      const Vec2<int> a{-3, 9};
+      const Vec2<int> b{-3, 9};
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for equal double vectors whose x coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Vec2<double> a{1.23456789000000000001, 3.2};
+      const Vec2<double> b{1.23456789000000000002, 3.2};
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for equal double vectors whose y coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Vec2<double> a{3.2, 1.23456789000000000001};
+      const Vec2<double> b{3.2, 1.23456789000000000002};
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for unequal vectors";
+
+      const Vec2<float> a{0.011f, -345.78f};
+      const Vec2<float> b{7.6f, -2.2f};
+      VERIFY(!(a == b), caseLabel);
+   }
+}
+
+
+void testVec2Inequality()
+{
+   {
+      const std::string caseLabel = "Inequality for unequal float vectors";
+
+      const Vec2<float> a{0.011f, -345.78f};
+      const Vec2<float> b{0.011f, -345.0f};
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for unequal integer vectors";
+
+      const Vec2<int> a{-3, 9};
+      const Vec2<int> b{3, 9};
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal double vectors whose x coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Vec2<double> a{1.23456789000000000001, 3.2};
+      const Vec2<double> b{1.23456789000000000002, 3.2};
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal double vectors whose y coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Vec2<double> a{3.2, 1.23456789000000000001};
+      const Vec2<double> b{3.2, 1.23456789000000000002};
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for equal vectors";
+
+      const Vec2<float> a{0.011f, -345.78f};
+      const Vec2<float> b = a;
+      VERIFY(!(a != b), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -866,4 +954,6 @@ void testVector2D()
    testVec2MultiplicationWithScalarAsSecondOperand();
    testVec2MultiplicationWithScalarAsFirstOperand();
    testVec2DivisionByScalar();
+   testVec2Equality();
+   testVec2Inequality();
 }
