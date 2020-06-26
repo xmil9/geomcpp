@@ -153,7 +153,7 @@ template <typename T> Point2<T> Rect2<T>::rightBottom() const
 
 template <typename T> Point2<T> Rect2<T>::center() const
 {
-   return Point2((left() + right()) / T(2.0), (top() + bottom()) / T(2.0))
+   return Point2((left() + right()) / T(2.0), (top() + bottom()) / T(2.0));
 }
 
 
