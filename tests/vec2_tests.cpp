@@ -108,6 +108,13 @@ void testVec2PointCtor()
       VERIFY(v.x() == 2.0f, caseLabel);
       VERIFY(v.y() == 4.0f, caseLabel);
    }
+   {
+      const std::string caseLabel = "Vec2 point ctor for mixed point types";
+
+      Vec2<float> v{Point2{2, 3}, Point2{4.0, 7.0}};
+      VERIFY(v.x() == 2.0f, caseLabel);
+      VERIFY(v.y() == 4.0f, caseLabel);
+   }
 }
 
 
@@ -920,6 +927,61 @@ void testVec2Inequality()
    }
 }
 
+
+void testPointVectorAddition()
+{
+   {
+      const std::string caseLabel = "Add vector to point";
+
+      const Point2<float> p{3.2f, -4.1f};
+      const Vec2<float> v{0.3f, -0.1f};
+
+      const auto res = p + v;
+      VERIFY(equal(res.x(), 3.5f), caseLabel);
+      VERIFY(equal(res.y(), -4.2f), caseLabel);
+   }
+}
+
+
+void testVectorPointAddition()
+{
+   {
+      const std::string caseLabel = "Add point to vector";
+
+      const Point2<float> p{3.2f, -4.1f};
+      const Vec2<float> v{0.3f, -0.1f};
+
+      const auto res = v + p;
+      VERIFY(equal(res.x(), 3.5f), caseLabel);
+      VERIFY(equal(res.y(), -4.2f), caseLabel);
+   }
+}
+
+
+void testPointSubtraction()
+{
+   {
+      const std::string caseLabel = "Subtract points";
+
+      const Point2<float> p{3.2f, -4.1f};
+      const Point2<float> q{0.3f, -0.1f};
+
+      const auto res = p - q;
+      VERIFY(equal(res.x(), 2.9f), caseLabel);
+      VERIFY(equal(res.y(), -4.0f), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Subtract points for mixed types";
+
+      const Point2<int> p{3, -4};
+      const Point2<float> q{0.3f, -0.1f};
+
+      const auto res = p - q;
+      VERIFY(equal(res.x(), 2.7f), caseLabel);
+      VERIFY(equal(res.y(), -3.9f), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -956,4 +1018,8 @@ void testVector2D()
    testVec2DivisionByScalar();
    testVec2Equality();
    testVec2Inequality();
+   
+   testPointVectorAddition();
+   testVectorPointAddition();
+   testPointSubtraction();
 }

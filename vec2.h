@@ -26,7 +26,8 @@ template <typename T> class Vec2
 
    Vec2() = default;
    constexpr Vec2(T x, T y);
-   template <typename U> constexpr Vec2(const Point2<U>& from, const Point2<U>& to);
+   template <typename U, typename V>
+   constexpr Vec2(const Point2<U>& from, const Point2<V>& to);
    Vec2(const Vec2&) = default;
    Vec2(Vec2&&) = default;
 
@@ -69,8 +70,8 @@ template <typename T> constexpr Vec2<T>::Vec2(T x, T y) : m_x{x}, m_y{y}
 
 
 template <typename T>
-template <typename U>
-constexpr Vec2<T>::Vec2(const Point2<U>& from, const Point2<U>& to)
+template <typename U, typename V>
+constexpr Vec2<T>::Vec2(const Point2<U>& from, const Point2<V>& to)
 : m_x{static_cast<T>(to.x() - from.x())}, m_y{static_cast<T>(to.y() - from.y())}
 {
 }
@@ -269,6 +270,7 @@ template <typename T, typename U> bool operator!=(const Vec2<T>& a, const Vec2<U
 
 ///////////////////
 
+// Dot product as operator*.
 template <typename T, typename U>
 sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
 {
@@ -276,6 +278,7 @@ sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
 }
 
 
+// Free function for perpendicular dot product.
 template <typename T, typename U>
 sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
 {
@@ -283,6 +286,7 @@ sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
 }
 
 
+// Vector subtraction.
 template <typename T, typename U>
 Vec2<std::common_type_t<T, U>> operator-(const Vec2<T>& a, const Vec2<U>& b)
 {
@@ -292,6 +296,7 @@ Vec2<std::common_type_t<T, U>> operator-(const Vec2<T>& a, const Vec2<U>& b)
 }
 
 
+// Vector addition.
 template <typename T, typename U>
 Vec2<std::common_type_t<T, U>> operator+(const Vec2<T>& a, const Vec2<U>& b)
 {
@@ -301,27 +306,53 @@ Vec2<std::common_type_t<T, U>> operator+(const Vec2<T>& a, const Vec2<U>& b)
 }
 
 
-template <typename T, typename S>
-Vec2<T> operator*(const Vec2<T>& v, S scalar)
+// Scale vector by scalar.
+template <typename T, typename S> Vec2<T> operator*(const Vec2<T>& v, S scalar)
 {
    return v.scale(scalar);
 }
 
 
-template <typename T, typename S>
-Vec2<T> operator*(S scalar, const Vec2<T>& v)
+// Scale vector by scalar (reverse operands).
+template <typename T, typename S> Vec2<T> operator*(S scalar, const Vec2<T>& v)
 {
    return v.scale(scalar);
 }
 
 
-template <typename T, typename S>
-Vec2<T> operator/(const Vec2<T>& v, S scalar)
+// Divide vector by scalar.
+template <typename T, typename S> Vec2<T> operator/(const Vec2<T>& v, S scalar)
 {
    if (scalar == S(0))
       throw std::runtime_error("Division by zero.");
    using FP = sutil::FpType<T>;
    return v.scale(FP(1.0) / scalar);
+}
+
+
+///////////////////
+
+// Offset point by vector.
+template <typename T, typename U>
+Point2<T> operator+(const Point2<T>& pt, const Vec2<U>& v)
+{
+   return pt.offset(v.x(), v.y());
+}
+
+
+// Offset point by vector (reverse operands).
+template <typename T, typename U>
+Point2<T> operator+(const Vec2<U>& v, const Point2<T>& pt)
+{
+   return pt.offset(v.x(), v.y());
+}
+
+
+// Subtract points yielding a vector.
+template <typename T, typename U>
+Vec2<std::common_type_t<T, U>> operator-(const Point2<T>& p, const Point2<U>& q)
+{
+   return Vec2<std::common_type_t<T, U>>(q, p);
 }
 
 } // namespace geom
