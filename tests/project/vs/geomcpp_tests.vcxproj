@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\interval_dec_tests.cpp" />
     <ClCompile Include="..\..\interval_tec_tests.cpp" />
     <ClCompile Include="..\..\point2_tests.cpp" />
+    <ClCompile Include="..\..\rect2_tests.cpp" />
     <ClCompile Include="..\..\vec2_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +51,7 @@
     <ClInclude Include="..\..\interval_dec_tests.h" />
     <ClInclude Include="..\..\interval_tec_tests.h" />
     <ClInclude Include="..\..\point2_tests.h" />
+    <ClInclude Include="..\..\rect2_tests.h" />
     <ClInclude Include="..\..\test_util.h" />
     <ClInclude Include="..\..\vec2_tests.h" />
   </ItemGroup>
