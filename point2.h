@@ -13,9 +13,9 @@
 
 namespace geom
 {
-
 ///////////////////
 
+// 2D point.
 template <typename T> class Point2
 {
  public:
