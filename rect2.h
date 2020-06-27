@@ -213,8 +213,8 @@ Rect2<std::common_type_t<T, U>> intersect(const Rect2<T>& a, const Rect2<U>& b)
 {
    using R = std::common_type_t<T, U>;
 
-   if (a.left() > b.right() || b.left() > a.right() || a.top() > b.bottom() ||
-       b.top > a.bottom())
+   if (sutil::greater(a.left(), b.right()) || sutil::greater(b.left(), a.right()) ||
+       sutil::greater(a.top(), b.bottom()) || sutil::greater(b.top(), a.bottom()))
    {
       return Rect2<R>{};
    }
