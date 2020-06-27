@@ -7,4 +7,4 @@
 //
 #pragma once
 
-void testRect2D();
+void testRect();
