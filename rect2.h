@@ -174,6 +174,7 @@ template <typename T> template <typename U> void Rect2<T>::inflate(U by)
    m_r += by;
    m_t -= by;
    m_b += by;
+   normalize();
 }
 
 
