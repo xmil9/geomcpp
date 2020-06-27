@@ -325,11 +325,75 @@ void testRect2Inflate()
 
 void testRect2Equality()
 {
+   {
+      const std::string caseLabel = "Equality for equal rects";
+
+      const Rect2<float> a{0.011f, -345.78f, 1.2f, 4.5f};
+      const Rect2<float> b = a;
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for equal double rects whose left coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Rect2<double> a{1.23456789000000000001, 3.2, 3.4, 5.8};
+      const Rect2<double> b{1.23456789000000000002, 3.2, 3.4, 5.8};
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for equal double rects whose top coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Rect2<double> a{3.2, 1.23456789000000000001, 3.4, 5.8};
+      const Rect2<double> b{3.2, 1.23456789000000000002, 3.4, 5.8};
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for unequal rects";
+
+      const Rect2<float> a{0.011f, -345.78f, 1.2f, 4.8f};
+      const Rect2<float> b{7.6f, -2.2f, 12.2f, 14.8f};
+      VERIFY(!(a == b), caseLabel);
+   }
 }
 
 
 void testRect2Inequality()
 {
+   {
+      const std::string caseLabel = "Inequality for equal rects";
+
+      const Rect2<float> a{0.011f, -345.78f, 1.2f, 4.5f};
+      const Rect2<float> b = a;
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal double rects whose left coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Rect2<double> a{1.23456789000000000001, 3.2, 3.4, 5.8};
+      const Rect2<double> b{1.23456789000000000002, 3.2, 3.4, 5.8};
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal double rects whose top coordinates are unequal beyond the "
+         "epsilon threshold";
+
+      const Rect2<double> a{3.2, 1.23456789000000000001, 3.4, 5.8};
+      const Rect2<double> b{3.2, 1.23456789000000000002, 3.4, 5.8};
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for unequal rects";
+
+      const Rect2<float> a{0.011f, -345.78f, 1.2f, 4.8f};
+      const Rect2<float> b{7.6f, -2.2f, 12.2f, 14.8f};
+      VERIFY(a != b, caseLabel);
+   }
 }
 
 
