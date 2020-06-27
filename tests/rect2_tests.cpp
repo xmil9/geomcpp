@@ -435,9 +435,9 @@ void testRect2Intersect()
       const std::string caseLabel = "Intersect nested rects";
 
       const Rect2 a{-1, -2, 5, 7};
-      const Rect2 b{1, 0, 3, 2};
-		const Rect2 isect = intersect(a, b);
-      VERIFY((isect == Rect2{1, 0, 3, 2}), caseLabel);
+      const Rect2 inner{1, 0, 3, 2};
+		const Rect2 isect = intersect(a, inner);
+      VERIFY((isect == inner), caseLabel);
    }
    {
       const std::string caseLabel = "Intersect vertically non-overlapping rects";
@@ -475,6 +475,77 @@ void testRect2Intersect()
 
 void testRect2Unite()
 {
+   {
+      const std::string caseLabel = "Unite vertically overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{-3, 1, 7, 10};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-3, -2, 7, 10}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite horizontally overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{2, -4, 10, 8};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-1, -4, 10, 8}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite diagonally overlapping rects (case 1)";
+
+      const Rect2 a{-1.0, -2.0, 5.0, 7.0};
+      const Rect2 b{-3.0, -5.0, 3.0, 4.0};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-3.0, -5.0, 5.0, 7.0}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite diagonally overlapping rects (case 2)";
+
+      const Rect2 a{-1.0, -2.0, 5.0, 7.0};
+      const Rect2 b{1.0, 3.0, 7.0, 10.0};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-1.0, -2.0, 7.0, 10.0}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite nested rects";
+
+      const Rect2 outer{-1, -2, 5, 7};
+      const Rect2 b{1, 0, 3, 2};
+		const Rect2 u = unite(outer, b);
+      VERIFY((u == outer), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite vertically non-overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{2, 10, 7, 14};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-1, -2, 7, 14}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite horizontally non-overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{8, 2, 11, 14};
+		const Rect2 u = unite(a, b);
+      VERIFY((u == Rect2{-1, -2, 11, 14}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite same rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+		const Rect2 u = unite(a, a);
+      VERIFY((u == a), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Unite with empty rect";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2<int> empty{};
+      const Rect2 u = unite(a, empty);
+      VERIFY((u == a), caseLabel);
+   }
 }
 
 } // namespace
