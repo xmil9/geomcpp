@@ -399,6 +399,77 @@ void testRect2Inequality()
 
 void testRect2Intersect()
 {
+   {
+      const std::string caseLabel = "Intersect vertically overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{-3, 1, 7, 10};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2{-1, 1, 5, 7}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect horizontally overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{2, -4, 10, 8};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2{2, -2, 5, 7}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect diagonally overlapping rects (case 1)";
+
+      const Rect2 a{-1.0, -2.0, 5.0, 7.0};
+      const Rect2 b{-3.0, -5.0, 3.0, 4.0};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2{-1.0, -2.0, 3.0, 4.0}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect diagonally overlapping rects (case 2)";
+
+      const Rect2 a{-1.0, -2.0, 5.0, 7.0};
+      const Rect2 b{1.0, 3.0, 7.0, 10.0};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2{1.0, 3.0, 5.0, 7.0}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect nested rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{1, 0, 3, 2};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2{1, 0, 3, 2}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect vertically non-overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{2, 10, 7, 14};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2<int>{}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect horizontally non-overlapping rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2 b{8, 2, 11, 14};
+		const Rect2 isect = intersect(a, b);
+      VERIFY((isect == Rect2<int>{}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect same rects";
+
+      const Rect2 a{-1, -2, 5, 7};
+		const Rect2 isect = intersect(a, a);
+      VERIFY((isect == a), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect with empty rect";
+
+      const Rect2 a{-1, -2, 5, 7};
+      const Rect2<int> empty{};
+      const Rect2 isect = intersect(a, empty);
+      VERIFY((isect == empty), caseLabel);
+   }
 }
 
 
