@@ -290,6 +290,36 @@ void testRect2IsPointInRect()
 
 void testRect2Inflate()
 {
+   {
+      const std::string caseLabel = "Rect2::inflate for positive offset";
+
+      Rect2 r{1, 2, 3, 7};
+      r.inflate(2);
+      VERIFY(equal(r.left(), -1), caseLabel);
+      VERIFY(equal(r.top(), 0), caseLabel);
+      VERIFY(equal(r.right(), 5), caseLabel);
+      VERIFY(equal(r.bottom(), 9), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Rect2::inflate for negative offset";
+
+      Rect2 r{1, 2, 5, 7};
+      r.inflate(-1);
+      VERIFY(equal(r.left(), 2), caseLabel);
+      VERIFY(equal(r.top(), 3), caseLabel);
+      VERIFY(equal(r.right(), 4), caseLabel);
+      VERIFY(equal(r.bottom(), 6), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Rect2::inflate for offset that denormalizes rect";
+
+      Rect2 r{1, 2, 4, 5};
+      r.inflate(-3);
+      VERIFY(equal(r.left(), 1), caseLabel);
+      VERIFY(equal(r.top(), 2), caseLabel);
+      VERIFY(equal(r.right(), 4), caseLabel);
+      VERIFY(equal(r.bottom(), 5), caseLabel);
+   }
 }
 
 
