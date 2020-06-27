@@ -259,6 +259,32 @@ void testRect2Center()
 
 void testRect2IsPointInRect()
 {
+   {
+      const std::string caseLabel = "Is point in rect for point inside";
+
+      Rect2 r{-1, -2, 5, 7};
+      VERIFY(r.isPointInRect(Point2{2, 4}), caseLabel);
+      VERIFY(r.isPointInRect(Point2{3, -1}), caseLabel);
+      VERIFY(r.isPointInRect(Point2{-0.2, 6.0}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Is point in rect for point outside";
+
+      Rect2 r{-1, -2, 5, 7};
+      VERIFY(!r.isPointInRect(Point2{-2, 4}), caseLabel);
+      VERIFY(!r.isPointInRect(Point2{0, -4}), caseLabel);
+      VERIFY(!r.isPointInRect(Point2{8.0, 4.0}), caseLabel);
+      VERIFY(!r.isPointInRect(Point2{3, 10}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Is point in rect for point on edge";
+
+      Rect2 r{-1, -2, 5, 7};
+      VERIFY(r.isPointInRect(Point2{2, -2}), caseLabel);
+      VERIFY(r.isPointInRect(Point2{5, 2}), caseLabel);
+      VERIFY(r.isPointInRect(Point2{0.0, 7.0}), caseLabel);
+      VERIFY(r.isPointInRect(Point2{-1, 1}), caseLabel);
+   }
 }
 
 
