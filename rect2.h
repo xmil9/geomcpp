@@ -161,8 +161,10 @@ template <typename T>
 template <typename U>
 bool Rect2<T>::isPointInRect(const Point2<U>& pt) const
 {
-   return sutil::greaterEqual(pt.x(), left()) && sutil::fpLessEqual(pt.x(), right()) &&
-          sutil::greaterEqual(pt.y(), top()) && sutil::fpLessEqual(pt.y(), bottom());
+   return sutil::greaterEqual(static_cast<T>(pt.x()), left()) &&
+          sutil::lessEqual(static_cast<T>(pt.x()), right()) &&
+          sutil::greaterEqual(static_cast<T>(pt.y()), top()) &&
+          sutil::lessEqual(static_cast<T>(pt.y()), bottom());
 }
 
 
@@ -178,9 +180,9 @@ template <typename T> template <typename U> void Rect2<T>::inflate(U by)
 template <typename T> void Rect2<T>::normalize()
 {
    using std::swap;
-	if (left() > right())
+   if (left() > right())
       swap(m_l, m_r);
-	if (top() > bottom())
+   if (top() > bottom())
       swap(m_t, m_b);
 }
 
