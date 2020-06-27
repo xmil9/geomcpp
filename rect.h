@@ -1,6 +1,6 @@
 //
 // geomcpp
-// 2D rectangle.
+// Rectangle.
 //
 // Jun-2020, Michael Lindner
 // MIT license
