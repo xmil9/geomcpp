@@ -4,6 +4,7 @@
 // Jun-2020, Michael Lindner
 // MIT license
 //
+#include "circle_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
 #include "point2_tests.h"
@@ -14,6 +15,7 @@
 
 int main()
 {
+   testCircle();
    testDecInterval();
    testPoint2D();
    testTecInterval();

@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\circle_tests.cpp" />
     <ClCompile Include="..\..\geomcpp_tests.cpp" />
     <ClCompile Include="..\..\interval_dec_tests.cpp" />
     <ClCompile Include="..\..\interval_tec_tests.cpp" />
@@ -48,6 +49,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\circle_tests.h" />
     <ClInclude Include="..\..\interval_dec_tests.h" />
     <ClInclude Include="..\..\interval_tec_tests.h" />
     <ClInclude Include="..\..\point2_tests.h" />
