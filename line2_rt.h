@@ -1,6 +1,6 @@
 //
 // geomcpp
-// Base class for 2D lines using run time/dynamic polymorphism.
+// A 2D line using run time/dynamic polymorphism.
 //
 // Jun-2020, Michael Lindner
 // MIT license
@@ -18,6 +18,7 @@ namespace rt
 {
 ///////////////////
 
+// A line extends infinitely into both directions.
 template <typename T> class Line2
 {
  public:
@@ -25,14 +26,17 @@ template <typename T> class Line2
    using Fp = sutil::FpType<T>;
    using ParametricValue = Fp;
 
+   Line2() = default;
+   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
+
    Point2<T> anchorPoint() const noexcept { return m_anchor; }
    Vec2<T> direction() const noexcept { return m_dir; }
 
    bool isPoint() const;
-   virtual bool hasStartPoint() const = 0;
-   virtual std::optional<Point2<T>> startPoint() const = 0;
-   virtual bool hasEndPoint() const = 0;
-   virtual std::optional<Point2<T>> endPoint() const = 0;
+   virtual bool hasStartPoint() const { return false; }
+   virtual std::optional<Point2<T>> startPoint() const { return std::nullopt; }
+   virtual bool hasEndPoint() const  { return false; }   
+   virtual std::optional<Point2<T>> endPoint() const { return std::nullopt; }
 
    virtual std::optional<ParametricValue> isPointOnLine(const Point2<T>& pt) const;
    // Checks if a given point is on the infinite extension of the line.
@@ -43,10 +47,6 @@ template <typename T> class Line2
    template <typename U> Point2<T> calcPointAt(U parametricVal) const;
 
  protected:
-   Line2() = default;
-   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
-
- private:
    // Point that anchors the line in the coordinate system. For line types that
    // have a start point it is guaranteed to be the start point.
    Point2<T> m_anchor;
@@ -73,8 +73,7 @@ template <typename T>
 std::optional<typename Line2<T>::ParametricValue>
 Line2<T>::isPointOnLine(const Point2<T>& pt) const
 {
-   // Default to negative result. Subclasses should customize this method.
-   return std::nullopt;
+   return isPointOnInfiniteLine(pt);
 }
 
 
