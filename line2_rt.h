@@ -56,6 +56,13 @@ template <typename T> class Line2
 };
 
 
+template <typename T>
+constexpr Line2<T>::Line2(const Point2<T>& anchor, const Vec2<T>& direction)
+   : m_anchor{anchor}, m_dir{direction}
+{
+}
+
+
 template <typename T> bool Line2<T>::isPoint() const
 {
    return sutil::equal(direction().lengthSquared() == FP(0));
