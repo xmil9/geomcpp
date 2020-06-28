@@ -23,7 +23,7 @@ template <typename T> class Circle
    using value_type = T;
 
    Circle() = default;
-   template <typename U> constexpr Circle(const Point2<T>& center, U radius);
+   constexpr Circle(const Point2<T>& center, T radius);
    Circle(const Circle&) = default;
    Circle(Circle&&) = default;
 
@@ -47,8 +47,7 @@ template <typename T> class Circle
 
 
 template <typename T>
-template <typename U>
-constexpr Circle<T>::Circle(const Point2<T>& center, U radius)
+constexpr Circle<T>::Circle(const Point2<T>& center, T radius)
 : m_center{center}, m_radius{static_cast<T>(radius)}
 {
 }
@@ -62,8 +61,8 @@ template <typename T> bool Circle<T>::isPoint() const
 
 template <typename T> Rect<T> Circle<T>::bounds() const
 {
-   return Rect{m_center.x - radius(), m_center.y - radius(), m_center.x + radius(),
-               m_center.y + radius()};
+   return Rect{m_center.x() - radius(), m_center.y() - radius(), m_center.x() + radius(),
+               m_center.y() + radius()};
 }
 
 
@@ -111,7 +110,7 @@ Point2<T> Circle<T>::pointAtAngle(U angleInRadians) const
    const FP r = static_cast<FP>(radius());
    const FP x = m_center.x() + r * std::cos(angle);
    const FP y = m_center.y() + r * std::sin(angle);
-   return Point2<T>(x, y);
+   return Point2<T>(static_cast<T>(x), static_cast<T>(y));
 }
 
 
