@@ -44,6 +44,7 @@
     <ClInclude Include="..\..\interval_tec.h" />
     <ClInclude Include="..\..\interval_dec.h" />
     <ClInclude Include="..\..\interval_types.h" />
+    <ClInclude Include="..\..\line2_rt.h" />
     <ClInclude Include="..\..\point2.h" />
     <ClInclude Include="..\..\rect.h" />
     <ClInclude Include="..\..\vec2.h" />
