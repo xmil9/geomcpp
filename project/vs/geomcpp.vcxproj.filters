@@ -12,5 +12,6 @@
     <ClInclude Include="..\..\point2.h" />
     <ClInclude Include="..\..\coordsys.h" />
     <ClInclude Include="..\..\rect.h" />
+    <ClInclude Include="..\..\circle.h" />
   </ItemGroup>
 </Project>
