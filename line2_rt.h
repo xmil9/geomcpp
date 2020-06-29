@@ -46,7 +46,7 @@ template <typename T> class Line2
    // Returns the point at a given parametric value along the line.
    template <typename U> Point2<T> calcPointAt(U parametricVal) const;
 
- protected:
+ private:
    // Point that anchors the line in the coordinate system. For line types that
    // have a start point it is guaranteed to be the start point.
    Point2<T> m_anchor;
