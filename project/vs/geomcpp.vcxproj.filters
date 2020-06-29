@@ -15,5 +15,6 @@
     <ClInclude Include="..\..\circle.h" />
     <ClInclude Include="..\..\line2_rt.h" />
     <ClInclude Include="..\..\line_seg2_rt.h" />
+    <ClInclude Include="..\..\line_ray2_rt.h" />
   </ItemGroup>
 </Project>
