@@ -23,9 +23,9 @@ namespace rt
 template <typename T> class LineSeg2 : public Line2<T>
 {
  public:
-   using value_type = T;
-   using Fp = sutil::FpType<T>;
-   using ParametricValue = Fp;
+   using value_type = typename Line2<T>::value_type;
+   using Fp = typename Line2<T>::Fp;
+   using ParametricValue = typename Line2<T>::ParametricValue;
 
    LineSeg2() = default;
    LineSeg2(const Point2<T>& start, const Point2<T>& end);
@@ -35,8 +35,7 @@ template <typename T> class LineSeg2 : public Line2<T>
    std::optional<Point2<T>> startPoint() const override { return anchor(); }
    bool hasEndPoint() const override { return true; }
    std::optional<Point2<T>> endPoint() const override;
-   std::optional<typename Line2<T>::ParametricValue>
-   isPointOnLine(const Point2<T>& pt) const override;
+   std::optional<ParametricValue> isPointOnLine(const Point2<T>& pt) const override;
 
    Point2<T> midPoint() const;
    Fp lengthSquared() const;
@@ -65,14 +64,12 @@ template <typename T> std::optional<Point2<T>> LineSeg2<T>::endPoint() const
 
 
 template <typename T>
-std::optional<typename Line2<T>::ParametricValue>
+std::optional<typename LineSeg2<T>::ParametricValue>
 LineSeg2<T>::isPointOnLine(const Point2<T>& pt) const
 {
    const auto paramVal = calcParametricValue(pt);
    if (paramVal && sutil::fpGreaterEqual(*paramVal, 0) && sutil::fpLessEqual(paramVal, 1))
-   {
       return paramVal;
-   }
    return std::nullopt;
 }
 
