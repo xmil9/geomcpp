@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\geomcpp_tests.cpp" />
     <ClCompile Include="..\..\interval_dec_tests.cpp" />
     <ClCompile Include="..\..\interval_tec_tests.cpp" />
+    <ClCompile Include="..\..\line2_rt_tests.cpp" />
     <ClCompile Include="..\..\point2_tests.cpp" />
     <ClCompile Include="..\..\rect_tests.cpp" />
     <ClCompile Include="..\..\vec2_tests.cpp" />
@@ -52,6 +53,7 @@
     <ClInclude Include="..\..\circle_tests.h" />
     <ClInclude Include="..\..\interval_dec_tests.h" />
     <ClInclude Include="..\..\interval_tec_tests.h" />
+    <ClInclude Include="..\..\line2_rt_tests.h" />
     <ClInclude Include="..\..\point2_tests.h" />
     <ClInclude Include="..\..\rect_tests.h" />
     <ClInclude Include="..\..\test_util.h" />
