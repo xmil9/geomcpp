@@ -46,7 +46,7 @@ LineRay2<T>::LineRay2(const Point2<T>& start, const Vec2<T>& direction)
 
 
 template <typename T>
-std::optional<typename Line2<T>::ParametricValue>
+std::optional<typename LineRay2<T>::ParametricValue>
 LineRay2<T>::isPointOnLine(const Point2<T>& pt) const
 {
    const auto paramVal = calcParametricValue(pt);

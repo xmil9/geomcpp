@@ -29,13 +29,13 @@ template <typename T> class Line2
    Line2() = default;
    constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
 
-   Point2<T> anchorPoint() const noexcept { return m_anchor; }
+   Point2<T> anchor() const noexcept { return m_anchor; }
    Vec2<T> direction() const noexcept { return m_dir; }
 
    bool isPoint() const;
    virtual bool hasStartPoint() const { return false; }
    virtual std::optional<Point2<T>> startPoint() const { return std::nullopt; }
-   virtual bool hasEndPoint() const  { return false; }   
+   virtual bool hasEndPoint() const { return false; }
    virtual std::optional<Point2<T>> endPoint() const { return std::nullopt; }
 
    virtual std::optional<ParametricValue> isPointOnLine(const Point2<T>& pt) const;
@@ -52,20 +52,20 @@ template <typename T> class Line2
    Point2<T> m_anchor;
    // Direction of line. Whether the length of the direction vector has meaning
    // is up to each derived class.
-   Vec2 m_dir;
+   Vec2<T> m_dir;
 };
 
 
 template <typename T>
 constexpr Line2<T>::Line2(const Point2<T>& anchor, const Vec2<T>& direction)
-   : m_anchor{anchor}, m_dir{direction}
+: m_anchor{anchor}, m_dir{direction}
 {
 }
 
 
 template <typename T> bool Line2<T>::isPoint() const
 {
-   return sutil::equal(direction().lengthSquared() == FP(0));
+   return sutil::equal(direction().lengthSquared(), Fp(0));
 }
 
 
@@ -90,15 +90,15 @@ std::optional<typename Line2<T>::ParametricValue>
 Line2<T>::calcParametricValue(const Point2<T>& pt) const
 {
    if (isPoint())
-      return (pt == anchor) ? ParametricValue(0) : std::nullopt;
+      return (pt == anchor()) ? std::make_optional(ParametricValue(0)) : std::nullopt;
 
-   const Vec2<T> v = Vec2{anchor, pt};
-   if (!v.isParallel(dir))
+   const auto v = Vec2<T>{anchor(), pt};
+   if (!v.isParallel(direction()))
       return std::nullopt;
 
    // length != 0 is assured by checking whether line is a point above.
-   const auto parametricVal = v.length() / dir.length();
-   if (!v.hasSameDirection(dir))
+   auto parametricVal = v.length() / direction().length();
+   if (!v.hasSameDirection(direction()))
       parametricVal *= ParametricValue(-1);
 
    return parametricVal;
@@ -109,7 +109,7 @@ template <typename T>
 template <typename U>
 Point2<T> Line2<T>::calcPointAt(U parametricVal) const
 {
-   const Vec2 v = dir.scale(parametricVal);
+   const Vec2 v = direction().scale(parametricVal);
    return anchor().offset(v);
 }
 
