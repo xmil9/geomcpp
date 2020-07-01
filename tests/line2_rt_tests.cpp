@@ -197,6 +197,73 @@ void testLine2IsPointOnLine()
    }
 }
 
+
+void testLine2IsPointOnInfiniteLine()
+{
+   {
+      const std::string caseLabel =
+         "Line2::isPointOnInfiniteLine for point that is on line";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = 0.7 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.isPointOnInfiniteLine(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, 0.7), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Line2::isPointOnInfiniteLine for point that is next to line";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Point2 pt{7.0, 1.0};
+      const auto pos = l.isPointOnInfiniteLine(pt);
+
+      VERIFY(!pos, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Line2::isPointOnInfiniteLine for point that is on infinite "
+         "line extension before the anchor point";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = -0.2 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.isPointOnInfiniteLine(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, -0.2), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Line2::isPointOnInfiniteLine for point that is on infinite ray";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = 1.5 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.isPointOnInfiniteLine(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, 1.5), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -210,4 +277,5 @@ void testRtLine2()
    testLine2HasEndPoint();
    testLine2EndPoint();
    testLine2IsPointOnLine();
+   testLine2IsPointOnInfiniteLine();
 }
