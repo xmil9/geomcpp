@@ -264,6 +264,70 @@ void testLine2IsPointOnInfiniteLine()
    }
 }
 
+
+void testLine2CalcParametricValue()
+{
+   {
+      const std::string caseLabel =
+         "Line2::calcParametricValue for point within length of directional vector";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = 0.3 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.calcParametricValue(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, 0.3), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Line2::calcParametricValue for point past the length of directional vector";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = 4.5 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.calcParametricValue(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, 4.5), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Line2::calcParametricValue for point before the anchor point";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const Vec2 v = -1.2 * dir;
+      const Point2 pt = anchor + v;
+      const auto pos = l.calcParametricValue(pt);
+
+      VERIFY(pos.has_value(), caseLabel);
+      if (pos)
+         VERIFY(fpEqual(*pos, -1.2), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Line2::calcParametricValue for point not on line";
+
+      const Point2 anchor{3.0, 4.0};
+      const Vec2 dir{2.0, 1.0};
+      const Line2 l{anchor, dir};
+
+      const auto pos = l.calcParametricValue(Point2{1.0, 1.0});
+
+      VERIFY(!pos.has_value(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -278,4 +342,5 @@ void testRtLine2()
    testLine2EndPoint();
    testLine2IsPointOnLine();
    testLine2IsPointOnInfiniteLine();
+   testLine2CalcParametricValue();
 }
