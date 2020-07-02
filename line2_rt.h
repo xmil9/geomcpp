@@ -24,7 +24,6 @@ template <typename T> class Line2
  public:
    using value_type = T;
    using Fp = sutil::FpType<T>;
-   using ParametricValue = Fp;
 
    Line2() = default;
    constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
@@ -38,13 +37,15 @@ template <typename T> class Line2
    virtual bool hasEndPoint() const { return false; }
    virtual std::optional<Point2<T>> endPoint() const { return std::nullopt; }
 
-   virtual std::optional<ParametricValue> isPointOnLine(const Point2<T>& pt) const;
+   // Returns the interpolation factor of the point.
+   virtual std::optional<Fp> isPointOnLine(const Point2<T>& pt) const;
    // Checks if a given point is on the infinite extension of the line.
-   std::optional<ParametricValue> isPointOnInfiniteLine(const Point2<T>& pt) const;
-   // Calculates the parametric value of a given point along the line.
-   std::optional<ParametricValue> calcParametricValue(const Point2<T>& pt) const;
-   // Returns the point at a given parametric value along the line.
-   template <typename U> Point2<T> calcPointAt(U parametricVal) const;
+   // Returns the interpolation factor of the point.
+   std::optional<Fp> isPointOnInfiniteLine(const Point2<T>& pt) const;
+   // Calculates the interpolation factor of a given point along the line.
+   std::optional<Fp> calcLerpFactor(const Point2<T>& pt) const;
+   // Interpolates a point at a given factor along the line.
+   template <typename U> Point2<T> lerpPoint(U factor) const;
 
  private:
    // Point that anchors the line in the coordinate system. For line types that
@@ -70,46 +71,42 @@ template <typename T> bool Line2<T>::isPoint() const
 
 
 template <typename T>
-std::optional<typename Line2<T>::ParametricValue>
-Line2<T>::isPointOnLine(const Point2<T>& pt) const
+std::optional<typename Line2<T>::Fp> Line2<T>::isPointOnLine(const Point2<T>& pt) const
 {
    return isPointOnInfiniteLine(pt);
 }
 
 
 template <typename T>
-std::optional<typename Line2<T>::ParametricValue>
+std::optional<typename Line2<T>::Fp>
 Line2<T>::isPointOnInfiniteLine(const Point2<T>& pt) const
 {
-   return calcParametricValue(pt);
+   return calcLerpFactor(pt);
 }
 
 
 template <typename T>
-std::optional<typename Line2<T>::ParametricValue>
-Line2<T>::calcParametricValue(const Point2<T>& pt) const
+std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<T>& pt) const
 {
    if (isPoint())
-      return (pt == anchor()) ? std::make_optional(ParametricValue(0)) : std::nullopt;
+      return (pt == anchor()) ? std::make_optional(Fp(0)) : std::nullopt;
 
    const auto v = Vec2<T>{anchor(), pt};
    if (!v.isParallel(direction()))
       return std::nullopt;
 
    // length != 0 is assured by checking whether line is a point above.
-   auto parametricVal = v.length() / direction().length();
+   auto factor = v.length() / direction().length();
    if (!v.hasSameDirection(direction()))
-      parametricVal *= ParametricValue(-1);
+      factor *= -1;
 
-   return parametricVal;
+   return factor;
 }
 
 
-template <typename T>
-template <typename U>
-Point2<T> Line2<T>::calcPointAt(U parametricVal) const
+template <typename T> template <typename U> Point2<T> Line2<T>::lerpPoint(U factor) const
 {
-   const Vec2 v = direction().scale(parametricVal);
+   const Vec2 v = direction() * factor;
    return anchor().offset(v);
 }
 

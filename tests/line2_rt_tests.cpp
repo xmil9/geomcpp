@@ -265,11 +265,11 @@ void testLine2IsPointOnInfiniteLine()
 }
 
 
-void testLine2CalcParametricValue()
+void testLine2CalcLerpFactor()
 {
    {
       const std::string caseLabel =
-         "Line2::calcParametricValue for point within length of directional vector";
+         "Line2::calcLerpFactor for point within length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -277,7 +277,7 @@ void testLine2CalcParametricValue()
 
       const Vec2 v = 0.3 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcParametricValue(pt);
+      const auto pos = l.calcLerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
@@ -285,7 +285,7 @@ void testLine2CalcParametricValue()
    }
    {
       const std::string caseLabel =
-         "Line2::calcParametricValue for point past the length of directional vector";
+         "Line2::calcLerpFactor for point past the length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -293,7 +293,7 @@ void testLine2CalcParametricValue()
 
       const Vec2 v = 4.5 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcParametricValue(pt);
+      const auto pos = l.calcLerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
@@ -301,7 +301,7 @@ void testLine2CalcParametricValue()
    }
    {
       const std::string caseLabel =
-         "Line2::calcParametricValue for point before the anchor point";
+         "Line2::calcLerpFactor for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -309,20 +309,20 @@ void testLine2CalcParametricValue()
 
       const Vec2 v = -1.2 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcParametricValue(pt);
+      const auto pos = l.calcLerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
          VERIFY(fpEqual(*pos, -1.2), caseLabel);
    }
    {
-      const std::string caseLabel = "Line2::calcParametricValue for point not on line";
+      const std::string caseLabel = "Line2::calcLerpFactor for point not on line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const Line2 l{anchor, dir};
 
-      const auto pos = l.calcParametricValue(Point2{1.0, 1.0});
+      const auto pos = l.calcLerpFactor(Point2{1.0, 1.0});
 
       VERIFY(!pos.has_value(), caseLabel);
    }
@@ -342,5 +342,5 @@ void testRtLine2()
    testLine2EndPoint();
    testLine2IsPointOnLine();
    testLine2IsPointOnInfiniteLine();
-   testLine2CalcParametricValue();
+   testLine2CalcLerpFactor();
 }
