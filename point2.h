@@ -70,7 +70,9 @@ template <typename T> template <typename U> Point2<T> Point2<T>::scale(U factor)
 
 template <typename T, typename U> bool operator==(const Point2<T>& a, const Point2<U>& b)
 {
-   return sutil::equal(a.x(), b.x()) && sutil::equal(a.y(), b.y());
+   using Common = std::common_type_t<T, U>;
+   return sutil::equal<Common>(static_cast<Common>(a.x()), static_cast<Common>(b.x())) &&
+          sutil::equal<Common>(static_cast<Common>(a.y()), static_cast<Common>(b.y()));
 }
 
 
