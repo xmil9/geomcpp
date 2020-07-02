@@ -7,6 +7,7 @@
 #include "circle_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
+#include "line_ray2_rt_tests.h"
 #include "line_seg2_rt_tests.h"
 #include "line2_rt_tests.h"
 #include "point2_tests.h"
@@ -23,6 +24,7 @@ int main()
    testTecInterval();
    testRect();
    testRtLine2();
+   testRtLineRay2();
    testRtLineSeg2();
    testVector2D();
 
