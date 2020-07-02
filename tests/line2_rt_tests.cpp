@@ -1,6 +1,6 @@
 //
 // geomcpp tests
-// Tests for rectangles.
+// Tests for 2D lines using run time polymorphism.
 //
 // Jun-2020, Michael Lindner
 // MIT license

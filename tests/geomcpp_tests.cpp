@@ -7,6 +7,7 @@
 #include "circle_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
+#include "line_seg2_rt_tests.h"
 #include "line2_rt_tests.h"
 #include "point2_tests.h"
 #include "rect_tests.h"
@@ -22,6 +23,7 @@ int main()
    testTecInterval();
    testRect();
    testRtLine2();
+   testRtLineSeg2();
    testVector2D();
 
    std::cout << "geomcpp tests finished.\n";
