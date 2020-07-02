@@ -39,14 +39,15 @@ template <typename T> class Line2
 
    // Returns the interpolation factor of the point.
    virtual std::optional<Fp> isPointOnLine(const Point2<T>& pt) const;
-   
+
    // Checks if a given point is on the infinite extension of the line.
    // Returns the interpolation factor of the point.
-   std::optional<Fp> isPointOnInfiniteLine(const Point2<T>& pt) const;
-   
+   template <typename U>
+   std::optional<Fp> isPointOnInfiniteLine(const Point2<U>& pt) const;
+
    // Calculates the interpolation factor of a given point along the line.
-   std::optional<Fp> calcLerpFactor(const Point2<T>& pt) const;
-   
+   template <typename U> std::optional<Fp> calcLerpFactor(const Point2<U>& pt) const;
+
    // Interpolates a point at a given factor along the line.
    template <typename U> Point2<T> lerpPoint(U factor) const;
 
@@ -82,15 +83,17 @@ std::optional<typename Line2<T>::Fp> Line2<T>::isPointOnLine(const Point2<T>& pt
 
 
 template <typename T>
+template <typename U>
 std::optional<typename Line2<T>::Fp>
-Line2<T>::isPointOnInfiniteLine(const Point2<T>& pt) const
+Line2<T>::isPointOnInfiniteLine(const Point2<U>& pt) const
 {
    return calcLerpFactor(pt);
 }
 
 
 template <typename T>
-std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<T>& pt) const
+template <typename U>
+std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<U>& pt) const
 {
    if (isPoint())
       return (pt == anchor()) ? std::make_optional(Fp(0)) : std::nullopt;
@@ -126,7 +129,7 @@ template <typename T, typename U> bool parallel(const Line2<T>& a, const Line2<U
 // Checks if two lines are on the same inifinite line.
 template <typename T, typename U> bool coincident(const Line2<T>& a, const Line2<U>& b)
 {
-   return parallel(a, b) && a.isPointOnInfiniteLine(b.anchorPoint());
+   return parallel(a, b) && a.isPointOnInfiniteLine(b.anchor());
 }
 
 
