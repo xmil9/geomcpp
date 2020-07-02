@@ -107,7 +107,7 @@ std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<T>& p
 template <typename T> template <typename U> Point2<T> Line2<T>::lerpPoint(U factor) const
 {
    const Vec2 v = direction() * factor;
-   return anchor().offset(v);
+   return anchor() + v;
 }
 
 
