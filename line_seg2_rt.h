@@ -30,9 +30,7 @@ template <typename T> class LineSeg2 : public Line2<T>
    LineSeg2(const Point2<T>& start, const Point2<T>& end);
    LineSeg2(const Point2<T>& start, const Vec2<T>& direction);
 
-   bool hasStartPoint() const override { return true; }
    std::optional<Point2<T>> startPoint() const override { return this->anchor(); }
-   bool hasEndPoint() const override { return true; }
    std::optional<Point2<T>> endPoint() const override;
    std::optional<Fp> isPointOnLine(const Point2<T>& pt) const override;
 

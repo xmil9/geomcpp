@@ -32,9 +32,7 @@ template <typename T> class Line2
    Vec2<T> direction() const noexcept { return m_dir; }
 
    bool isPoint() const;
-   virtual bool hasStartPoint() const { return false; }
    virtual std::optional<Point2<T>> startPoint() const { return std::nullopt; }
-   virtual bool hasEndPoint() const { return false; }
    virtual std::optional<Point2<T>> endPoint() const { return std::nullopt; }
 
    // Returns the interpolation factor of the point.

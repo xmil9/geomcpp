@@ -82,19 +82,6 @@ void testLine2IsPoint()
 }
 
 
-void testLine2HasStartPoint()
-{
-   {
-      const std::string caseLabel = "Line2::hasStartPoint";
-
-      const Point2 anchor{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const Line2 l{anchor, dir};
-      VERIFY(!l.hasStartPoint(), caseLabel);
-   }
-}
-
-
 void testLine2StartPoint()
 {
    {
@@ -104,19 +91,6 @@ void testLine2StartPoint()
       const Vec2 dir{3.0f, 2.0f};
       const Line2 l{anchor, dir};
       VERIFY(!l.startPoint(), caseLabel);
-   }
-}
-
-
-void testLine2HasEndPoint()
-{
-   {
-      const std::string caseLabel = "Line2::hasEndPoint";
-
-      const Point2 anchor{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const Line2 l{anchor, dir};
-      VERIFY(!l.hasEndPoint(), caseLabel);
    }
 }
 
@@ -462,9 +436,7 @@ void testRtLine2()
    testLine2DefaultCtor();
    testLine2ValueCtor();
    testLine2IsPoint();
-   testLine2HasStartPoint();
    testLine2StartPoint();
-   testLine2HasEndPoint();
    testLine2EndPoint();
    testLine2IsPointOnLine();
    testLine2IsPointOnInfiniteLine();

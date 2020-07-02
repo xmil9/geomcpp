@@ -83,19 +83,6 @@ void testLineRay2IsPoint()
 }
 
 
-void testLineRay2HasStartPoint()
-{
-   {
-      const std::string caseLabel = "LineRay2::hasStartPoint";
-
-      const Point2 start{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const LineRay2 l{start, dir};
-      VERIFY(l.hasStartPoint(), caseLabel);
-   }
-}
-
-
 void testLineRay2StartPoint()
 {
    {
@@ -105,19 +92,6 @@ void testLineRay2StartPoint()
       const Vec2 dir{3.0f, 2.0f};
       const LineRay2 l{start, dir};
       VERIFY(l.startPoint() == start, caseLabel);
-   }
-}
-
-
-void testLineRay2HasEndPoint()
-{
-   {
-      const std::string caseLabel = "LineRay2::hasEndPoint";
-
-      const Point2 start{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const LineRay2 l{start, dir};
-      VERIFY(!l.hasEndPoint(), caseLabel);
    }
 }
 
@@ -507,9 +481,7 @@ void testRtLineRay2()
    testLineRay2DefaultCtor();
    testLineRay2StartDirectionCtor();
    testLineRay2IsPoint();
-   testLineRay2HasStartPoint();
    testLineRay2StartPoint();
-   testLineRay2HasEndPoint();
    testLineRay2EndPoint();
    testLineRay2IsPointOnLine();
    testLineRay2IsPointOnInfiniteLine();

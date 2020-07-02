@@ -105,19 +105,6 @@ void testLineSeg2IsPoint()
 }
 
 
-void testLineSeg2HasStartPoint()
-{
-   {
-      const std::string caseLabel = "LineSeg2::hasStartPoint";
-
-      const Point2 start{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const LineSeg2 l{start, dir};
-      VERIFY(l.hasStartPoint(), caseLabel);
-   }
-}
-
-
 void testLineSeg2StartPoint()
 {
    {
@@ -127,19 +114,6 @@ void testLineSeg2StartPoint()
       const Vec2 dir{3.0f, 2.0f};
       const LineSeg2 l{start, dir};
       VERIFY(l.startPoint() == start, caseLabel);
-   }
-}
-
-
-void testLineSeg2HasEndPoint()
-{
-   {
-      const std::string caseLabel = "LineSeg2::hasEndPoint";
-
-      const Point2 start{1.0f, 2.0f};
-      const Vec2 dir{3.0f, 2.0f};
-      const LineSeg2 l{start, dir};
-      VERIFY(l.hasEndPoint(), caseLabel);
    }
 }
 
@@ -595,9 +569,7 @@ void testRtLineSeg2()
    testLineSeg2StartEndCtor();
    testLineSeg2StartDirectionCtor();
    testLineSeg2IsPoint();
-   testLineSeg2HasStartPoint();
    testLineSeg2StartPoint();
-   testLineSeg2HasEndPoint();
    testLineSeg2EndPoint();
    testLineSeg2IsPointOnLine();
    testLineSeg2IsPointOnInfiniteLine();
