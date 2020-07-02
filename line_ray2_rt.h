@@ -25,33 +25,32 @@ template <typename T> class LineRay2 : public Line2<T>
  public:
    using value_type = typename Line2<T>::value_type;
    using Fp = typename Line2<T>::Fp;
-   using ParametricValue = typename Line2<T>::ParametricValue;
 
    LineRay2() = default;
    LineRay2(const Point2<T>& start, const Vec2<T>& direction);
 
    bool hasStartPoint() const override { return true; }
-   std::optional<Point2<T>> startPoint() const override { return anchor(); }
+   std::optional<Point2<T>> startPoint() const override { return this->anchor(); }
    bool hasEndPoint() const override { return false; }
    std::optional<Point2<T>> endPoint() const override { return std::nullopt; }
-   std::optional<ParametricValue> isPointOnLine(const Point2<T>& pt) const override;
+   std::optional<Fp> isPointOnLine(const Point2<T>& pt) const override;
 };
 
 
 template <typename T>
 LineRay2<T>::LineRay2(const Point2<T>& start, const Vec2<T>& direction)
-: Line2(start, direction)
+: Line2<T>(start, direction)
 {
 }
 
 
 template <typename T>
-std::optional<typename LineRay2<T>::ParametricValue>
+std::optional<typename LineRay2<T>::Fp>
 LineRay2<T>::isPointOnLine(const Point2<T>& pt) const
 {
-   const auto paramVal = calcParametricValue(pt);
-   if (paramVal && sutil::fpGreaterEqual(*paramVal, 0))
-      return paramVal;
+   const auto factor = this->calcLerpFactor(pt);
+   if (factor && sutil::fpGreaterEqual<Fp>(*factor, 0))
+      return factor;
    return std::nullopt;
 }
 
