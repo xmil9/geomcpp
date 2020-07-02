@@ -394,6 +394,66 @@ void testLine2LerpPoint()
    }
 }
 
+
+void testLine2Parallel()
+{
+   {
+      const std::string caseLabel = "parallel() for parallel lines";
+
+      const Vec2 dir{2.0, 1.0};
+      const Line2 a{Point2{3.0, 4.0}, dir};
+      const Line2 b{Point2{2.0, 1.0}, dir};
+      
+      VERIFY(parallel(a, b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "parallel() for non-parallel lines";
+
+      const Line2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
+      const Line2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
+      
+      VERIFY(!parallel(a, b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "parallel() for mixed line types";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
+      
+      VERIFY(parallel(a, b), caseLabel);
+   }
+}
+
+
+void testLine2Coincident()
+{
+   {
+      const std::string caseLabel = "coincident() for coincident lines";
+
+      const Vec2 dir{2.0, 1.0};
+      const Line2 a{Point2{3.0, 4.0}, dir};
+      const Line2 b{Point2{5.0, 5.0}, dir};
+      
+      VERIFY(coincident(a, b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "coincident() for non-coincident lines";
+
+      const Line2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
+      const Line2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
+      
+      VERIFY(!coincident(a, b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "coincident() for mixed line types";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
+      
+      VERIFY(coincident(a, b), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -410,4 +470,6 @@ void testRtLine2()
    testLine2IsPointOnInfiniteLine();
    testLine2CalcLerpFactor();
    testLine2LerpPoint();
+   testLine2Parallel();
+   testLine2Coincident();
 }
