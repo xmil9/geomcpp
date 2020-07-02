@@ -39,11 +39,14 @@ template <typename T> class Line2
 
    // Returns the interpolation factor of the point.
    virtual std::optional<Fp> isPointOnLine(const Point2<T>& pt) const;
+   
    // Checks if a given point is on the infinite extension of the line.
    // Returns the interpolation factor of the point.
    std::optional<Fp> isPointOnInfiniteLine(const Point2<T>& pt) const;
+   
    // Calculates the interpolation factor of a given point along the line.
    std::optional<Fp> calcLerpFactor(const Point2<T>& pt) const;
+   
    // Interpolates a point at a given factor along the line.
    template <typename U> Point2<T> lerpPoint(U factor) const;
 
@@ -51,6 +54,7 @@ template <typename T> class Line2
    // Point that anchors the line in the coordinate system. For line types that
    // have a start point it is guaranteed to be the start point.
    Point2<T> m_anchor;
+
    // Direction of line. Whether the length of the direction vector has meaning
    // is up to each derived class.
    Vec2<T> m_dir;
