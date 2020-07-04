@@ -881,6 +881,14 @@ void testVec2Equality()
       const Vec2<float> b{7.6f, -2.2f};
       VERIFY(!(a == b), caseLabel);
    }
+   {
+      const std::string caseLabel =
+         "Equality for vectors with different value types but same data values";
+
+      const Vec2<float> a{2.0f, -3.0f};
+      const Vec2<int> b{2, -3};
+      VERIFY(a == b, caseLabel);
+   }
 }
 
 
@@ -1018,7 +1026,7 @@ void testVector2D()
    testVec2DivisionByScalar();
    testVec2Equality();
    testVec2Inequality();
-   
+
    testPointVectorAddition();
    testVectorPointAddition();
    testPointSubtraction();
