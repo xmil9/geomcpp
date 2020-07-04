@@ -147,9 +147,5 @@ template <typename T, typename U> bool coincident(const Line2<T>& a, const Line2
    return parallel(a, b) && a.isPointOnInfiniteLine(b.anchor());
 }
 
-
-// template <typename T, typename U>
-// LineIntersection2D.Result intersect(const Line2<T>& a, const Line2<T>& b) const;
-
 } // namespace rt
 } // namespace geom
