@@ -24,6 +24,7 @@ namespace rt
 {
 ///////////////////
 
+// Union of possible outcomes when intersecting two lines.
 template <typename T>
 using LineIntersection2 = std::variant<Point2<T>, LineSeg2<T>, LineRay2<T>, Line2<T>>;
 
@@ -33,8 +34,8 @@ using LineIntersection2 = std::variant<Point2<T>, LineSeg2<T>, LineRay2<T>, Line
 namespace internals
 {
 
-template <typename T> constexpr T PosInf = std::numeric_limits<T>::max;
-template <typename T> constexpr T NegInf = std::numeric_limits<T>::lowest;
+template <typename T> constexpr T PosInf = std::numeric_limits<T>::max();
+template <typename T> constexpr T NegInf = std::numeric_limits<T>::lowest();
 
 
 // Returns the result for the reduced problem of intersecting a point with a line.
@@ -80,7 +81,7 @@ makeCoincidentIntersection(const dec::Interval<T>& overlap, const Line2<T>& refL
    case 0:
       if (sutil::equal(overlap.start(), overlap.end()))
       {
-         return std::make_optional(refLine.lerpPoint(overlap.start());
+         return std::make_optional(refLine.lerpPoint(overlap.start()));
       }
       else
       {
@@ -131,15 +132,15 @@ std::optional<LineIntersection2<T>> intersectCoincidentLines(const Line2<T>& a,
    const Interval<T> aIval{begin, end, IntervalType::Closed};
 
    const bool hasSameDir = b.direction().hasSameDirection(a.direction());
+   begin = hasSameDir ? NegInf<T> : PosInf<T>;
    if (const auto startPt = b.startPoint())
-      begin = a.calcLerpFactor(*startPt);
-   else
-      begin = hasSameDir ? NegInf<T> : PosInf<T>;
+      if (const auto startFactor = a.calcLerpFactor(*startPt))
+         begin = *startFactor;
 
+   end = hasSameDir ? PosInf<T> : NegInf<T>;
    if (const auto endPt = b.endPoint())
-      end = a.calcLerpFactor(*endPt);
-   else
-      end = hasSameDir ? PosInf<T> : NegInf<T>;
+      if (const auto endFactor = a.calcLerpFactor(*endPt))
+         end = *endFactor;
 
    const Interval<T> bIval{begin, end, IntervalType::Closed};
 
