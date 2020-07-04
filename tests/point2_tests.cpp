@@ -209,6 +209,14 @@ void testPoint2Equality()
       const Point2<float> b{7.6f, -2.2f};
       VERIFY(!(a == b), caseLabel);
    }
+   {
+      const std::string caseLabel =
+         "Equality for points with different value types but same data values";
+
+      const Point2<float> a{2.0f, -3.0f};
+      const Point2<int> b{2, -3};
+      VERIFY(a == b, caseLabel);
+   }
 }
 
 
