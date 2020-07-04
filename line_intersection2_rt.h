@@ -66,17 +66,17 @@ std::optional<LineIntersection2<T>> intersectDegenerateLines(const Line2<T>& a,
 // Creates the result for the intersection of two coincident lines that overlap at
 // a given interval that contains the interpolation factors relative to a given
 // reference line.
-template <typename T>
+template <typename T, typename FP>
 std::optional<LineIntersection2<T>>
-makeCoincidentIntersection(const dec::Interval<T>& overlap, const Line2<T>& refLine)
+makeCoincidentIntersection(const dec::Interval<FP>& overlap, const Line2<T>& refLine)
 {
-   if (overlap == dec::EmptyInterval<T>)
+   if (overlap == dec::EmptyInterval<FP>)
       return std::nullopt;
 
    std::size_t numInfiniteEnds = 0;
-   if (overlap.start() == NegInf<T>)
+   if (overlap.start() == NegInf<FP>)
       ++numInfiniteEnds;
-   if (overlap.end() == PosInf<T>)
+   if (overlap.end() == PosInf<FP>)
       ++numInfiniteEnds;
 
    switch (numInfiniteEnds)
@@ -94,14 +94,14 @@ makeCoincidentIntersection(const dec::Interval<T>& overlap, const Line2<T>& refL
       }
 
    case 1:
-      if (overlap.start() == NegInf<T>)
+      if (overlap.start() == NegInf<FP>)
       {
          const LineRay2<T> res{refLine.lerpPoint(overlap.end()), -refLine.direction()};
          return std::make_optional(res);
       }
       else
       {
-         assert(overlap.end() == PosInf<T>);
+         assert(overlap.end() == PosInf<FP>);
          const LineRay2<T> res{refLine.lerpPoint(overlap.start()), refLine.direction()};
          return std::make_optional(res);
       }
@@ -121,6 +121,7 @@ template <typename T>
 std::optional<LineIntersection2<T>> intersectCoincidentLines(const Line2<T>& a,
                                                              const Line2<T>& b)
 {
+   using Fp = sutil::FpType<T>;
    using dec::Interval;
 
    // Use the interpolation values of the lines' start and end points to
@@ -130,25 +131,25 @@ std::optional<LineIntersection2<T>> intersectCoincidentLines(const Line2<T>& a,
    // When line b is infinite or a ray watch out to choose the correct
    // inifinite interpolation values depending on whether b is in the same
    // or the opposite direction of a.
-   T begin = a.startPoint() ? 0 : NegInf<T>;
-   T end = a.endPoint() ? 1 : PosInf<T>;
-   const Interval<T> aIval{begin, end, IntervalType::Closed};
+   Fp begin = a.startPoint() ? 0 : NegInf<Fp>;
+   Fp end = a.endPoint() ? 1 : PosInf<Fp>;
+   const Interval<Fp> aIval{begin, end, IntervalType::Closed};
 
    const bool hasSameDir = b.direction().hasSameDirection(a.direction());
-   begin = hasSameDir ? NegInf<T> : PosInf<T>;
+   begin = hasSameDir ? NegInf<Fp> : PosInf<Fp>;
    if (const auto startPt = b.startPoint())
       if (const auto startFactor = a.calcLerpFactor(*startPt))
          begin = *startFactor;
 
-   end = hasSameDir ? PosInf<T> : NegInf<T>;
+   end = hasSameDir ? PosInf<Fp> : NegInf<Fp>;
    if (const auto endPt = b.endPoint())
       if (const auto endFactor = a.calcLerpFactor(*endPt))
          end = *endFactor;
 
-   const Interval<T> bIval{begin, end, IntervalType::Closed};
+   const Interval<Fp> bIval{begin, end, IntervalType::Closed};
 
    // Calculate the overlap of the two intervals.
-   const Interval<T> overlap = intersect(aIval, bIval);
+   const Interval<Fp> overlap = intersect(aIval, bIval);
 
    return makeCoincidentIntersection(overlap, a);
 }
