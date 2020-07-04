@@ -62,6 +62,19 @@ void testLineRay2StartDirectionCtor()
 }
 
 
+void testLineRay2Type()
+{
+   {
+      const std::string caseLabel = "LineRay2::type";
+
+      const Point2 anchor{1.0f, 2.0f};
+      const Vec2 dir{3.0f, 2.0f};
+      const LineRay2 l{anchor, dir};
+      VERIFY(l.type() == Line2Type::Ray, caseLabel);
+   }
+}
+
+
 void testLineRay2IsPoint()
 {
    {

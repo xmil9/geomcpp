@@ -6,6 +6,7 @@
 // MIT license
 //
 #pragma once
+#include "line2_types.h"
 #include "point2.h"
 #include "vec2.h"
 #include <optional>
@@ -28,6 +29,7 @@ template <typename T> class Line2
    Line2() = default;
    constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
 
+   virtual Line2Type type() const { return Line2Type::Infinite; }
    Point2<T> anchor() const noexcept { return m_anchor; }
    Vec2<T> direction() const noexcept { return m_dir; }
 

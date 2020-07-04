@@ -84,6 +84,19 @@ void testLineSeg2StartDirectionCtor()
 }
 
 
+void testLineSeg2Type()
+{
+   {
+      const std::string caseLabel = "LineSeg2::type";
+
+      const Point2 anchor{1.0f, 2.0f};
+      const Vec2 dir{3.0f, 2.0f};
+      const LineSeg2 l{anchor, dir};
+      VERIFY(l.type() == Line2Type::Segment, caseLabel);
+   }
+}
+
+
 void testLineSeg2IsPoint()
 {
    {
@@ -568,6 +581,7 @@ void testRtLineSeg2()
    testLineSeg2DefaultCtor();
    testLineSeg2StartEndCtor();
    testLineSeg2StartDirectionCtor();
+   testLineSeg2Type();
    testLineSeg2IsPoint();
    testLineSeg2StartPoint();
    testLineSeg2EndPoint();

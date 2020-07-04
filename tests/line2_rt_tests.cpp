@@ -61,6 +61,19 @@ void testLine2ValueCtor()
 }
 
 
+void testLine2Type()
+{
+   {
+      const std::string caseLabel = "Line2::type";
+
+      const Point2 anchor{1.0f, 2.0f};
+      const Vec2 dir{3.0f, 2.0f};
+      const Line2 l{anchor, dir};
+      VERIFY(l.type() == Line2Type::Infinite, caseLabel);
+   }
+}
+
+
 void testLine2IsPoint()
 {
    {
@@ -435,6 +448,7 @@ void testRtLine2()
 {
    testLine2DefaultCtor();
    testLine2ValueCtor();
+   testLine2Type();
    testLine2IsPoint();
    testLine2StartPoint();
    testLine2EndPoint();
