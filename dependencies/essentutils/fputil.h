@@ -31,14 +31,14 @@ template <> struct FpTraits<double>
 
 template <> struct FpTraits<float>
 {
-   static constexpr float epsilon = 0.0000001f;
+   static constexpr float epsilon = 0.00001f;
    static float sqrt(float val) { return std::sqrtf(val); }
 };
 
 
 template <> struct FpTraits<long double>
 {
-   static constexpr long double epsilon = 0.0000001L;
+   static constexpr long double epsilon = 0.000000001L;
    static long double sqrt(long double val) { return std::sqrtl(val); }
 };
 
