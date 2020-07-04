@@ -120,6 +120,21 @@ template <typename T> template <typename U> Point2<T> Line2<T>::lerpPoint(U fact
 
 ///////////////////
 
+// Comparisions.
+
+template <typename T, typename U> bool operator==(const Line2<T>& a, const Line2<U>& b)
+{
+   return a.type() == b.type() && a.anchor() == b.anchor() &&
+          a.direction() == b.direction();
+}
+
+
+template <typename T, typename U> bool operator!=(const Line2<T>& a, const Line2<U>& b)
+{
+   return !(a == b);
+}
+
+
 template <typename T, typename U> bool parallel(const Line2<T>& a, const Line2<U>& b)
 {
    return a.direction().isParallel(b.direction().normalize());

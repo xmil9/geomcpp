@@ -506,7 +506,7 @@ void testLineSeg2Parallel()
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 a{Point2{3.0, 4.0}, dir};
       const LineSeg2 b{Point2{2.0, 1.0}, dir};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
    {
@@ -514,7 +514,7 @@ void testLineSeg2Parallel()
 
       const LineSeg2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineSeg2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!parallel(a, b), caseLabel);
    }
    {
@@ -522,7 +522,7 @@ void testLineSeg2Parallel()
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineSeg2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
    {
@@ -530,7 +530,7 @@ void testLineSeg2Parallel()
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const Line2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
 }
@@ -544,7 +544,7 @@ void testLineSeg2Coincident()
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 a{Point2{3.0, 4.0}, dir};
       const LineSeg2 b{Point2{5.0, 5.0}, dir};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
    {
@@ -552,7 +552,7 @@ void testLineSeg2Coincident()
 
       const LineSeg2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineSeg2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!coincident(a, b), caseLabel);
    }
    {
@@ -560,7 +560,7 @@ void testLineSeg2Coincident()
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineSeg2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
    {
@@ -568,8 +568,102 @@ void testLineSeg2Coincident()
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const Line2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(coincident(a, b), caseLabel);
+   }
+}
+
+
+void testLineSeg2Equality()
+{
+   {
+      const std::string caseLabel = "Equality for equal line segments";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for line segments with different anchors";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for line segments with different directions";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for line segments with different value types but same data values";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality between line segment and infinite line";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+}
+
+
+void testLineSeg2Inequality()
+{
+   {
+      const std::string caseLabel = "Inequality for equal line segments";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for line segments with different anchors";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for line segments with different directions";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for line segments with different value types but same data values";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineSeg2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality between line segment and infinite line";
+
+      const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(a != b, caseLabel);
    }
 }
 
@@ -594,4 +688,6 @@ void testRtLineSeg2()
    testLineSeg2Length();
    testLineSeg2Parallel();
    testLineSeg2Coincident();
+   testLineSeg2Equality();
+   testLineSeg2Inequality();
 }

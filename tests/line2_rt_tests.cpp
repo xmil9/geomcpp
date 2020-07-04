@@ -390,7 +390,7 @@ void testLine2Parallel()
       const Vec2 dir{2.0, 1.0};
       const Line2 a{Point2{3.0, 4.0}, dir};
       const Line2 b{Point2{2.0, 1.0}, dir};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
    {
@@ -398,7 +398,7 @@ void testLine2Parallel()
 
       const Line2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const Line2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!parallel(a, b), caseLabel);
    }
    {
@@ -406,7 +406,7 @@ void testLine2Parallel()
 
       const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const Line2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
 }
@@ -420,7 +420,7 @@ void testLine2Coincident()
       const Vec2 dir{2.0, 1.0};
       const Line2 a{Point2{3.0, 4.0}, dir};
       const Line2 b{Point2{5.0, 5.0}, dir};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
    {
@@ -428,7 +428,7 @@ void testLine2Coincident()
 
       const Line2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const Line2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!coincident(a, b), caseLabel);
    }
    {
@@ -436,8 +436,86 @@ void testLine2Coincident()
 
       const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const Line2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(coincident(a, b), caseLabel);
+   }
+}
+
+
+void testLine2Equality()
+{
+   {
+      const std::string caseLabel = "Equality for equal infinite lines";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for infinite lines with different anchors";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for infinite lines with different directions";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for infinite lines with different value types but same data values";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(a == b, caseLabel);
+   }
+}
+
+
+void testLine2Inequality()
+{
+   {
+      const std::string caseLabel = "Inequality for equal infinite lines";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for infinite lines with different anchors";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for infinite lines with different directions";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for infinite lines with different value types but same data values";
+
+      const Line2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(!(a != b), caseLabel);
    }
 }
 
@@ -458,4 +536,6 @@ void testRtLine2()
    testLine2LerpPoint();
    testLine2Parallel();
    testLine2Coincident();
+   testLine2Equality();
+   testLine2Inequality();
 }

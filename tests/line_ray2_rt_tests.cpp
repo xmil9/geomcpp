@@ -486,6 +486,100 @@ void testLineRay2Coincident()
    }
 }
 
+
+void testLineRay2Equality()
+{
+   {
+      const std::string caseLabel = "Equality for equal line rays";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for line rays with different anchors";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for line rays with different directions";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for line rays with different value types but same data values";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality between line segment and infinite line";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a == b), caseLabel);
+   }
+}
+
+
+void testLineRay2Inequality()
+{
+   {
+      const std::string caseLabel = "Inequality for equal line rays";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for line rays with different anchors";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{2, 4}, Vec2{2, 1}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for line rays with different directions";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<int> b{Point2{3, 4}, Vec2{2, 2}};
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for line rays with different value types but same data values";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const LineRay2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
+
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality between line segment and infinite line";
+
+      const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
+      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+
+      VERIFY(a != b, caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -502,4 +596,6 @@ void testRtLineRay2()
    testLineRay2LerpPoint();
    testLineRay2Parallel();
    testLineRay2Coincident();
+   testLineRay2Equality();
+   testLineRay2Inequality();
 }
