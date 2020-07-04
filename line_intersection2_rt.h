@@ -70,6 +70,9 @@ template <typename T>
 std::optional<LineIntersection2<T>>
 makeCoincidentIntersection(const dec::Interval<T>& overlap, const Line2<T>& refLine)
 {
+   if (overlap == dec::EmptyInterval<T>)
+      return std::nullopt;
+
    std::size_t numInfiniteEnds = 0;
    if (overlap.start() == NegInf<T>)
       ++numInfiniteEnds;
