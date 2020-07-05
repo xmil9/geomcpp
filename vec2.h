@@ -26,6 +26,8 @@ template <typename T> class Vec2
 
    Vec2() = default;
    constexpr Vec2(T x, T y);
+   // To use the ctor for two points explicitly specify the vector's value type,
+   // otherwise the coordinate ctor might be selected.
    template <typename U, typename V>
    constexpr Vec2(const Point2<U>& from, const Point2<V>& to);
    Vec2(const Vec2&) = default;
