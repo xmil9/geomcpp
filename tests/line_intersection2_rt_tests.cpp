@@ -497,6 +497,64 @@ void testIntersectLineSegmentAndInfiniteLine2D()
    }
 }
 
+
+void testIntersectTwoLineRays2D()
+{
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - both are differnt points";
+
+      Point2 p(1.0, 2.0);
+      LineRay2 a(p, Vec2<double>{});
+      Point2 q(2.0, 1.0);
+      LineRay2 b(q, Vec2<double>{});
+
+      const auto res = intersect(a, b);
+      VERIFY(!res.has_value(), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - both are the same point";
+
+      Point2 p(1.0, 2.0);
+      LineRay2 a(p, Vec2<double>{});
+      LineRay2 b(p, Vec2<double>{});
+
+      const auto res = intersect(a, b);
+      verifyIntersection(res, p, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - one is a point and point is on other ray";
+
+      LineRay2 a(Point2(1.0f, 2.0f), Vec2(3.0f, 3.0f));
+      Point2 p = a.lerpPoint(0.6f);
+      LineRay2 b(p, Vec2<float>{});
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, p, caseLabel);
+
+      // Reverse order.
+      auto reversedRes = intersect(b, a);
+      verifyIntersection(reversedRes, p, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - one is a point and point is not on other ray";
+
+      LineRay2 a(Point2(1.0f, 2.0f), Vec2(2.0f, 3.0f));
+      Point2 p{0.0f, 0.0f};
+      LineRay2 b(p, Vec2<float>{});
+
+      auto res = intersect(a, b);
+      VERIFY(!res.has_value(), caseLabel);
+
+      // Reverse order.
+      auto reversedRes = intersect(b, a);
+      VERIFY(!res.has_value(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -505,4 +563,5 @@ void testRtLineIntersection2()
    testIntersectTwoLineSegments2D();
    testIntersectLineSegmentAndRay2D();
    testIntersectLineSegmentAndInfiniteLine2D();
+   testIntersectTwoLineRays2D();
 }
