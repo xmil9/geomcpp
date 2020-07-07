@@ -553,6 +553,99 @@ void testIntersectTwoLineRays2D()
       auto reversedRes = intersect(b, a);
       VERIFY(!res.has_value(), caseLabel);
    }
+   {
+      const std::string caseLabel = "Intersect two 2d line rays - coincident and "
+                                    "overlapping in same direction";
+
+      Point2 startA(1.0f, 2.0f);
+      LineRay2 a(startA, Vec2(3.0f, 3.0f));
+      Point2 startB = *a.startPoint() + 0.8f * a.direction();
+      Vec2 dirB = 2.5f * a.direction();
+      LineRay2 b(startB, dirB);
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, LineRay2{startB, a.direction()}, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect two 2d line rays - coincident and "
+                                    "overlapping with opposite directions";
+
+      Point2 startA(1.0f, 2.0f);
+      LineRay2 a(startA, Vec2(3.0f, 3.0f));
+      Point2 startB = *a.startPoint() + 0.8f * a.direction();
+      Vec2 dirB = -2.5f * a.direction();
+      LineRay2 b(startB, dirB);
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, LineSeg2{startA, startB}, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect two 2d line rays - coincident and "
+                                    "overlapping at start points";
+
+      Point2 start(1.0f, 2.0f);
+      LineRay2 a(start, Vec2(3.0f, 3.0f));
+      LineRay2 b(start, -2.5f * a.direction());
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, start, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - coincident but disjoint";
+
+      Point2 startA(1.0f, 2.0f);
+      LineRay2 a(startA, Vec2(3.0f, 3.0f));
+      Point2 startB = -*a.startPoint() + -3.8f * a.direction();
+      LineRay2 b(startB, -2.5f * a.direction());
+
+      auto res = intersect(a, b);
+      VERIFY(!res, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - parallel (not coincident)";
+
+      LineRay2 a(Point2(1, 2), Vec2(3, 3));
+      LineRay2 b(Point2(2, 4), a.direction());
+
+      auto res = intersect(a, b);
+      VERIFY(!res, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect two 2d line rays - intersecting";
+
+      Point2 x(3.0, 4.0);
+      // Build the lines so that they intersect at the intersection point.
+      Vec2 dirA(1.0, 2.0);
+      Point2 startA = x + -dirA;
+      LineRay2 a(startA, dirA);
+      Vec2 dirB(5.0, 3.0);
+      Point2 startB = x + -1.2 * dirB;
+      LineRay2 b(startB, dirB);
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, x, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Intersect two 2d line rays - intersecting at origin";
+
+      LineRay2 a(Point2(-1.0f, 0.0f), Vec2(3.0f, 0.0f));
+      LineRay2 b(Point2(0.0f, 2.0f), Vec2(0.0f, -2.0f));
+
+      auto res = intersect(a, b);
+      verifyIntersection(res, Point2{0.0f, 0.0f}, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Intersect two 2d line rays - not intersecting";
+
+      LineRay2 a(Point2(1.0f, 2.0f), Vec2(3.0f, 3.0f));
+      LineRay2 b(Point2(0.0f, 2.0f), Vec2(0.0f, -2.0f));
+
+      auto res = intersect(a, b);
+      VERIFY(!res, caseLabel);
+   }
 }
 
 } // namespace
