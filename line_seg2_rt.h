@@ -65,7 +65,7 @@ template <typename T>
 std::optional<typename LineSeg2<T>::Fp>
 LineSeg2<T>::isPointOnLine(const Point2<T>& pt) const
 {
-   const auto factor = this->calcLerpFactor(pt);
+   const auto factor = this->lerpFactor(pt);
    if (factor && sutil::fpGreaterEqual<Fp>(*factor, 0) &&
        sutil::fpLessEqual<Fp>(*factor, 1))
    {

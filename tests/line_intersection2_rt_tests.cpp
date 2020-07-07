@@ -68,7 +68,7 @@ void testIntersectTwoLineSegments2D()
          "Intersect two 2d line segments - one is a point and point is on other line";
 
       LineSeg2 a(Point2(1.0f, 2.0f), Point2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       LineSeg2 b(p, p);
 
       auto res = intersect(a, b);
@@ -210,7 +210,7 @@ void testIntersectLineSegmentAndRay2D()
          "Intersect 2d line segment and ray - ray is a point and is on segment";
 
       LineSeg2 a(Point2(1.0f, 2.0f), Point2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       LineRay2 b(p, Vec2{0.0f, 0.0f});
 
       auto res = intersect(a, b);
@@ -225,7 +225,7 @@ void testIntersectLineSegmentAndRay2D()
          "Intersect 2d line segment and ray - segment is a point and is on ray";
 
       LineRay2 b(Point2(1.0, 2.0), Vec2(2.0, 3.0));
-      Point2 p = b.lerpPoint(0.6);
+      Point2 p = b.lerp(0.6);
       LineSeg2 a(p, p);
 
       auto res = intersect(a, b);
@@ -381,7 +381,7 @@ void testIntersectLineSegmentAndInfiniteLine2D()
                                     "is a point and is on segment";
 
       LineSeg2 a(Point2(1.0f, 2.0f), Point2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       Line2 b(p, Vec2{0.0f, 0.0f});
 
       auto res = intersect(a, b);
@@ -396,7 +396,7 @@ void testIntersectLineSegmentAndInfiniteLine2D()
                                     "segment is a point and is on line";
 
       Line2 b(Point2(1.0, 2.0), Vec2(2.0, 3.0));
-      Point2 p = b.lerpPoint(0.6);
+      Point2 p = b.lerp(0.6);
       LineSeg2 a(p, p);
 
       auto res = intersect(a, b);
@@ -529,7 +529,7 @@ void testIntersectTwoLineRays2D()
          "Intersect two 2d line rays - one is a point and point is on other ray";
 
       LineRay2 a(Point2(1.0f, 2.0f), Vec2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       LineRay2 b(p, Vec2<float>{});
 
       auto res = intersect(a, b);
@@ -681,7 +681,7 @@ void testIntersectLineRayAndInfiniteLine2D()
                                     "is a point and is on other line";
 
       LineRay2 a(Point2(1.0f, 2.0f), Vec2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       Line2 b(p, Vec2{0.0f, 0.0f});
 
       auto res = intersect(a, b);
@@ -812,7 +812,7 @@ void testIntersectTwoInfiniteLines2D()
          "Intersect two 2d infinite lines - one is a point and point is on other line";
 
       Line2 a(Point2(1.0f, 2.0f), Vec2(3.0f, 3.0f));
-      Point2 p = a.lerpPoint(0.6f);
+      Point2 p = a.lerp(0.6f);
       Line2 b(p, Vec2<float>{});
 
       auto res = intersect(a, b);

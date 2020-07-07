@@ -46,10 +46,10 @@ template <typename T> class Line2
    std::optional<Fp> isPointOnInfiniteLine(const Point2<U>& pt) const;
 
    // Calculates the interpolation factor of a given point along the line.
-   template <typename U> std::optional<Fp> calcLerpFactor(const Point2<U>& pt) const;
+   template <typename U> std::optional<Fp> lerpFactor(const Point2<U>& pt) const;
 
    // Interpolates a point at a given factor along the line.
-   template <typename U> Point2<T> lerpPoint(U factor) const;
+   template <typename U> Point2<T> lerp(U factor) const;
 
  private:
    // Point that anchors the line in the coordinate system. For line types that
@@ -87,13 +87,13 @@ template <typename U>
 std::optional<typename Line2<T>::Fp>
 Line2<T>::isPointOnInfiniteLine(const Point2<U>& pt) const
 {
-   return calcLerpFactor(pt);
+   return lerpFactor(pt);
 }
 
 
 template <typename T>
 template <typename U>
-std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<U>& pt) const
+std::optional<typename Line2<T>::Fp> Line2<T>::lerpFactor(const Point2<U>& pt) const
 {
    if (isPoint())
       return (pt == anchor()) ? std::make_optional(Fp(0)) : std::nullopt;
@@ -111,7 +111,7 @@ std::optional<typename Line2<T>::Fp> Line2<T>::calcLerpFactor(const Point2<U>& p
 }
 
 
-template <typename T> template <typename U> Point2<T> Line2<T>::lerpPoint(U factor) const
+template <typename T> template <typename U> Point2<T> Line2<T>::lerp(U factor) const
 {
    const Vec2 v = direction() * factor;
    return anchor() + v;

@@ -84,25 +84,25 @@ makeCoincidentIntersection(const dec::Interval<FP>& overlap, const Line2<T>& ref
    case 0:
       if (sutil::equal(overlap.start(), overlap.end()))
       {
-         return std::make_optional(refLine.lerpPoint(overlap.start()));
+         return std::make_optional(refLine.lerp(overlap.start()));
       }
       else
       {
-         const LineSeg2<T> res{refLine.lerpPoint(overlap.start()),
-                               refLine.lerpPoint(overlap.end())};
+         const LineSeg2<T> res{refLine.lerp(overlap.start()),
+                               refLine.lerp(overlap.end())};
          return std::make_optional(res);
       }
 
    case 1:
       if (overlap.start() == NegInf<FP>)
       {
-         const LineRay2<T> res{refLine.lerpPoint(overlap.end()), -refLine.direction()};
+         const LineRay2<T> res{refLine.lerp(overlap.end()), -refLine.direction()};
          return std::make_optional(res);
       }
       else
       {
          assert(overlap.end() == PosInf<FP>);
-         const LineRay2<T> res{refLine.lerpPoint(overlap.start()), refLine.direction()};
+         const LineRay2<T> res{refLine.lerp(overlap.start()), refLine.direction()};
          return std::make_optional(res);
       }
 
@@ -138,12 +138,12 @@ std::optional<LineIntersection2<T>> intersectCoincidentLines(const Line2<T>& a,
    const bool hasSameDir = b.direction().hasSameDirection(a.direction());
    begin = hasSameDir ? NegInf<Fp> : PosInf<Fp>;
    if (const auto startPt = b.startPoint())
-      if (const auto startFactor = a.calcLerpFactor(*startPt))
+      if (const auto startFactor = a.lerpFactor(*startPt))
          begin = *startFactor;
 
    end = hasSameDir ? PosInf<Fp> : NegInf<Fp>;
    if (const auto endPt = b.endPoint())
-      if (const auto endFactor = a.calcLerpFactor(*endPt))
+      if (const auto endFactor = a.lerpFactor(*endPt))
          end = *endFactor;
 
    const Interval<Fp> bIval{begin, end, IntervalType::Closed};
@@ -208,7 +208,7 @@ std::optional<LineIntersection2<T>> intersectSkewLines(const Line2<T>& a,
    if (isInterpolatedPointOnLine(lerpFactors.first, a) &&
        isInterpolatedPointOnLine(lerpFactors.second, b))
    {
-      return std::make_optional(a.lerpPoint(lerpFactors.first));
+      return std::make_optional(a.lerp(lerpFactors.first));
    }
    return std::nullopt;
 }

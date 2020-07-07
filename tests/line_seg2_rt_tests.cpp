@@ -299,11 +299,11 @@ void testLineSeg2IsPointOnInfiniteLine()
 }
 
 
-void testLineSeg2CalcLerpFactor()
+void testLineSeg2LerpFactor()
 {
    {
       const std::string caseLabel =
-         "LineSeg2::calcLerpFactor for point within length of directional vector";
+         "LineSeg2::lerpFactor for point within length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -311,7 +311,7 @@ void testLineSeg2CalcLerpFactor()
 
       const Vec2 v = 0.3 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcLerpFactor(pt);
+      const auto pos = l.lerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
@@ -319,7 +319,7 @@ void testLineSeg2CalcLerpFactor()
    }
    {
       const std::string caseLabel =
-         "LineSeg2::calcLerpFactor for point past the length of directional vector";
+         "LineSeg2::lerpFactor for point past the length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -327,7 +327,7 @@ void testLineSeg2CalcLerpFactor()
 
       const Vec2 v = 4.5 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcLerpFactor(pt);
+      const auto pos = l.lerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
@@ -335,7 +335,7 @@ void testLineSeg2CalcLerpFactor()
    }
    {
       const std::string caseLabel =
-         "LineSeg2::calcLerpFactor for point before the anchor point";
+         "LineSeg2::lerpFactor for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -343,86 +343,85 @@ void testLineSeg2CalcLerpFactor()
 
       const Vec2 v = -1.2 * dir;
       const Point2 pt = anchor + v;
-      const auto pos = l.calcLerpFactor(pt);
+      const auto pos = l.lerpFactor(pt);
 
       VERIFY(pos.has_value(), caseLabel);
       if (pos)
          VERIFY(fpEqual(*pos, -1.2), caseLabel);
    }
    {
-      const std::string caseLabel = "LineSeg2::calcLerpFactor for point not on line";
+      const std::string caseLabel = "LineSeg2::lerpFactor for point not on line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pos = l.calcLerpFactor(Point2{1.0, 1.0});
+      const auto pos = l.lerpFactor(Point2{1.0, 1.0});
 
       VERIFY(!pos.has_value(), caseLabel);
    }
 }
 
 
-void testLineSeg2LerpPoint()
+void testLineSeg2Lerp()
 {
    {
       const std::string caseLabel =
-         "LineSeg2::lerpPoint for point within length of directional vector";
+         "LineSeg2::lerp for point within length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pt = l.lerpPoint(0.3);
+      const auto pt = l.lerp(0.3);
 
       Point2 expected = anchor + 0.3 * dir;
       VERIFY(pt == expected, caseLabel);
    }
    {
       const std::string caseLabel =
-         "LineSeg2::lerpPoint for point past the length of directional vector";
+         "LineSeg2::lerp for point past the length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pt = l.lerpPoint(4.5);
+      const auto pt = l.lerp(4.5);
 
       Point2 expected = anchor + 4.5 * dir;
       VERIFY(pt == expected, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "LineSeg2::lerpPoint for point before the anchor point";
+      const std::string caseLabel = "LineSeg2::lerp for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pt = l.lerpPoint(-1.2);
+      const auto pt = l.lerp(-1.2);
 
       Point2 expected = anchor + -1.2 * dir;
       VERIFY(pt == expected, caseLabel);
    }
    {
-      const std::string caseLabel = "LineSeg2::lerpPoint with zero";
+      const std::string caseLabel = "LineSeg2::lerp with zero";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pt = l.lerpPoint(0.0);
+      const auto pt = l.lerp(0.0);
 
       VERIFY(pt == anchor, caseLabel);
    }
    {
-      const std::string caseLabel = "LineSeg2::lerpPoint with integer value";
+      const std::string caseLabel = "LineSeg2::lerp with integer value";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
       const LineSeg2 l{anchor, dir};
 
-      const auto pt = l.lerpPoint(3);
+      const auto pt = l.lerp(3);
 
       Point2 expected = anchor + 3.0 * dir;
       VERIFY(pt == expected, caseLabel);
@@ -681,8 +680,8 @@ void testRtLineSeg2()
    testLineSeg2EndPoint();
    testLineSeg2IsPointOnLine();
    testLineSeg2IsPointOnInfiniteLine();
-   testLineSeg2CalcLerpFactor();
-   testLineSeg2LerpPoint();
+   testLineSeg2LerpFactor();
+   testLineSeg2Lerp();
    testLineSeg2MidPoint();
    testLineSeg2LengthSquared();
    testLineSeg2Length();
