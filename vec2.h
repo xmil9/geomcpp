@@ -15,7 +15,6 @@
 
 namespace geom
 {
-
 ///////////////////
 
 // Mathematical 2D vector.
@@ -44,7 +43,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U> sutil::FpType<T> dot(const Vec2<U>& w) const;
    template <typename U> sutil::FpType<T> perpDot(const Vec2<U>& w) const;
    template <typename U> bool isPerpendicular(const Vec2<U>& w) const;
    template <typename U> bool isOrthogonal(const Vec2<U>& w) const;
@@ -64,6 +62,11 @@ template <typename T> class Vec2
    T m_x = T(0);
    T m_y = T(0);
 };
+
+
+// Forward declare dot product.
+template <typename T, typename U>
+sutil::FpType<T> dot(const Vec2<T>& a, const Vec2<U>& b);
 
 
 template <typename T> constexpr Vec2<T>::Vec2(T x, T y) : m_x{x}, m_y{y}
@@ -87,7 +90,7 @@ template <typename T> Vec2<T> Vec2<T>::operator-() const
 
 template <typename T> sutil::FpType<T> Vec2<T>::lengthSquared() const
 {
-   return dot(*this);
+   return dot(*this, *this);
 }
 
 
@@ -109,24 +112,6 @@ template <typename T> Vec2<T> Vec2<T>::normalize() const
 template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) const
 {
    return Vec2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
-}
-
-
-// Calculates the dot product with a given vector.
-// Also called inner or scalar product.
-// Meaning:
-//   v.dot(w) - The length of the projection of v onto w.
-// Properties:
-//   v.dot(w) == 0 => v and w are perpendicular
-//   v.dot(w) > 0  => angle between v and w is acute, i.e abs(angle) < 90
-//   v.dot(w) < 0  => angle between v and w is obtuse, i.e abs(angle) > 90
-// Source:
-//   http://geomalgorithms.com/vector_products.html
-template <typename T>
-template <typename U>
-sutil::FpType<T> Vec2<T>::dot(const Vec2<U>& w) const
-{
-   return static_cast<sutil::FpType<T>>(x() * w.x() + y() * w.y());
 }
 
 
@@ -161,7 +146,7 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
 {
-   return sutil::equal(dot(w), sutil::FpType<T>(0));
+   return sutil::equal(dot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -197,7 +182,7 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::hasAcuteAngle(const Vec2<U>& w) const
 {
-   return sutil::greater(dot(w), sutil::FpType<T>(0));
+   return sutil::greater(dot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -206,7 +191,7 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::hasObtuseAngle(const Vec2<U>& w) const
 {
-   return sutil::less(dot(w), sutil::FpType<T>(0));
+   return sutil::less(dot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -274,11 +259,27 @@ template <typename T, typename U> bool operator!=(const Vec2<T>& a, const Vec2<U
 
 ///////////////////
 
+// Calculates the dot product of two given vectors.
+// Also called inner or scalar product.
+// Meaning:
+//   dot(v, w) - The length of the projection of v onto w.
+// Properties:
+//   dot(v, w) == 0 => v and w are perpendicular
+//   dot(v, w) > 0  => angle between v and w is acute, i.e abs(angle) < 90
+//   dot(v, w) < 0  => angle between v and w is obtuse, i.e abs(angle) > 90
+// Source:
+//   http://geomalgorithms.com/vector_products.html
+template <typename T, typename U> sutil::FpType<T> dot(const Vec2<T>& a, const Vec2<U>& b)
+{
+   return static_cast<sutil::FpType<T>>(a.x() * b.x() + a.y() * b.y());
+}
+
+
 // Dot product as operator*.
 template <typename T, typename U>
 sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
 {
-   return a.dot(b);
+   return dot(a, b);
 }
 
 
