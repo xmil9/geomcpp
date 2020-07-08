@@ -452,23 +452,23 @@ void testVec2Perpendicular()
 }
 
 
-void testVec2IsOrthogonal()
+void testVec2Orthogonal()
 {
    {
-      const std::string caseLabel = "Vec2::isOrthogonal for orthogonal vector";
+      const std::string caseLabel = "Orthogonal for orthogonal vectors";
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{-3.0, 2.0};
-      VERIFY(v.isOrthogonal(w), caseLabel);
-      VERIFY(w.isOrthogonal(v), caseLabel);
+      VERIFY(orthogonal(v, w), caseLabel);
+      VERIFY(orthogonal(w, v), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isOrthogonal for not orthogonal vector";
+      const std::string caseLabel = "Orthogonal for not orthogonal vectors";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<int> w{2, 4};
-      VERIFY(!v.isOrthogonal(w), caseLabel);
-      VERIFY(!w.isOrthogonal(v), caseLabel);
+      VERIFY(!orthogonal(v, w), caseLabel);
+      VERIFY(!orthogonal(w, v), caseLabel);
    }
 }
 
@@ -977,7 +977,7 @@ void testVector2D()
    testVec2DotOperator();
    testVec2PerpDot();
    testVec2Perpendicular();
-   testVec2IsOrthogonal();
+   testVec2Orthogonal();
    testVec2HasSameDirection();
    testVec2IsParallel();
    testVec2HasAcuteAngle();

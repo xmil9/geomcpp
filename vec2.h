@@ -44,7 +44,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U> bool isOrthogonal(const Vec2<U>& w) const;
    template <typename U> bool hasSameDirection(const Vec2<U>& w) const;
    template <typename U> bool isParallel(const Vec2<U>& w) const;
    template <typename U> bool hasAcuteAngle(const Vec2<U>& w) const;
@@ -111,16 +110,6 @@ template <typename T> Vec2<T> Vec2<T>::normalize() const
 template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) const
 {
    return Vec2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
-}
-
-
-// Orthogonal describes the same concept as perpendicular but can be applied to
-// other geometric objects, too. For lines it is the same as perpendicular.
-template <typename T>
-template <typename U>
-bool Vec2<T>::isOrthogonal(const Vec2<U>& w) const
-{
-   return perpendicular(*this, w);
 }
 
 
@@ -324,6 +313,15 @@ bool perpendicular(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::equal<Fp>(dot(v, w), Fp(0));
+}
+
+
+// Orthogonal describes the same concept as perpendicular but can be applied to
+// other geometric objects, too. For lines it is the same as perpendicular.
+template <typename T, typename U>
+bool orthogonal(const Vec2<T>& v, const Vec2<U>& w)
+{
+   return perpendicular(v, w);
 }
 
 
