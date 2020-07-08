@@ -99,7 +99,7 @@ std::optional<typename Line2<T>::Fp> Line2<T>::lerpFactor(const Point2<U>& pt) c
       return (pt == anchor()) ? std::make_optional(Fp(0)) : std::nullopt;
 
    const auto v = Vec2<T>{anchor(), pt};
-   if (!v.isParallel(direction()))
+   if (!parallel(v, direction()))
       return std::nullopt;
 
    // length != 0 is assured by checking whether line is a point above.
@@ -137,7 +137,7 @@ template <typename T, typename U> bool operator!=(const Line2<T>& a, const Line2
 
 template <typename T, typename U> bool parallel(const Line2<T>& a, const Line2<U>& b)
 {
-   return a.direction().isParallel(b.direction().normalize());
+   return parallel(a.direction(), b.direction().normalize());
 }
 
 

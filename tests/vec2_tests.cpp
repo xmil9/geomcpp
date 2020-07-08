@@ -476,8 +476,7 @@ void testVec2Orthogonal()
 void testVec2SameDirection()
 {
    {
-      const std::string caseLabel =
-         "SameDirection for vectors with same direction";
+      const std::string caseLabel = "SameDirection for vectors with same direction";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{4.0f, 4.0f};
@@ -485,8 +484,7 @@ void testVec2SameDirection()
       VERIFY(sameDirection(w, v), caseLabel);
    }
    {
-      const std::string caseLabel =
-         "SameDirection for vectors with opposite directions";
+      const std::string caseLabel = "SameDirection for vectors with opposite directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{-4, -4};
@@ -494,8 +492,7 @@ void testVec2SameDirection()
       VERIFY(!sameDirection(w, v), caseLabel);
    }
    {
-      const std::string caseLabel =
-         "SameDirection for vectors with different directions";
+      const std::string caseLabel = "SameDirection for vectors with different directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{-3.0f, -4.0f};
@@ -505,32 +502,31 @@ void testVec2SameDirection()
 }
 
 
-void testVec2IsParallel()
+void testVec2Parallel()
 {
    {
-      const std::string caseLabel = "Vec2::isParallel for vector with same direction";
+      const std::string caseLabel = "Parallel for vectors with same direction";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{4.0f, 4.0f};
-      VERIFY(v.isParallel(w), caseLabel);
-      VERIFY(w.isParallel(v), caseLabel);
+      VERIFY(parallel(v, w), caseLabel);
+      VERIFY(parallel(w, v), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isParallel for vector with opposite direction";
+      const std::string caseLabel = "Parallel for vectors with opposite directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{-4, -4};
-      VERIFY(v.isParallel(w), caseLabel);
-      VERIFY(w.isParallel(v), caseLabel);
+      VERIFY(parallel(v, w), caseLabel);
+      VERIFY(parallel(w, v), caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Vec2::isParallel for vector with different direction";
+      const std::string caseLabel = "Parallel for vectors with different directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{-3.0f, -4.0f};
-      VERIFY(!v.isParallel(w), caseLabel);
-      VERIFY(!w.isParallel(v), caseLabel);
+      VERIFY(!parallel(v, w), caseLabel);
+      VERIFY(!parallel(w, v), caseLabel);
    }
 }
 
@@ -979,7 +975,7 @@ void testVector2D()
    testVec2Perpendicular();
    testVec2Orthogonal();
    testVec2SameDirection();
-   testVec2IsParallel();
+   testVec2Parallel();
    testVec2HasAcuteAngle();
    testVec2HasObtuseAngle();
    testVec2IsCcw();
