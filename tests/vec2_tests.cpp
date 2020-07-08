@@ -583,60 +583,60 @@ void testVec2ObtuseAngle()
 }
 
 
-void testVec2IsCcw()
+void testVec2Ccw()
 {
    {
-      const std::string caseLabel = "Vec2::isCcw for ccw vector";
+      const std::string caseLabel = "ccw() for ccw vectors";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{2.0f, 1.0f};
-      VERIFY(v.isCcw(w, CoordSys::Screen), caseLabel);
-      VERIFY(!v.isCcw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(ccw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(!ccw(v, w, CoordSys::Cartesian), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isCcw for cw vector";
+      const std::string caseLabel = "ccw() for cw vectors";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{1.0f, 2.0f};
-      VERIFY(!v.isCcw(w, CoordSys::Screen), caseLabel);
-      VERIFY(v.isCcw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(!ccw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(ccw(v, w, CoordSys::Cartesian), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isCcw for vector in same direction";
+      const std::string caseLabel = "ccw() for vectors in same direction";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{3, 3};
-      VERIFY(!v.isCcw(w, CoordSys::Screen), caseLabel);
-      VERIFY(!v.isCcw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(!ccw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(!ccw(v, w, CoordSys::Cartesian), caseLabel);
    }
 }
 
 
-void testVec2IsCw()
+void testVec2Cw()
 {
    {
-      const std::string caseLabel = "Vec2::isCw for ccw vector";
+      const std::string caseLabel = "cw() for ccw vectors";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{2.0f, 1.0f};
-      VERIFY(!v.isCw(w, CoordSys::Screen), caseLabel);
-      VERIFY(v.isCw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(!cw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(cw(v, w, CoordSys::Cartesian), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isCw for cw vector";
+      const std::string caseLabel = "cw() for cw vectors";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{1.0f, 2.0f};
-      VERIFY(v.isCw(w, CoordSys::Screen), caseLabel);
-      VERIFY(!v.isCw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(cw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(!cw(v, w, CoordSys::Cartesian), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isCw for vector in same direction";
+      const std::string caseLabel = "cw() for vectors in same direction";
 
       Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{3, 3};
-      VERIFY(!v.isCw(w, CoordSys::Screen), caseLabel);
-      VERIFY(!v.isCw(w, CoordSys::Cartesian), caseLabel);
+      VERIFY(!cw(v, w, CoordSys::Screen), caseLabel);
+      VERIFY(!cw(v, w, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -649,10 +649,10 @@ void testVec2CcwNormal()
       const Vec2<float> v = Vec2(2.0f, 3.0f);
 
       const Vec2<float> ccwScreen = v.ccwNormal(CoordSys::Screen);
-      VERIFY(v.isCcw(ccwScreen, CoordSys::Screen), caseLabel);
+      VERIFY(ccw(v, ccwScreen, CoordSys::Screen), caseLabel);
 
       const Vec2<float> ccwCart = v.ccwNormal(CoordSys::Cartesian);
-      VERIFY(v.isCcw(ccwCart, CoordSys::Cartesian), caseLabel);
+      VERIFY(ccw(v, ccwCart, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -665,10 +665,10 @@ void testVec2CwNormal()
       const Vec2<int> v = Vec2(2, 3);
 
       const Vec2<int> cwScreen = v.cwNormal(CoordSys::Screen);
-      VERIFY(v.isCw(cwScreen, CoordSys::Screen), caseLabel);
+      VERIFY(cw(v, cwScreen, CoordSys::Screen), caseLabel);
 
       const Vec2<int> cwCart = v.cwNormal(CoordSys::Cartesian);
-      VERIFY(v.isCw(cwCart, CoordSys::Cartesian), caseLabel);
+      VERIFY(cw(v, cwCart, CoordSys::Cartesian), caseLabel);
    }
 }
 
@@ -978,8 +978,8 @@ void testVector2D()
    testVec2Parallel();
    testVec2AcuteAngle();
    testVec2ObtuseAngle();
-   testVec2IsCcw();
-   testVec2IsCw();
+   testVec2Ccw();
+   testVec2Cw();
    testVec2CcwNormal();
    testVec2CwNormal();
    testVec2Negation();

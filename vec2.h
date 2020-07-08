@@ -44,11 +44,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U>
-   bool isCcw(const Vec2<U>& w, CoordSys cs = CoordSys::Screen) const;
-   template <typename U>
-   bool isCw(const Vec2<U>& w, CoordSys cs = CoordSys::Screen) const;
-
    Vec2 ccwNormal(CoordSys cs = CoordSys::Screen) const;
    Vec2 cwNormal(CoordSys cs = CoordSys::Screen) const;
 
@@ -106,30 +101,6 @@ template <typename T> Vec2<T> Vec2<T>::normalize() const
 template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) const
 {
    return Vec2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
-}
-
-
-// Checks if a given vector is counter-clockwise of 'this' when facing into
-// the direction of 'this'. This depends on the coordinate system used.
-template <typename T>
-template <typename U>
-bool Vec2<T>::isCcw(const Vec2<U>& w, CoordSys cs) const
-{
-   if (cs == CoordSys::Screen)
-      return sutil::less(perpDot(*this, w), sutil::FpType<T>(0));
-   return sutil::greater(perpDot(*this, w), sutil::FpType<T>(0));
-}
-
-
-// Checks if a given vector is clockwise of 'this' when facing into the
-// direction of 'this'. This depends on the coordinate system used.
-template <typename T>
-template <typename U>
-bool Vec2<T>::isCw(const Vec2<U>& w, CoordSys cs) const
-{
-   if (cs == CoordSys::Screen)
-      return sutil::greater(perpDot(*this, w), sutil::FpType<T>(0));
-   return sutil::less(perpDot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -317,6 +288,30 @@ bool obtuseAngle(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::less<Fp>(dot(v, w), Fp(0));
+}
+
+
+// Checks if a given vector is counter-clockwise of 'this' when facing into
+// the direction of 'this'. This depends on the coordinate system used.
+template <typename T, typename U>
+bool ccw(const Vec2<T>& v, const Vec2<U>& w, CoordSys cs = CoordSys::Screen)
+{
+   using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
+   if (cs == CoordSys::Screen)
+      return sutil::less<Fp>(perpDot(v, w), Fp(0));
+   return sutil::greater<Fp>(perpDot(v, w), Fp(0));
+}
+
+
+// Checks if a given vector is clockwise of 'this' when facing into the
+// direction of 'this'. This depends on the coordinate system used.
+template <typename T, typename U>
+bool cw(const Vec2<T>& v, const Vec2<U>& w, CoordSys cs = CoordSys::Screen)
+{
+   using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
+   if (cs == CoordSys::Screen)
+      return sutil::greater<Fp>(perpDot(v, w), Fp(0));
+   return sutil::less<Fp>(perpDot(v, w), Fp(0));
 }
 
 
