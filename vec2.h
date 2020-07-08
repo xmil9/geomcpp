@@ -190,8 +190,7 @@ std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp> operator*(const V
 // 		cartesian CS: w is cw of v when facing into direction of v
 // 		screen CS   : w is ccw of v when facing into direction of v
 // Other usage:
-//   Gives the (signed) area of the 2D parallelogram spanned by 'this' and the
-//   given vector.
+//   Gives the (signed) area of the 2D parallelogram spanned by the two vectors.
 // Source:
 //   http://geomalgorithms.com/vector_products.html
 template <typename T, typename U>
