@@ -531,54 +531,54 @@ void testVec2Parallel()
 }
 
 
-void testVec2HasAcuteAngle()
+void testVec2AcuteAngle()
 {
    {
-      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with acute angle";
+      const std::string caseLabel = "AcuteAngle() for vectors with acute angle";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{3.0f, 4.0f};
-      VERIFY(v.hasAcuteAngle(w), caseLabel);
+      VERIFY(acuteAngle(v, w), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with obtuse angle";
+      const std::string caseLabel = "AcuteAngle() for vectors with obtuse angle";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{-3, -4};
-      VERIFY(!v.hasAcuteAngle(w), caseLabel);
+      VERIFY(!acuteAngle(v, w), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::hasAcuteAngle for vector with right angle";
+      const std::string caseLabel = "AcuteAngle() for vectors with right angle";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{-2.0f, 2.0f};
-      VERIFY(!v.hasAcuteAngle(w), caseLabel);
+      VERIFY(!acuteAngle(v, w), caseLabel);
    }
 }
 
 
-void testVec2HasObtuseAngle()
+void testVec2ObtuseAngle()
 {
    {
-      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with acute angle";
+      const std::string caseLabel = "ObtuseAngle() for vectors with acute angle";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{3.0f, 4.0f};
-      VERIFY(!v.hasObtuseAngle(w), caseLabel);
+      VERIFY(!obtuseAngle(v, w), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with obtuse angle";
+      const std::string caseLabel = "ObtuseAngle() for vectors with obtuse angle";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{-3, -4};
-      VERIFY(v.hasObtuseAngle(w), caseLabel);
+      VERIFY(obtuseAngle(v, w), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::hasObtuseAngle for vector with right angle";
+      const std::string caseLabel = "ObtuseAngle() for vectors with right angle";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{-2.0f, 2.0f};
-      VERIFY(!v.hasObtuseAngle(w), caseLabel);
+      VERIFY(!obtuseAngle(v, w), caseLabel);
    }
 }
 
@@ -976,8 +976,8 @@ void testVector2D()
    testVec2Orthogonal();
    testVec2SameDirection();
    testVec2Parallel();
-   testVec2HasAcuteAngle();
-   testVec2HasObtuseAngle();
+   testVec2AcuteAngle();
+   testVec2ObtuseAngle();
    testVec2IsCcw();
    testVec2IsCw();
    testVec2CcwNormal();
