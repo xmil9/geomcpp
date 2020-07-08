@@ -175,8 +175,8 @@ calcLerpFactorsOfIntersectionPoint(const Line2<T>& a, const Line2<T>& b)
    // The divisions are safe because the denominators would only be zero
    // if the lines were parallel which should be checked before calling
    // this method.
-   const Fp factorA = (v.y() * w.x() - v.x() * w.y()) / v.perpDot(u);
-   const Fp factorB = u.perpDot(w) / u.perpDot(v);
+   const Fp factorA = (v.y() * w.x() - v.x() * w.y()) / perpDot(v, u);
+   const Fp factorB = perpDot(u, w) / perpDot(u, v);
 
    return std::make_pair(factorA, factorB);
 }

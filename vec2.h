@@ -43,7 +43,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U> sutil::FpType<T> perpDot(const Vec2<U>& w) const;
    template <typename U> bool isPerpendicular(const Vec2<U>& w) const;
    template <typename U> bool isOrthogonal(const Vec2<U>& w) const;
    template <typename U> bool hasSameDirection(const Vec2<U>& w) const;
@@ -115,33 +114,6 @@ template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) con
 }
 
 
-// Calculates the perp dot product with a given vector.
-// Also called external or outer product.
-// Named because it is the same as the dot product of the perpendicular vector
-// to the first vector and the second vector: perpDot(v, w) = dot(perp(v), w)
-// Meaning:
-//   v.perpDot(w) - The signed length of the 3D cross product between v and w.
-// Properties:
-//   v.perpDot(w) == 0 => v and w have same or opposite directions
-//   v.perpDot(w) > 0  =>
-// 		cartesian CS: w is ccw of v when facing into direction of v
-// 		screen CS   : w is cw of v when facing into direction of v
-//   v.perpDot(w) < 0  =>
-// 		cartesian CS: w is cw of v when facing into direction of v
-// 		screen CS   : w is ccw of v when facing into direction of v
-// Other usage:
-//   Gives the (signed) area of the 2D parallelogram spanned by 'this' and the
-//   given vector.
-// Source:
-//   http://geomalgorithms.com/vector_products.html
-template <typename T>
-template <typename U>
-sutil::FpType<T> Vec2<T>::perpDot(const Vec2<U>& w) const
-{
-   return static_cast<sutil::FpType<T>>(x() * w.y() - y() * w.x());
-}
-
-
 template <typename T>
 template <typename U>
 bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
@@ -173,7 +145,7 @@ template <typename T>
 template <typename U>
 bool Vec2<T>::isParallel(const Vec2<U>& w) const
 {
-   return sutil::equal(perpDot(w), sutil::FpType<T>(0));
+   return sutil::equal(perpDot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -202,8 +174,8 @@ template <typename U>
 bool Vec2<T>::isCcw(const Vec2<U>& w, CoordSys cs) const
 {
    if (cs == CoordSys::Screen)
-      return sutil::less(perpDot(w), sutil::FpType<T>(0));
-   return sutil::greater(perpDot(w), sutil::FpType<T>(0));
+      return sutil::less(perpDot(*this, w), sutil::FpType<T>(0));
+   return sutil::greater(perpDot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -214,8 +186,8 @@ template <typename U>
 bool Vec2<T>::isCw(const Vec2<U>& w, CoordSys cs) const
 {
    if (cs == CoordSys::Screen)
-      return sutil::greater(perpDot(w), sutil::FpType<T>(0));
-   return sutil::less(perpDot(w), sutil::FpType<T>(0));
+      return sutil::greater(perpDot(*this, w), sutil::FpType<T>(0));
+   return sutil::less(perpDot(*this, w), sutil::FpType<T>(0));
 }
 
 
@@ -283,11 +255,29 @@ sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
 }
 
 
-// Free function for perpendicular dot product.
+// Calculates the perp dot product with a given vector.
+// Also called external or outer product and in 3d space cross product.
+// Named because it is the same as the dot product of the perpendicular vector
+// to the first vector and the second vector: perpDot(v, w) = dot(perp(v), w)
+// Meaning:
+//   perpDot(v, w) - The signed length of the 3D cross product between v and w.
+// Properties:
+//   perpDot(v, w) == 0 => v and w have same or opposite directions
+//   perpDot(v, w) > 0  =>
+// 		cartesian CS: w is ccw of v when facing into direction of v
+// 		screen CS   : w is cw of v when facing into direction of v
+//   perpDot(v, w) < 0  =>
+// 		cartesian CS: w is cw of v when facing into direction of v
+// 		screen CS   : w is ccw of v when facing into direction of v
+// Other usage:
+//   Gives the (signed) area of the 2D parallelogram spanned by 'this' and the
+//   given vector.
+// Source:
+//   http://geomalgorithms.com/vector_products.html
 template <typename T, typename U>
 sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
 {
-   return a.perpDot(b);
+   return static_cast<sutil::FpType<T>>(a.x() * b.y() - a.y() * b.x());
 }
 
 

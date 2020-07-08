@@ -292,14 +292,16 @@ void testVec2Dot()
       VERIFY(equal(dot(v, w), 21.0), caseLabel);
    }
    {
-      const std::string caseLabel = "Dot product of vectors with second to right at obtuse angle";
+      const std::string caseLabel =
+         "Dot product of vectors with second to right at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-3.0f, -4.0f};
       VERIFY(equal(dot(v, w), -21.0f), caseLabel);
    }
    {
-      const std::string caseLabel = "Dot product of vectors with second to left at obtuse angle";
+      const std::string caseLabel =
+         "Dot product of vectors with second to left at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-2.0f, 1.0f};
@@ -354,76 +356,77 @@ void testVec2DotOperator()
 void testVec2PerpDot()
 {
    {
-      const std::string caseLabel = "Vec2::perpDot for other vector in same direction";
+      const std::string caseLabel =
+         "Perpendicular dot product for vectors in same direction";
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{3.0, 4.5};
-      VERIFY(equal(v.perpDot(w), 0.0), caseLabel);
+      VERIFY(equal(perpDot(v, w), 0.0), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector in opposite direction";
+         "Perpendicular dot product for vectors in opposite direction";
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{-2.0, -3.0};
-      VERIFY(fpEqual(v.perpDot(w), 0.0), caseLabel);
+      VERIFY(fpEqual(perpDot(v, w), 0.0), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector perpendicular to left";
+         "Perpendicular dot product for vectors perpendicular to left";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{-3.0f, 2.0f};
-      VERIFY(equal(v.perpDot(w), 13.0f), caseLabel);
+      VERIFY(equal(perpDot(v, w), 13.0f), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector perpendicular to right";
+         "Perpendicular dot product for vectors perpendicular to right";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<float> w{3.0f, -2.0f};
-      VERIFY(equal(v.perpDot(w), -13.0f), caseLabel);
+      VERIFY(equal(perpDot(v, w), -13.0f), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector to right at acute angle";
+         "Perpendicular dot product for vectors to right at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{4, 3};
-      VERIFY(equal(v.perpDot(w), -3.0), caseLabel);
+      VERIFY(equal(perpDot(v, w), -3.0), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector to left at acute angle";
+         "Perpendicular dot product for vectors to left at acute angle";
 
       const Vec2<int> v{3, 3};
       const Vec2<int> w{3, 4};
-      VERIFY(equal(v.perpDot(w), 3.0), caseLabel);
+      VERIFY(equal(perpDot(v, w), 3.0), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector to right at obtuse angle";
+         "Perpendicular dot product for vectors to right at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-3.0f, -4.0f};
-      VERIFY(equal(v.perpDot(w), -3.0f), caseLabel);
+      VERIFY(equal(perpDot(v, w), -3.0f), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vector to left at obtuse angle";
+         "Perpendicular dot product for vectors to left at obtuse angle";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<float> w{-2.0f, 1.0f};
-      VERIFY(equal(v.perpDot(w), 9.0f), caseLabel);
+      VERIFY(equal(perpDot(v, w), 9.0f), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::perpDot for other vectors with mixed value types";
+         "Perpendicular dot product for vectors with mixed value types";
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(equal(v.perpDot(w), 9.0f), caseLabel);
-      VERIFY(equal(w.perpDot(v), -9.0), caseLabel);
+      VERIFY(equal(perpDot(v, w), 9.0f), caseLabel);
+      VERIFY(equal(perpDot(w, v), -9.0), caseLabel);
    }
 }
 
