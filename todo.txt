@@ -1,2 +1,1 @@
- - Add 'Fp' as type definition to each class.
- - Vec2 - move functions that take two vectors out of class.
+- Add 'Fp' as type definition to each class.
