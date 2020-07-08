@@ -39,8 +39,8 @@ template <typename T> class Vec2
    T x() const noexcept { return m_x; }
    T y() const noexcept { return m_y; }
    Vec2 operator-() const;
-   sutil::FpType<T> lengthSquared() const;
-   sutil::FpType<T> length() const;
+   Fp lengthSquared() const;
+   Fp length() const;
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
@@ -55,7 +55,8 @@ template <typename T> class Vec2
 
 // Forward declare dot product.
 template <typename T, typename U>
-sutil::FpType<T> dot(const Vec2<T>& a, const Vec2<U>& b);
+std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp> dot(const Vec2<T>& a,
+                                                                   const Vec2<U>& b);
 
 
 template <typename T> constexpr Vec2<T>::Vec2(T x, T y) : m_x{x}, m_y{y}
@@ -77,13 +78,13 @@ template <typename T> Vec2<T> Vec2<T>::operator-() const
 }
 
 
-template <typename T> sutil::FpType<T> Vec2<T>::lengthSquared() const
+template <typename T> typename Vec2<T>::Fp Vec2<T>::lengthSquared() const
 {
    return dot(*this, *this);
 }
 
 
-template <typename T> sutil::FpType<T> Vec2<T>::length() const
+template <typename T> typename Vec2<T>::Fp Vec2<T>::length() const
 {
    return sutil::sqrt<sutil::FpType<T>>(lengthSquared());
 }
@@ -92,9 +93,9 @@ template <typename T> sutil::FpType<T> Vec2<T>::length() const
 template <typename T> Vec2<T> Vec2<T>::normalize() const
 {
    const auto len = length();
-   if (sutil::equal(len, sutil::FpType<T>(0)))
+   if (sutil::equal(len, Fp(0)))
       return *this;
-   return scale(sutil::FpType<T>(1) / len);
+   return scale(Fp(1) / len);
 }
 
 
@@ -156,15 +157,19 @@ template <typename T, typename U> bool operator!=(const Vec2<T>& a, const Vec2<U
 //   dot(v, w) < 0  => angle between v and w is obtuse, i.e abs(angle) > 90
 // Source:
 //   http://geomalgorithms.com/vector_products.html
-template <typename T, typename U> sutil::FpType<T> dot(const Vec2<T>& a, const Vec2<U>& b)
+template <typename T, typename U>
+std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp> dot(const Vec2<T>& a,
+                                                                   const Vec2<U>& b)
 {
-   return static_cast<sutil::FpType<T>>(a.x() * b.x() + a.y() * b.y());
+   using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
+   return static_cast<Fp>(a.x() * b.x() + a.y() * b.y());
 }
 
 
 // Dot product as operator*.
 template <typename T, typename U>
-sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
+std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp> operator*(const Vec2<T>& a,
+                                                                         const Vec2<U>& b)
 {
    return dot(a, b);
 }
@@ -190,9 +195,11 @@ sutil::FpType<T> operator*(const Vec2<T>& a, const Vec2<U>& b)
 // Source:
 //   http://geomalgorithms.com/vector_products.html
 template <typename T, typename U>
-sutil::FpType<T> perpDot(const Vec2<T>& a, const Vec2<U>& b)
+std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp> perpDot(const Vec2<T>& a,
+                                                                       const Vec2<U>& b)
 {
-   return static_cast<sutil::FpType<T>>(a.x() * b.y() - a.y() * b.x());
+   using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
+   return static_cast<Fp>(a.x() * b.y() - a.y() * b.x());
 }
 
 
@@ -240,8 +247,7 @@ template <typename T, typename S> Vec2<T> operator/(const Vec2<T>& v, S scalar)
 }
 
 
-template <typename T, typename U>
-bool perpendicular(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool perpendicular(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::equal<Fp>(dot(v, w), Fp(0));
@@ -250,23 +256,20 @@ bool perpendicular(const Vec2<T>& v, const Vec2<U>& w)
 
 // Orthogonal describes the same concept as perpendicular but can be applied to
 // other geometric objects, too. For lines it is the same as perpendicular.
-template <typename T, typename U>
-bool orthogonal(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool orthogonal(const Vec2<T>& v, const Vec2<U>& w)
 {
    return perpendicular(v, w);
 }
 
 
-template <typename T, typename U>
-bool sameDirection(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool sameDirection(const Vec2<T>& v, const Vec2<U>& w)
 {
    return parallel(v, w) && acuteAngle(v, w);
 }
 
 
 // Could be pointing in the same or opposite direction.
-template <typename T, typename U>
-bool parallel(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool parallel(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::equal<Fp>(perpDot(v, w), Fp(0));
@@ -274,8 +277,7 @@ bool parallel(const Vec2<T>& v, const Vec2<U>& w)
 
 
 // Checks if the angle between 'this' and a given vector is < 90.
-template <typename T, typename U>
-bool acuteAngle(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool acuteAngle(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::greater<Fp>(dot(v, w), Fp(0));
@@ -283,8 +285,7 @@ bool acuteAngle(const Vec2<T>& v, const Vec2<U>& w)
 
 
 // Checks if the angle between 'this' and a given vector is > 90.
-template <typename T, typename U>
-bool obtuseAngle(const Vec2<T>& v, const Vec2<U>& w)
+template <typename T, typename U> bool obtuseAngle(const Vec2<T>& v, const Vec2<U>& w)
 {
    using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
    return sutil::less<Fp>(dot(v, w), Fp(0));

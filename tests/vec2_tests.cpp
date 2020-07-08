@@ -312,8 +312,8 @@ void testVec2Dot()
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(equal(dot(v, w), -3.0f), caseLabel);
-      VERIFY(equal(dot(w, v), -3.0), caseLabel);
+      VERIFY(equal<double>(dot(v, w), -3.0), caseLabel);
+      VERIFY(equal<double>(dot(w, v), -3.0), caseLabel);
    }
 }
 
@@ -347,8 +347,8 @@ void testVec2DotOperator()
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(equal(v * w, -3.0f), caseLabel);
-      VERIFY(equal(w * v, -3.0), caseLabel);
+      VERIFY(equal<double>(v * w, -3.0), caseLabel);
+      VERIFY(equal<double>(w * v, -3.0), caseLabel);
    }
 }
 
@@ -425,8 +425,8 @@ void testVec2PerpDot()
 
       const Vec2<float> v{3.0f, 3.0f};
       const Vec2<int> w{-2, 1};
-      VERIFY(equal(perpDot(v, w), 9.0f), caseLabel);
-      VERIFY(equal(perpDot(w, v), -9.0), caseLabel);
+      VERIFY(equal<double>(perpDot(v, w), 9.0), caseLabel);
+      VERIFY(equal<double>(perpDot(w, v), -9.0), caseLabel);
    }
 }
 
