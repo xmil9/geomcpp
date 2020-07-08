@@ -431,61 +431,23 @@ void testVec2PerpDot()
 }
 
 
-void testVec2PerpDotFreeFunction()
+void testVec2Perpendicular()
 {
    {
-      const std::string caseLabel =
-         "Perpendicular dot product free function for vectors in same direction";
-
-      const Vec2<double> v{2.0, 3.0};
-      const Vec2<double> w{3.0, 4.5};
-      VERIFY(equal(perpDot(v, w), 0.0), caseLabel);
-   }
-   {
-      const std::string caseLabel =
-         "Perpendicular dot product free function for perpendicular vectors";
-
-      const Vec2<float> v{2.0, 3.0};
-      const Vec2<float> w{-2.0, -3.0};
-      VERIFY(fpEqual(perpDot(v, w), 0.0f), caseLabel);
-   }
-   {
-      const std::string caseLabel =
-         "Perpendicular dot product free function for vectors at acute angle";
-
-      const Vec2<int> v{3, 3};
-      const Vec2<int> w{3, 4};
-      VERIFY(equal(perpDot(v, w), 3.0), caseLabel);
-   }
-   {
-      const std::string caseLabel =
-         "Perpendicular dot product free function for vectors with mixed value types";
-
-      const Vec2<float> v{3.0f, 3.0f};
-      const Vec2<int> w{-2, 1};
-      VERIFY(equal(perpDot(v, w), 9.0f), caseLabel);
-      VERIFY(equal(perpDot(w, v), -9.0), caseLabel);
-   }
-}
-
-
-void testVec2IsPerpendicular()
-{
-   {
-      const std::string caseLabel = "Vec2::isPerpendicular for perpendicular vector";
+      const std::string caseLabel = "Perpendicular for perpendicular vectors";
 
       const Vec2<double> v{2.0, 3.0};
       const Vec2<double> w{-3.0, 2.0};
-      VERIFY(v.isPerpendicular(w), caseLabel);
-      VERIFY(w.isPerpendicular(v), caseLabel);
+      VERIFY(perpendicular(v, w), caseLabel);
+      VERIFY(perpendicular(w, v), caseLabel);
    }
    {
-      const std::string caseLabel = "Vec2::isPerpendicular for not perpendicular vector";
+      const std::string caseLabel = "Perpendicular for not perpendicular vectors";
 
       const Vec2<float> v{2.0f, 3.0f};
       const Vec2<int> w{2, 4};
-      VERIFY(!v.isPerpendicular(w), caseLabel);
-      VERIFY(!w.isPerpendicular(v), caseLabel);
+      VERIFY(!perpendicular(v, w), caseLabel);
+      VERIFY(!perpendicular(w, v), caseLabel);
    }
 }
 
@@ -1014,8 +976,7 @@ void testVector2D()
    testVec2Dot();
    testVec2DotOperator();
    testVec2PerpDot();
-   testVec2PerpDotFreeFunction();
-   testVec2IsPerpendicular();
+   testVec2Perpendicular();
    testVec2IsOrthogonal();
    testVec2HasSameDirection();
    testVec2IsParallel();

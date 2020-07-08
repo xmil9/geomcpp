@@ -22,6 +22,7 @@ template <typename T> class Vec2
 {
  public:
    using value_type = T;
+   using Fp = sutil::FpType<T>;
 
    Vec2() = default;
    constexpr Vec2(T x, T y);
@@ -43,7 +44,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U> bool isPerpendicular(const Vec2<U>& w) const;
    template <typename U> bool isOrthogonal(const Vec2<U>& w) const;
    template <typename U> bool hasSameDirection(const Vec2<U>& w) const;
    template <typename U> bool isParallel(const Vec2<U>& w) const;
@@ -114,21 +114,13 @@ template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) con
 }
 
 
-template <typename T>
-template <typename U>
-bool Vec2<T>::isPerpendicular(const Vec2<U>& w) const
-{
-   return sutil::equal(dot(*this, w), sutil::FpType<T>(0));
-}
-
-
 // Orthogonal describes the same concept as perpendicular but can be applied to
 // other geometric objects, too. For lines it is the same as perpendicular.
 template <typename T>
 template <typename U>
 bool Vec2<T>::isOrthogonal(const Vec2<U>& w) const
 {
-   return isPerpendicular(w);
+   return perpendicular(*this, w);
 }
 
 
@@ -231,6 +223,8 @@ template <typename T, typename U> bool operator!=(const Vec2<T>& a, const Vec2<U
 
 ///////////////////
 
+// Operations on two vectors.
+
 // Calculates the dot product of two given vectors.
 // Also called inner or scalar product.
 // Meaning:
@@ -320,8 +314,16 @@ template <typename T, typename S> Vec2<T> operator/(const Vec2<T>& v, S scalar)
 {
    if (scalar == S(0))
       throw std::runtime_error("Division by zero.");
-   using FP = sutil::FpType<T>;
-   return v.scale(FP(1.0) / scalar);
+   using Fp = sutil::FpType<T>;
+   return v.scale(Fp(1.0) / scalar);
+}
+
+
+template <typename T, typename U>
+bool perpendicular(const Vec2<T>& v, const Vec2<U>& w)
+{
+   using Fp = std::common_type_t<typename Vec2<T>::Fp, typename Vec2<U>::Fp>;
+   return sutil::equal<Fp>(dot(v, w), Fp(0));
 }
 
 
