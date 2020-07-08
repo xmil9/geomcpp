@@ -473,34 +473,34 @@ void testVec2Orthogonal()
 }
 
 
-void testVec2HasSameDirection()
+void testVec2SameDirection()
 {
    {
       const std::string caseLabel =
-         "Vec2::hasSameDirection for vector with same direction";
+         "SameDirection for vectors with same direction";
 
       const Vec2<float> v{2.0f, 2.0f};
       const Vec2<float> w{4.0f, 4.0f};
-      VERIFY(v.hasSameDirection(w), caseLabel);
-      VERIFY(w.hasSameDirection(v), caseLabel);
+      VERIFY(sameDirection(v, w), caseLabel);
+      VERIFY(sameDirection(w, v), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::hasSameDirection for vector with opposite direction";
+         "SameDirection for vectors with opposite directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<int> w{-4, -4};
-      VERIFY(!v.hasSameDirection(w), caseLabel);
-      VERIFY(!w.hasSameDirection(v), caseLabel);
+      VERIFY(!sameDirection(v, w), caseLabel);
+      VERIFY(!sameDirection(w, v), caseLabel);
    }
    {
       const std::string caseLabel =
-         "Vec2::hasSameDirection for vector with different direction";
+         "SameDirection for vectors with different directions";
 
       const Vec2<double> v{2.0, 2.0};
       const Vec2<float> w{-3.0f, -4.0f};
-      VERIFY(!v.hasSameDirection(w), caseLabel);
-      VERIFY(!w.hasSameDirection(v), caseLabel);
+      VERIFY(!sameDirection(v, w), caseLabel);
+      VERIFY(!sameDirection(w, v), caseLabel);
    }
 }
 
@@ -978,7 +978,7 @@ void testVector2D()
    testVec2PerpDot();
    testVec2Perpendicular();
    testVec2Orthogonal();
-   testVec2HasSameDirection();
+   testVec2SameDirection();
    testVec2IsParallel();
    testVec2HasAcuteAngle();
    testVec2HasObtuseAngle();

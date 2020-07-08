@@ -135,13 +135,13 @@ std::optional<LineIntersection2<T>> intersectCoincidentLines(const Line2<T>& a,
    Fp end = a.endPoint() ? 1 : PosInf<Fp>;
    const Interval<Fp> aIval{begin, end, IntervalType::Closed};
 
-   const bool hasSameDir = b.direction().hasSameDirection(a.direction());
-   begin = hasSameDir ? NegInf<Fp> : PosInf<Fp>;
+   const bool haveSameDir = sameDirection(b.direction(), a.direction());
+   begin = haveSameDir ? NegInf<Fp> : PosInf<Fp>;
    if (const auto startPt = b.startPoint())
       if (const auto startFactor = a.lerpFactor(*startPt))
          begin = *startFactor;
 
-   end = hasSameDir ? PosInf<Fp> : NegInf<Fp>;
+   end = haveSameDir ? PosInf<Fp> : NegInf<Fp>;
    if (const auto endPt = b.endPoint())
       if (const auto endFactor = a.lerpFactor(*endPt))
          end = *endFactor;

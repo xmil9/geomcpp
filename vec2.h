@@ -44,7 +44,6 @@ template <typename T> class Vec2
    [[nodiscard]] Vec2 normalize() const;
    template <typename U>[[nodiscard]] Vec2 scale(U factor) const;
 
-   template <typename U> bool hasSameDirection(const Vec2<U>& w) const;
    template <typename U> bool isParallel(const Vec2<U>& w) const;
    template <typename U> bool hasAcuteAngle(const Vec2<U>& w) const;
    template <typename U> bool hasObtuseAngle(const Vec2<U>& w) const;
@@ -110,14 +109,6 @@ template <typename T> Vec2<T> Vec2<T>::normalize() const
 template <typename T> template <typename U> Vec2<T> Vec2<T>::scale(U factor) const
 {
    return Vec2(static_cast<T>(x() * factor), static_cast<T>(y() * factor));
-}
-
-
-template <typename T>
-template <typename U>
-bool Vec2<T>::hasSameDirection(const Vec2<U>& w) const
-{
-   return isParallel(w) && hasAcuteAngle(w);
 }
 
 
@@ -322,6 +313,13 @@ template <typename T, typename U>
 bool orthogonal(const Vec2<T>& v, const Vec2<U>& w)
 {
    return perpendicular(v, w);
+}
+
+
+template <typename T, typename U>
+bool sameDirection(const Vec2<T>&  v, const Vec2<U>& w)
+{
+   return v.isParallel(w) && v.hasAcuteAngle(w);
 }
 
 

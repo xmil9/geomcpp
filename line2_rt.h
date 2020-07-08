@@ -104,7 +104,7 @@ std::optional<typename Line2<T>::Fp> Line2<T>::lerpFactor(const Point2<U>& pt) c
 
    // length != 0 is assured by checking whether line is a point above.
    auto factor = v.length() / direction().length();
-   if (!v.hasSameDirection(direction()))
+   if (!sameDirection(v, direction()))
       factor *= -1;
 
    return factor;
