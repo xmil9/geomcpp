@@ -36,6 +36,13 @@ template <typename T> class Line2 : public Line2Base<Line2<T>>
 };
 
 
+template <typename T>
+constexpr Line2<T>::Line2(const Point2<T>& anchor, const Vec2<T>& direction)
+   : Line2Base<Line2<T>>{anchor, direction}
+{
+}
+
+
 template <typename T> Line2Type Line2<T>::type() const
 {
    return Line2Type::Infinite;
@@ -56,7 +63,7 @@ template <typename T> std::optional<Point2<T>> Line2<T>::endPoint() const
 
 template <typename T>
 std::optional<typename Line2<T>::Fp>
-Line2<T>::isPointOnLine(const Point2<value_type>& pt) const
+Line2<T>::isPointOnLine(const Point2<T>& pt) const
 {
    return isPointOnInfiniteLine(pt);
 }

@@ -20,5 +20,6 @@
     <ClInclude Include="..\..\line2_types.h" />
     <ClInclude Include="..\..\line2_base_ct.h" />
     <ClInclude Include="..\..\line2_ct.h" />
+    <ClInclude Include="..\..\line_seg2_ct.h" />
   </ItemGroup>
 </Project>
