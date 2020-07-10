@@ -22,14 +22,14 @@ namespace
 void testLineInf2DefaultCtor()
 {
    {
-      const std::string caseLabel = "LineInf2 default ctor for float";
+      const std::string caseLabel = "[ct] LineInf2 default ctor for float";
 
       LineInf2<float> l;
       VERIFY((l.anchor() == Point2<float>{}), caseLabel);
       VERIFY((l.direction() == Vec2<float>{}), caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2 default ctor for integer";
+      const std::string caseLabel = "[ct] LineInf2 default ctor for integer";
 
       LineInf2<long> l;
       VERIFY((l.anchor() == Point2<long>{}), caseLabel);
@@ -41,7 +41,7 @@ void testLineInf2DefaultCtor()
 void testLineInf2ValueCtor()
 {
    {
-      const std::string caseLabel = "LineInf2 value ctor for float";
+      const std::string caseLabel = "[ct] LineInf2 value ctor for float";
 
       const Point2 anchor{1.0f, 2.0f};
       const Vec2 dir{3.0f, 2.0f};
@@ -50,7 +50,7 @@ void testLineInf2ValueCtor()
       VERIFY((l.direction() == dir), caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2 value ctor for integer";
+      const std::string caseLabel = "[ct] LineInf2 value ctor for integer";
 
       const Point2 anchor{1, 2};
       const Vec2 dir{3, 2};
@@ -64,7 +64,7 @@ void testLineInf2ValueCtor()
 void testLineInf2Type()
 {
    {
-      const std::string caseLabel = "LineInf2::type";
+      const std::string caseLabel = "[ct] LineInf2::type";
 
       const Point2 anchor{1.0f, 2.0f};
       const Vec2 dir{3.0f, 2.0f};
@@ -77,7 +77,7 @@ void testLineInf2Type()
 void testLineInf2IsPoint()
 {
    {
-      const std::string caseLabel = "LineInf2::isPoint for line that is not a point";
+      const std::string caseLabel = "[ct] LineInf2::isPoint for line that is not a point";
 
       const Point2 anchor{1.0f, 2.0f};
       const Vec2 dir{3.0f, 2.0f};
@@ -85,7 +85,7 @@ void testLineInf2IsPoint()
       VERIFY(!l.isPoint(), caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2::isPoint for line that is a point";
+      const std::string caseLabel = "[ct] LineInf2::isPoint for line that is a point";
 
       const Point2 anchor{1, 3};
       const Vec2 dir{0, 0};
@@ -98,7 +98,7 @@ void testLineInf2IsPoint()
 void testLineInf2StartPoint()
 {
    {
-      const std::string caseLabel = "LineInf2::startPoint";
+      const std::string caseLabel = "[ct] LineInf2::startPoint";
 
       const Point2 anchor{1.0f, 2.0f};
       const Vec2 dir{3.0f, 2.0f};
@@ -111,7 +111,7 @@ void testLineInf2StartPoint()
 void testLineInf2EndPoint()
 {
    {
-      const std::string caseLabel = "LineInf2::endPoint";
+      const std::string caseLabel = "[ct] LineInf2::endPoint";
 
       const Point2 anchor{1.0f, 2.0f};
       const Vec2 dir{3.0f, 2.0f};
@@ -124,7 +124,8 @@ void testLineInf2EndPoint()
 void testLineInf2IsPointOnLine()
 {
    {
-      const std::string caseLabel = "LineInf2::isPointOnLine for point that is on line";
+      const std::string caseLabel =
+         "[ct] LineInf2::isPointOnLine for point that is on line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -140,7 +141,7 @@ void testLineInf2IsPointOnLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnLine for point that is next to line";
+         "[ct] LineInf2::isPointOnLine for point that is next to line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -153,7 +154,7 @@ void testLineInf2IsPointOnLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnLine for point that is on infinite "
+         "[ct] LineInf2::isPointOnLine for point that is on infinite "
          "line extension before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
@@ -170,7 +171,7 @@ void testLineInf2IsPointOnLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnLine for point that is on infinite ray";
+         "[ct] LineInf2::isPointOnLine for point that is on infinite ray";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -191,7 +192,7 @@ void testLineInf2IsPointOnInfiniteLine()
 {
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnInfiniteLine for point that is on line";
+         "[ct] LineInf2::isPointOnInfiniteLine for point that is on line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -207,7 +208,7 @@ void testLineInf2IsPointOnInfiniteLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnInfiniteLine for point that is next to line";
+         "[ct] LineInf2::isPointOnInfiniteLine for point that is next to line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -220,7 +221,7 @@ void testLineInf2IsPointOnInfiniteLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnInfiniteLine for point that is on infinite "
+         "[ct] LineInf2::isPointOnInfiniteLine for point that is on infinite "
          "line extension before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
@@ -237,7 +238,7 @@ void testLineInf2IsPointOnInfiniteLine()
    }
    {
       const std::string caseLabel =
-         "LineInf2::isPointOnInfiniteLine for point that is on infinite ray";
+         "[ct] LineInf2::isPointOnInfiniteLine for point that is on infinite ray";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -258,7 +259,7 @@ void testLineInf2LerpFactor()
 {
    {
       const std::string caseLabel =
-         "LineInf2::lerpFactor for point within length of directional vector";
+         "[ct] LineInf2::lerpFactor for point within length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -274,7 +275,7 @@ void testLineInf2LerpFactor()
    }
    {
       const std::string caseLabel =
-         "LineInf2::lerpFactor for point past the length of directional vector";
+         "[ct] LineInf2::lerpFactor for point past the length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -290,7 +291,7 @@ void testLineInf2LerpFactor()
    }
    {
       const std::string caseLabel =
-         "LineInf2::lerpFactor for point before the anchor point";
+         "[ct] LineInf2::lerpFactor for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -305,7 +306,7 @@ void testLineInf2LerpFactor()
          VERIFY(fpEqual(*pos, -1.2), caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2::lerpFactor for point not on line";
+      const std::string caseLabel = "[ct] LineInf2::lerpFactor for point not on line";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -322,7 +323,7 @@ void testLineInf2Lerp()
 {
    {
       const std::string caseLabel =
-         "LineInf2::lerp for point within length of directional vector";
+         "[ct] LineInf2::lerp for point within length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -335,7 +336,7 @@ void testLineInf2Lerp()
    }
    {
       const std::string caseLabel =
-         "LineInf2::lerp for point past the length of directional vector";
+         "[ct] LineInf2::lerp for point past the length of directional vector";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -347,7 +348,8 @@ void testLineInf2Lerp()
       VERIFY(pt == expected, caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2::lerp for point before the anchor point";
+      const std::string caseLabel =
+         "[ct] LineInf2::lerp for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -359,7 +361,7 @@ void testLineInf2Lerp()
       VERIFY(pt == expected, caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2::lerp with zero";
+      const std::string caseLabel = "[ct] LineInf2::lerp with zero";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -370,7 +372,7 @@ void testLineInf2Lerp()
       VERIFY(pt == anchor, caseLabel);
    }
    {
-      const std::string caseLabel = "LineInf2::lerp with integer value";
+      const std::string caseLabel = "[ct] LineInf2::lerp with integer value";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -387,7 +389,7 @@ void testLineInf2Lerp()
 void testLineInf2Parallel()
 {
    {
-      const std::string caseLabel = "parallel() for parallel lines";
+      const std::string caseLabel = "[ct] parallel() for parallel lines";
 
       const Vec2 dir{2.0, 1.0};
       const LineInf2 a{Point2{3.0, 4.0}, dir};
@@ -396,7 +398,7 @@ void testLineInf2Parallel()
       VERIFY(parallel(a, b), caseLabel);
    }
    {
-      const std::string caseLabel = "parallel() for non-parallel lines";
+      const std::string caseLabel = "[ct] parallel() for non-parallel lines";
 
       const LineInf2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineInf2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
@@ -404,7 +406,7 @@ void testLineInf2Parallel()
       VERIFY(!parallel(a, b), caseLabel);
    }
    {
-      const std::string caseLabel = "parallel() for mixed line types";
+      const std::string caseLabel = "[ct] parallel() for mixed line types";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
@@ -417,7 +419,7 @@ void testLineInf2Parallel()
 void testLineInf2Coincident()
 {
    {
-      const std::string caseLabel = "coincident() for coincident lines";
+      const std::string caseLabel = "[ct] coincident() for coincident lines";
 
       const Vec2 dir{2.0, 1.0};
       const LineInf2 a{Point2{3.0, 4.0}, dir};
@@ -426,7 +428,7 @@ void testLineInf2Coincident()
       VERIFY(coincident(a, b), caseLabel);
    }
    {
-      const std::string caseLabel = "coincident() for non-coincident lines";
+      const std::string caseLabel = "[ct] coincident() for non-coincident lines";
 
       const LineInf2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineInf2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
@@ -434,7 +436,7 @@ void testLineInf2Coincident()
       VERIFY(!coincident(a, b), caseLabel);
    }
    {
-      const std::string caseLabel = "coincident() for mixed line types";
+      const std::string caseLabel = "[ct] coincident() for mixed line types";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
@@ -447,7 +449,7 @@ void testLineInf2Coincident()
 void testLineInf2Equality()
 {
    {
-      const std::string caseLabel = "Equality for equal infinite lines";
+      const std::string caseLabel = "[ct] Equality for equal infinite lines";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
@@ -455,7 +457,8 @@ void testLineInf2Equality()
       VERIFY(a == b, caseLabel);
    }
    {
-      const std::string caseLabel = "Equality for infinite lines with different anchors";
+      const std::string caseLabel =
+         "[ct] Equality for infinite lines with different anchors";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{2, 4}, Vec2{2, 1}};
@@ -464,7 +467,7 @@ void testLineInf2Equality()
    }
    {
       const std::string caseLabel =
-         "Equality for infinite lines with different directions";
+         "[ct] Equality for infinite lines with different directions";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{3, 4}, Vec2{2, 2}};
@@ -472,8 +475,8 @@ void testLineInf2Equality()
       VERIFY(!(a == b), caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Equality for infinite lines with different value types but same data values";
+      const std::string caseLabel = "[ct] Equality for infinite lines with different "
+                                    "value types but same data values";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
@@ -486,7 +489,7 @@ void testLineInf2Equality()
 void testLineInf2Inequality()
 {
    {
-      const std::string caseLabel = "Inequality for equal infinite lines";
+      const std::string caseLabel = "[ct] Inequality for equal infinite lines";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
@@ -495,7 +498,7 @@ void testLineInf2Inequality()
    }
    {
       const std::string caseLabel =
-         "Inequality for infinite lines with different anchors";
+         "[ct] Inequality for infinite lines with different anchors";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{2, 4}, Vec2{2, 1}};
@@ -504,7 +507,7 @@ void testLineInf2Inequality()
    }
    {
       const std::string caseLabel =
-         "Inequality for infinite lines with different directions";
+         "[ct] Inequality for infinite lines with different directions";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<int> b{Point2{3, 4}, Vec2{2, 2}};
@@ -512,8 +515,8 @@ void testLineInf2Inequality()
       VERIFY(a != b, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Inequality for infinite lines with different value types but same data values";
+      const std::string caseLabel = "[ct] Inequality for infinite lines with different "
+                                    "value types but same data values";
 
       const LineInf2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<float> b{Point2{3.0f, 4.0f}, Vec2{2.0f, 1.0f}};
