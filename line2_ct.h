@@ -26,9 +26,6 @@ template <typename T, template <typename> typename LineType> class Line2
    using Fp = sutil::FpType<T>;
 
  public:
-   Line2() = default;
-   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
-
    Line2Type type() const;
    Point2<T> anchor() const noexcept;
    Vec2<T> direction() const noexcept;
@@ -50,6 +47,10 @@ template <typename T, template <typename> typename LineType> class Line2
 
    // Interpolates a point at a given factor along the line.
    template <typename U> Point2<T> lerp(U factor) const;
+
+ protected:
+   Line2() = default;
+   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
 
  private:
    const LineType<T>& ConcreteLine() const;
