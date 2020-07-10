@@ -38,7 +38,7 @@ template <typename T> class LineInf2 : public Line2<T, LineInf2>
 
 template <typename T>
 constexpr LineInf2<T>::LineInf2(const Point2<T>& anchor, const Vec2<T>& direction)
-: Line2<T, LineInf2<T>>{anchor, direction}
+: Line2<T, LineInf2>{anchor, direction}
 {
 }
 
@@ -65,7 +65,7 @@ template <typename T>
 std::optional<typename LineInf2<T>::Fp>
 LineInf2<T>::isPointOnLine(const Point2<T>& pt) const
 {
-   return isPointOnInfiniteLine(pt);
+   return this->isPointOnInfiniteLine(pt);
 }
 
 } // namespace ct

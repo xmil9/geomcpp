@@ -138,7 +138,7 @@ std::optional<typename Line2<T, LineType>::Fp>
 Line2<T, LineType>::lerpFactor(const Point2<U>& pt) const
 {
    if (isPoint())
-      return (pt == anchor()) ? std::make_optional(typename LineType::Fp(0))
+      return (pt == anchor()) ? std::make_optional(Fp(0))
                               : std::nullopt;
 
    const auto v = Vec2<T>{anchor(), pt};
@@ -166,7 +166,7 @@ Point2<T> Line2<T, LineType>::lerp(U factor) const
 template <typename T, template <typename> typename LineType>
 const LineType<T>& Line2<T, LineType>::ConcreteLine() const
 {
-   return static_cast<LineType<T>&>(*this);
+   return static_cast<const LineType<T>&>(*this);
 }
 
 ///////////////////
