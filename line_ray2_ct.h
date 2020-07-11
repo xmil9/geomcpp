@@ -6,7 +6,7 @@
 // MIT license
 //
 #pragma once
-#include "line2_base_ct.h"
+#include "line2_ct.h"
 #include "point2.h"
 #include "vec2.h"
 #include <optional>
@@ -19,7 +19,7 @@ namespace ct
 {
 ///////////////////
 
-template <typename T> class LineRay2 : public Line2Base<LineRay2<T>>
+template <typename T> class LineRay2 : public Line2<T, LineRay2>
 {
  public:
    using value_type = T;
@@ -38,7 +38,7 @@ template <typename T> class LineRay2 : public Line2Base<LineRay2<T>>
 
 template <typename T>
 constexpr LineRay2<T>::LineRay2(const Point2<T>& start, const Vec2<T>& direction)
-: Line2Base<LineRay2<T>>{anchor, direction}
+: Line2<T, LineRay2>{start, direction}
 {
 }
 
@@ -57,7 +57,7 @@ template <typename T> std::optional<Point2<T>> LineRay2<T>::startPoint() const
 
 template <typename T> std::optional<Point2<T>> LineRay2<T>::endPoint() const
 {
-   return return std::nullopt;
+   return std::nullopt;
 }
 
 
