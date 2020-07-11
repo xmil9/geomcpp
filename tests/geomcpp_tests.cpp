@@ -8,6 +8,7 @@
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
 #include "line_inf2_ct_tests.h"
+#include "line_intersection2_ct_tests.h"
 #include "line_intersection2_rt_tests.h"
 #include "line_ray2_ct_tests.h"
 #include "line_ray2_rt_tests.h"
@@ -28,6 +29,7 @@ int main()
    testTecInterval();
    testRect();
    testCtLineInf2();
+   testCtLineIntersection2();
    testCtLineRay2();
    testCtLineSeg2();
    testRtLine2();

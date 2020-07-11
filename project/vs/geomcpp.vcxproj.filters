@@ -22,5 +22,6 @@
     <ClInclude Include="..\..\line_ray2_ct.h" />
     <ClInclude Include="..\..\line_inf2_ct.h" />
     <ClInclude Include="..\..\line2_ct.h" />
+    <ClInclude Include="..\..\line_intersection2_ct.h" />
   </ItemGroup>
 </Project>
