@@ -7,7 +7,7 @@
 //
 #pragma once
 #include "interval_dec.h"
-#include "line2_rt.h"
+#include "line_inf2_rt.h"
 #include "line_ray2_rt.h"
 #include "line_seg2_rt.h"
 #include "point2.h"
@@ -26,7 +26,7 @@ namespace rt
 
 // Union of possible outcomes when intersecting two lines.
 template <typename T>
-using LineIntersection2 = std::variant<Point2<T>, LineSeg2<T>, LineRay2<T>, Line2<T>>;
+using LineIntersection2 = std::variant<Point2<T>, LineSeg2<T>, LineRay2<T>, LineInf2<T>>;
 
 
 ///////////////////
@@ -107,7 +107,7 @@ makeCoincidentIntersection(const dec::Interval<FP>& overlap, const Line2<T>& ref
       }
 
    case 2:
-      return std::make_optional(Line2<T>{refLine.anchor(), refLine.direction()});
+      return std::make_optional(LineInf2<T>{refLine.anchor(), refLine.direction()});
 
    default:
       assert(false && "Unexpected number of line ends. :)");

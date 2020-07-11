@@ -6,6 +6,7 @@
 // MIT license
 //
 #include "line_ray2_rt_tests.h"
+#include "line_inf2_rt.h"
 #include "line_ray2_rt.h"
 #include "line_seg2_rt.h"
 #include "test_util.h"
@@ -442,7 +443,7 @@ void testLineRay2Parallel()
       const std::string caseLabel = "parallel() for mixed line classes";
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
+      const LineInf2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
       
       VERIFY(parallel(a, b), caseLabel);
    }
@@ -527,7 +528,7 @@ void testLineRay2Equality()
       const std::string caseLabel = "Equality between line segment and infinite line";
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+      const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
 
       VERIFY(!(a == b), caseLabel);
    }
@@ -574,7 +575,7 @@ void testLineRay2Inequality()
       const std::string caseLabel = "Inequality between line segment and infinite line";
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+      const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
 
       VERIFY(a != b, caseLabel);
    }

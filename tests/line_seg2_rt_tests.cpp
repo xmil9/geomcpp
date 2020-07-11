@@ -6,6 +6,7 @@
 // MIT license
 //
 #include "line_seg2_rt_tests.h"
+#include "line_inf2_rt.h"
 #include "line_seg2_rt.h"
 #include "test_util.h"
 #include "essentutils/fputil.h"
@@ -528,7 +529,7 @@ void testLineSeg2Parallel()
       const std::string caseLabel = "parallel() for mixed line classes";
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
+      const LineInf2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
 
       VERIFY(parallel(a, b), caseLabel);
    }
@@ -566,7 +567,7 @@ void testLineSeg2Coincident()
       const std::string caseLabel = "coincident() for mixed line classes";
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
+      const LineInf2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
 
       VERIFY(coincident(a, b), caseLabel);
    }
@@ -613,7 +614,7 @@ void testLineSeg2Equality()
       const std::string caseLabel = "Equality between line segment and infinite line";
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+      const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
 
       VERIFY(!(a == b), caseLabel);
    }
@@ -660,7 +661,7 @@ void testLineSeg2Inequality()
       const std::string caseLabel = "Inequality between line segment and infinite line";
 
       const LineSeg2<int> a{Point2{3, 4}, Vec2{2, 1}};
-      const Line2<int> b{Point2{3, 4}, Vec2{2, 1}};
+      const LineInf2<int> b{Point2{3, 4}, Vec2{2, 1}};
 
       VERIFY(a != b, caseLabel);
    }

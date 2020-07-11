@@ -47,6 +47,7 @@
     <ClInclude Include="..\..\line2_ct.h" />
     <ClInclude Include="..\..\line_inf2_ct.h" />
     <ClInclude Include="..\..\line2_types.h" />
+    <ClInclude Include="..\..\line_inf2_rt.h" />
     <ClInclude Include="..\..\line_intersection2_ct.h" />
     <ClInclude Include="..\..\line_intersection2_rt.h" />
     <ClInclude Include="..\..\line2_rt.h" />

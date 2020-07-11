@@ -26,19 +26,16 @@ template <typename T> class Line2
    using value_type = T;
    using Fp = sutil::FpType<T>;
 
-   Line2() = default;
-   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
-
    virtual Line2Type type() const { return Line2Type::Infinite; }
    Point2<T> anchor() const noexcept { return m_anchor; }
    Vec2<T> direction() const noexcept { return m_dir; }
 
    bool isPoint() const;
-   virtual std::optional<Point2<T>> startPoint() const { return std::nullopt; }
-   virtual std::optional<Point2<T>> endPoint() const { return std::nullopt; }
+   virtual std::optional<Point2<T>> startPoint() const = 0;
+   virtual std::optional<Point2<T>> endPoint() const = 0;
 
    // Returns the interpolation factor of the point.
-   virtual std::optional<Fp> isPointOnLine(const Point2<T>& pt) const;
+   virtual std::optional<Fp> isPointOnLine(const Point2<T>& pt) const = 0;
 
    // Checks if a given point is on the infinite extension of the line.
    // Returns the interpolation factor of the point.
@@ -50,6 +47,10 @@ template <typename T> class Line2
 
    // Interpolates a point at a given factor along the line.
    template <typename U> Point2<T> lerp(U factor) const;
+
+ protected:
+   Line2() = default;
+   constexpr Line2(const Point2<T>& anchor, const Vec2<T>& direction);
 
  private:
    // Point that anchors the line in the coordinate system. For line types that
