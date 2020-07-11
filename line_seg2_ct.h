@@ -6,7 +6,7 @@
 // MIT license
 //
 #pragma once
-#include "line2_base_ct.h"
+#include "line2_ct.h"
 #include "point2.h"
 #include "vec2.h"
 #include <optional>
@@ -19,7 +19,7 @@ namespace ct
 {
 ///////////////////
 
-template <typename T> class LineSeg2 : public Line2Base<LineSeg2<T>>
+template <typename T> class LineSeg2 : public Line2<T, LineSeg2>
 {
  public:
    using value_type = T;
@@ -43,14 +43,14 @@ template <typename T> class LineSeg2 : public Line2Base<LineSeg2<T>>
 
 template <typename T>
 constexpr LineSeg2<T>::LineSeg2(const Point2<T>& start, const Point2<T>& end)
-: Line2Base<LineSeg2<T>>{start, Vec2<T>{start, end}}
+: Line2<T, LineSeg2>{start, Vec2<T>{start, end}}
 {
 }
 
 
 template <typename T>
 constexpr LineSeg2<T>::LineSeg2(const Point2<T>& start, const Vec2<T>& direction)
-: Line2Base<LineSeg2<T>>{anchor, direction}
+: Line2<T, LineSeg2>{start, direction}
 {
 }
 
