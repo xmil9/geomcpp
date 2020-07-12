@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\line_ray2_ct_tests.cpp" />
     <ClCompile Include="..\..\line_intersection2_ct_tests.cpp" />
     <ClCompile Include="..\..\line_inf2_rt_tests.cpp" />
+    <ClCompile Include="..\..\triangle_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test_util.h" />
@@ -33,5 +34,6 @@
     <ClInclude Include="..\..\line_ray2_ct_tests.h" />
     <ClInclude Include="..\..\line_intersection2_ct_tests.h" />
     <ClInclude Include="..\..\line_inf2_rt_tests.h" />
+    <ClInclude Include="..\..\triangle_tests.h" />
   </ItemGroup>
 </Project>

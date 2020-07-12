@@ -17,6 +17,7 @@
 #include "line_seg2_rt_tests.h"
 #include "point2_tests.h"
 #include "rect_tests.h"
+#include "triangle_tests.h"
 #include "vec2_tests.h"
 #include <iostream>
 
@@ -36,6 +37,7 @@ int main()
    testRtLineIntersection2();
    testRtLineRay2();
    testRtLineSeg2();
+   testTriangle();
    testVector2D();
 
    std::cout << "geomcpp tests finished.\n";
