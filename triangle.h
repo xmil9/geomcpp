@@ -10,7 +10,9 @@
 #include "line_intersection2_ct.h"
 #include "line_seg2_ct.h"
 #include "point2.h"
+#include "vec2.h"
 #include <array>
+#include <optional>
 
 
 namespace geom
@@ -25,8 +27,6 @@ template <typename T> class Triangle
 
    Triangle() = default;
    constexpr Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c);
-   template <typename U>
-   constexpr Triangle(const Point2<U>& a, const Point2<U>& b, const Point2<U>& c);
 
    const Point2<T>& operator[](std::size_t idx) const;
    // Checks if a given point is a vertex of the triangle.
@@ -42,12 +42,13 @@ template <typename T> class Triangle
    Fp area() const;
    // Calculates the circumcircle of the triangle. The circumcircle is the circle
    // that goes through all three points of the triangle.
-   Circle<T> calcCircumcircle() const;
+   std::optional<Circle<T>> calcCircumcircle() const;
    // Calculates the circumcenter of the triangle. The circumcenter is the center
    // of the triangle's circumcircle.
-   Point2<T> calcCircumcenter() const;
+   std::optional<Point2<T>> calcCircumcenter() const;
 
  private:
+   // Vertices are arranged in ccw order.
    std::array<Point2<T>, 3> m_vertices;
 };
 
@@ -55,17 +56,11 @@ template <typename T> class Triangle
 template <typename T>
 constexpr Triangle<T>::Triangle(const Point2<T>& a, const Point2<T>& b,
                                 const Point2<T>& c)
-: m_vertices{a, b, c}
 {
-}
-
-
-template <typename T>
-template <typename U>
-constexpr Triangle<T>::Triangle(const Point2<U>& a, const Point2<U>& b,
-                                const Point2<U>& c)
-: m_vertices{a, b, c}
-{
+   const bool isCcw = ccw(Vec2<T>{a, b}, Vec2<T>{b, c});
+   m_vertices[0] = a;
+   m_vertices[1] = isCcw ? b : c;
+   m_vertices[2] = isCcw ? c : b;
 }
 
 
@@ -91,7 +86,7 @@ template <typename T> const Point2<T>* Triangle<T>::vertexArray() const
 
 template <typename T> ct::LineSeg2<T> Triangle<T>::edge(std::size_t idx) const
 {
-   return ct::LineSeg2<T>(m_vertices[idx], m_vertices[idx % 3]);
+   return ct::LineSeg2<T>(m_vertices[idx], m_vertices[(idx + 1) % 3]);
 }
 
 
@@ -105,7 +100,7 @@ template <typename T> bool Triangle<T>::isLine() const
 {
    if (isPoint())
       return false;
-   const LineSeg2<T> side01(m_vertices[0], m_vertices[1]);
+   const ct::LineSeg2<T> side01(m_vertices[0], m_vertices[1]);
    return m_vertices[0] == m_vertices[1] || side01.isPointOnInfiniteLine(m_vertices[2]);
 }
 
@@ -116,7 +111,7 @@ template <typename T> bool Triangle<T>::isDegenerate() const
 }
 
 
-template <typename T> Triangle<T>::Fp Triangle<T>::area() const
+template <typename T> typename Triangle<T>::Fp Triangle<T>::area() const
 {
    if (isDegenerate())
       return 0.0;
@@ -125,24 +120,28 @@ template <typename T> Triangle<T>::Fp Triangle<T>::area() const
    // two vectors and a line connecting their endpoints.
    const Vec2<T> v(m_vertices[0], m_vertices[1]);
    const Vec2<T> w(m_vertices[0], m_vertices[2]);
-   return std::abs(v.perpDot(w)) / 2.0;
+   return std::abs(perpDot(v, w)) / 2.0;
 }
 
 
-template <typename T> Circle<T> Triangle<T>::calcCircumcircle() const
+template <typename T> std::optional<Circle<T>> Triangle<T>::calcCircumcircle() const
 {
    if (isPoint())
-      return new Circle2<T>(m_vertices[0], 0.0);
+      return std::make_optional<Circle<T>>(m_vertices[0], T(0));
    if (isLine())
-      return null;
+      return std::nullopt;
 
-   const Point2<T> center = calcCircumcenter();
-   const Fp radius = Vec2<T>(center, m_vertices[0]).length();
-   return Circle2<T>(center, radius);
+   const auto center = calcCircumcenter();
+   if (!center)
+      return std::nullopt;
+
+   const Fp radius = Vec2<T>(*center, m_vertices[0]).length();
+   const Circle<T> ccircle{*center, static_cast<T>(radius)};
+   return ccircle;
 }
 
 
-template <typename T> Point2<T> Triangle<T>::calcCircumcenter() const
+template <typename T> std::optional<Point2<T>> Triangle<T>::calcCircumcenter() const
 {
    // Source:
    // https://www.geeksforgeeks.org/program-find-circumcenter-triangle-2
@@ -150,16 +149,15 @@ template <typename T> Point2<T> Triangle<T>::calcCircumcenter() const
    // bisectors of the sides of the triangle intersect.
    // It is enough to intersect two of the three bisectors.
 
-   const LineSeg2<T> side01(m_vertices[0], m_vertices[1]);
-   const LineInf<T> bisector01(side01.midPoint(), side01.direction().ccwNormal());
-   const LineSeg2<T> side12(m_vertices[1], m_vertices[2]);
-   const LineInf<T> bisector12(side12.midPoint(), side12.direction().ccwNormal());
+   const ct::LineSeg2<T> side01(m_vertices[0], m_vertices[1]);
+   const ct::LineInf2<T> bisector01(side01.midPoint(), side01.direction().ccwNormal());
+   const ct::LineSeg2<T> side12(m_vertices[1], m_vertices[2]);
+   const ct::LineInf2<T> bisector12(side12.midPoint(), side12.direction().ccwNormal());
 
    const auto x = ct::intersect(bisector01, bisector12);
-   if (auto xPt = std::get_if<Point2<T>>(isect))
-      return *xPt;
-
-   throw std::runtime_error("Triangle circumcircle - Failed to calculate circumcenter.");
+   if (x && std::holds_alternative<Point2<T>>(*x))
+         return std::get<Point2<T>>(*x);
+   return std::nullopt;
 }
 
 } // namespace geom
