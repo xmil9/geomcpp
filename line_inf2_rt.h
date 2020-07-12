@@ -2,7 +2,7 @@
 // geomcpp
 // 2D infinitle lines using run time/dynamic polymorphism.
 //
-// Jun-2020, Michael Lindner
+// Jul-2020, Michael Lindner
 // MIT license
 //
 #pragma once
