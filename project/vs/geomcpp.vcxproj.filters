@@ -25,5 +25,6 @@
     <ClInclude Include="..\..\line_intersection2_ct.h" />
     <ClInclude Include="..\..\line_inf2_rt.h" />
     <ClInclude Include="..\..\triangle.h" />
+    <ClInclude Include="..\..\poly2.h" />
   </ItemGroup>
 </Project>

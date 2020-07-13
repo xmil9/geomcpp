@@ -56,6 +56,7 @@
     <ClInclude Include="..\..\line_seg2_ct.h" />
     <ClInclude Include="..\..\line_seg2_rt.h" />
     <ClInclude Include="..\..\point2.h" />
+    <ClInclude Include="..\..\poly2.h" />
     <ClInclude Include="..\..\rect.h" />
     <ClInclude Include="..\..\triangle.h" />
     <ClInclude Include="..\..\vec2.h" />
