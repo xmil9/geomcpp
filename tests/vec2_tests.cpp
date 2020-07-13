@@ -115,6 +115,12 @@ void testVec2PointCtor()
       VERIFY(v.x() == 2.0f, caseLabel);
       VERIFY(v.y() == 4.0f, caseLabel);
    }
+   {
+      const std::string caseLabel = "Vec2 point ctor for constexpr definitions";
+
+      // This needs to compile.
+      constexpr Vec2<int> v{Point2{2, 3}, Point2{4, 7}};
+   }
 }
 
 

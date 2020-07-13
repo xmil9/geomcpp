@@ -58,6 +58,14 @@ void testLineInf2ValueCtor()
       VERIFY((l.anchor() == anchor), caseLabel);
       VERIFY((l.direction() == dir), caseLabel);
    }
+   {
+      const std::string caseLabel = "[ct] LineInf2 value ctor for constexpr definitions";
+
+      constexpr Point2 anchor{1, 2};
+      constexpr Vec2 dir{3, 2};
+      // Needs to compile.
+      constexpr LineInf2 l{anchor, dir};
+   }
 }
 
 

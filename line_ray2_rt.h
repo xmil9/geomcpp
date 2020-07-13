@@ -27,7 +27,7 @@ template <typename T> class LineRay2 : public Line2<T>
    using Fp = typename Line2<T>::Fp;
 
    LineRay2() = default;
-   LineRay2(const Point2<T>& start, const Vec2<T>& direction);
+   constexpr LineRay2(const Point2<T>& start, const Vec2<T>& direction);
 
    Line2Type type() const override { return Line2Type::Ray; }
    std::optional<Point2<T>> startPoint() const override { return this->anchor(); }
@@ -37,7 +37,7 @@ template <typename T> class LineRay2 : public Line2<T>
 
 
 template <typename T>
-LineRay2<T>::LineRay2(const Point2<T>& start, const Vec2<T>& direction)
+constexpr LineRay2<T>::LineRay2(const Point2<T>& start, const Vec2<T>& direction)
 : Line2<T>(start, direction)
 {
 }

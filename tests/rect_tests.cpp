@@ -94,13 +94,10 @@ void testRectPointCtor()
       VERIFY(r.bottom() == 4.0f, caseLabel);
    }
    {
-      const std::string caseLabel = "Rect point ctor for constexpr declaration";
+      const std::string caseLabel = "Rect point ctor for constexpr definitions";
 
+      // This needs to compile.
       constexpr Rect<float> r{Point2{3.0f, 4.0f}, Point2{1.0f, 2.0f}};
-      VERIFY(r.left() == 1.0f, caseLabel);
-      VERIFY(r.top() == 2.0f, caseLabel);
-      VERIFY(r.right() == 3.0f, caseLabel);
-      VERIFY(r.bottom() == 4.0f, caseLabel);
    }
 }
 

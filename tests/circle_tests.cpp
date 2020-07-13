@@ -42,6 +42,13 @@ void testCircleValueCtor()
       VERIFY(c.center() == center, caseLabel);
       VERIFY(c.radius() == 1, caseLabel);
    }
+   {
+      const std::string caseLabel = "Circle value ctor for constexpr definitions";
+
+      constexpr Point2 center{2, 3};
+      // Needs to compile.
+      constexpr Circle c{center, 1};
+   }
 }
 
 

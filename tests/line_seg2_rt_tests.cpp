@@ -59,6 +59,15 @@ void testLineSeg2StartEndCtor()
       VERIFY((l.startPoint() == start), caseLabel);
       VERIFY((l.endPoint() == end), caseLabel);
    }
+   {
+      const std::string caseLabel =
+         "LineSeg2 start-end point ctor for constexpr definitions";
+
+      constexpr Point2 start{1, 2};
+      constexpr Point2 end{0, 7};
+      // Needs to compile.
+      constexpr LineSeg2 l{start, end};
+   }
 }
 
 
@@ -81,6 +90,15 @@ void testLineSeg2StartDirectionCtor()
       const LineSeg2 l{anchor, dir};
       VERIFY((l.anchor() == anchor), caseLabel);
       VERIFY((l.direction() == dir), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "LineSeg2 start-direction ctor for constexpr definitions";
+
+      constexpr Point2 anchor{1, 2};
+      constexpr Vec2 dir{3, 2};
+      // Needs to compile.
+      constexpr LineSeg2 l{anchor, dir};
    }
 }
 

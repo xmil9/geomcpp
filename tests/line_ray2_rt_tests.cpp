@@ -60,6 +60,15 @@ void testLineRay2StartDirectionCtor()
       VERIFY((l.anchor() == anchor), caseLabel);
       VERIFY((l.direction() == dir), caseLabel);
    }
+   {
+      const std::string caseLabel =
+         "LineRay2 start-direction ctor for constexpr definitions";
+
+      constexpr Point2 anchor{1, 2};
+      constexpr Vec2 dir{3, 2};
+      // Needs to compile.
+      constexpr LineRay2 l{anchor, dir};
+   }
 }
 
 
@@ -374,8 +383,7 @@ void testLineRay2Lerp()
       VERIFY(pt == expected, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "LineRay2::lerp for point before the anchor point";
+      const std::string caseLabel = "LineRay2::lerp for point before the anchor point";
 
       const Point2 anchor{3.0, 4.0};
       const Vec2 dir{2.0, 1.0};
@@ -420,7 +428,7 @@ void testLineRay2Parallel()
       const Vec2 dir{2.0, 1.0};
       const LineRay2 a{Point2{3.0, 4.0}, dir};
       const LineRay2 b{Point2{2.0, 1.0}, dir};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
    {
@@ -428,7 +436,7 @@ void testLineRay2Parallel()
 
       const LineRay2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineRay2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!parallel(a, b), caseLabel);
    }
    {
@@ -436,7 +444,7 @@ void testLineRay2Parallel()
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineRay2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
    {
@@ -444,7 +452,7 @@ void testLineRay2Parallel()
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineInf2<float> b{Point2{2.0f, 1.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(parallel(a, b), caseLabel);
    }
 }
@@ -458,7 +466,7 @@ void testLineRay2Coincident()
       const Vec2 dir{2.0, 1.0};
       const LineRay2 a{Point2{3.0, 4.0}, dir};
       const LineRay2 b{Point2{5.0, 5.0}, dir};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
    {
@@ -466,7 +474,7 @@ void testLineRay2Coincident()
 
       const LineRay2 a{Point2{3.0, 4.0}, Vec2{2.0, 1.0}};
       const LineRay2 b{Point2{2.0, 1.0}, Vec2{1.0, 3.0}};
-      
+
       VERIFY(!coincident(a, b), caseLabel);
    }
    {
@@ -474,7 +482,7 @@ void testLineRay2Coincident()
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineRay2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
    {
@@ -482,7 +490,7 @@ void testLineRay2Coincident()
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineSeg2<float> b{Point2{5.0f, 5.0f}, Vec2{2.0f, 1.0f}};
-      
+
       VERIFY(coincident(a, b), caseLabel);
    }
 }
@@ -507,8 +515,7 @@ void testLineRay2Equality()
       VERIFY(!(a == b), caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Equality for line rays with different directions";
+      const std::string caseLabel = "Equality for line rays with different directions";
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineRay2<int> b{Point2{3, 4}, Vec2{2, 2}};
@@ -554,8 +561,7 @@ void testLineRay2Inequality()
       VERIFY(a != b, caseLabel);
    }
    {
-      const std::string caseLabel =
-         "Inequality for line rays with different directions";
+      const std::string caseLabel = "Inequality for line rays with different directions";
 
       const LineRay2<int> a{Point2{3, 4}, Vec2{2, 1}};
       const LineRay2<int> b{Point2{3, 4}, Vec2{2, 2}};

@@ -60,6 +60,15 @@ void testLineRay2StartDirectionCtor()
       VERIFY((l.anchor() == anchor), caseLabel);
       VERIFY((l.direction() == dir), caseLabel);
    }
+   {
+      const std::string caseLabel =
+         "[ct] LineRay2 start-direction ctor for constexpr definitions";
+
+      constexpr Point2 anchor{1, 2};
+      constexpr Vec2 dir{3, 2};
+      // Needs to compile.
+      constexpr LineRay2 l{anchor, dir};
+   }
 }
 
 

@@ -27,7 +27,7 @@ template <typename T> class Triangle
    using Fp = sutil::FpType<T>;
 
    Triangle() = default;
-   constexpr Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c);
+   Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c);
 
    const Point2<T>& operator[](std::size_t idx) const;
    // Checks if a given point is a vertex of the triangle.
@@ -55,8 +55,7 @@ template <typename T> class Triangle
 
 
 template <typename T>
-constexpr Triangle<T>::Triangle(const Point2<T>& a, const Point2<T>& b,
-                                const Point2<T>& c)
+Triangle<T>::Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c)
 {
    const bool isCcw = ccw(Vec2<T>{a, b}, Vec2<T>{b, c});
    m_vertices[0] = a;

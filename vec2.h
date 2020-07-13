@@ -36,8 +36,8 @@ template <typename T> class Vec2
    Vec2& operator=(const Vec2&) = default;
    Vec2& operator=(Vec2&&) = default;
 
-   T x() const noexcept { return m_x; }
-   T y() const noexcept { return m_y; }
+   constexpr T x() const noexcept { return m_x; }
+   constexpr T y() const noexcept { return m_y; }
    Vec2 operator-() const;
    Fp lengthSquared() const;
    Fp length() const;

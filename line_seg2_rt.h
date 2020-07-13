@@ -27,8 +27,8 @@ template <typename T> class LineSeg2 : public Line2<T>
    using Fp = typename Line2<T>::Fp;
 
    LineSeg2() = default;
-   LineSeg2(const Point2<T>& start, const Point2<T>& end);
-   LineSeg2(const Point2<T>& start, const Vec2<T>& direction);
+   constexpr LineSeg2(const Point2<T>& start, const Point2<T>& end);
+   constexpr LineSeg2(const Point2<T>& start, const Vec2<T>& direction);
 
    Line2Type type() const override { return Line2Type::Segment; }
    std::optional<Point2<T>> startPoint() const override { return this->anchor(); }
@@ -42,14 +42,14 @@ template <typename T> class LineSeg2 : public Line2<T>
 
 
 template <typename T>
-LineSeg2<T>::LineSeg2(const Point2<T>& start, const Point2<T>& end)
+constexpr LineSeg2<T>::LineSeg2(const Point2<T>& start, const Point2<T>& end)
 : Line2<T>(start, Vec2<T>(start, end))
 {
 }
 
 
 template <typename T>
-LineSeg2<T>::LineSeg2(const Point2<T>& start, const Vec2<T>& direction)
+constexpr LineSeg2<T>::LineSeg2(const Point2<T>& start, const Vec2<T>& direction)
 : Line2<T>(start, direction)
 {
 }
