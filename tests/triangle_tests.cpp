@@ -339,15 +339,15 @@ void testTriangleCalcCircumcircle()
    {
       const std::string caseLabel = "Triangle::calcCircumcircle for general triangle";
 
-		constexpr Point2<double> center(3, 8);
-		constexpr double radius = 4;
-		const Circle c(center, radius);
-		
-		const Point2 p1 = c.pointAtAngle(1.0);
-		const Point2 p2 = c.pointAtAngle(3.0);
-		const Point2 p3 = c.pointAtAngle(5.0);
-		
-		const Triangle t(p1, p2, p3);
+      constexpr Point2<double> center(3, 8);
+      constexpr double radius = 4;
+      const Circle c(center, radius);
+
+      const Point2 p1 = c.pointAtAngle(1.0);
+      const Point2 p2 = c.pointAtAngle(3.0);
+      const Point2 p3 = c.pointAtAngle(5.0);
+
+      const Triangle t(p1, p2, p3);
 
       const auto ccircle = t.calcCircumcircle();
       VERIFY(ccircle.has_value(), caseLabel);
@@ -400,20 +400,112 @@ void testTriangleCalcCircumcenter()
    {
       const std::string caseLabel = "Triangle::calcCircumcenter for general triangle";
 
-		constexpr Point2<double> center(3, 8);
-		constexpr double radius = 4;
-		const Circle c(center, radius);
-		
-		const Point2 p1 = c.pointAtAngle(1.0);
-		const Point2 p2 = c.pointAtAngle(3.0);
-		const Point2 p3 = c.pointAtAngle(5.0);
-		
-		const Triangle t(p1, p2, p3);
+      constexpr Point2<double> center(3, 8);
+      constexpr double radius = 4;
+      const Circle c(center, radius);
+
+      const Point2 p1 = c.pointAtAngle(1.0);
+      const Point2 p2 = c.pointAtAngle(3.0);
+      const Point2 p3 = c.pointAtAngle(5.0);
+
+      const Triangle t(p1, p2, p3);
 
       const auto ccenter = t.calcCircumcenter();
       VERIFY(ccenter.has_value(), caseLabel);
       if (ccenter)
          VERIFY(*ccenter == center, caseLabel);
+   }
+}
+
+
+void testTriangleEquality()
+{
+   {
+      const std::string caseLabel = "Equality for equal triangles";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+      const Triangle b = a;
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for unequal triangles";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+
+      constexpr Point2<float> q1(1, 2);
+      constexpr Point2<float> q2(-2, 4);
+      constexpr Point2<float> q3(-9, -3);
+      const Triangle b(q1, q2, q3);
+
+      VERIFY(!(a == b), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Equality for equal triangles with different value types";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+
+      constexpr Point2<int> q1(2, 0);
+      constexpr Point2<int> q2(-2, 0);
+      constexpr Point2<int> q3(0, 2);
+      const Triangle b(q1, q2, q3);
+
+      VERIFY(a == b, caseLabel);
+   }
+}
+
+
+void testTriangleInequality()
+{
+   {
+      const std::string caseLabel = "Inequality for equal triangles";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+      const Triangle b = a;
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Inequality for unequal triangles";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+
+      constexpr Point2<float> q1(1, 2);
+      constexpr Point2<float> q2(-2, 4);
+      constexpr Point2<float> q3(-9, -3);
+      const Triangle b(q1, q2, q3);
+
+      VERIFY(a != b, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Inequality for equal triangles with different value types";
+
+      constexpr Point2<float> p1(2, 0);
+      constexpr Point2<float> p2(-2, 0);
+      constexpr Point2<float> p3(0, 2);
+      const Triangle a(p1, p2, p3);
+
+      constexpr Point2<int> q1(2, 0);
+      constexpr Point2<int> q2(-2, 0);
+      constexpr Point2<int> q3(0, 2);
+      const Triangle b(q1, q2, q3);
+
+      VERIFY(!(a != b), caseLabel);
    }
 }
 
@@ -434,4 +526,6 @@ void testTriangle()
    testTriangleArea();
    testTriangleCalcCircumcircle();
    testTriangleCalcCircumcenter();
+   testTriangleEquality();
+   testTriangleInequality();
 }

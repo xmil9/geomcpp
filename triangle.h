@@ -156,8 +156,26 @@ template <typename T> std::optional<Point2<T>> Triangle<T>::calcCircumcenter() c
 
    const auto x = ct::intersect(bisector01, bisector12);
    if (x && std::holds_alternative<Point2<T>>(*x))
-         return std::get<Point2<T>>(*x);
+      return std::get<Point2<T>>(*x);
    return std::nullopt;
+}
+
+
+///////////////////
+
+// Comparisions.
+
+template <typename T, typename U>
+bool operator==(const Triangle<T>& a, const Triangle<U>& b)
+{
+   return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+}
+
+
+template <typename T, typename U>
+bool operator!=(const Triangle<T>& a, const Triangle<U>& b)
+{
+   return !(a == b);
 }
 
 } // namespace geom
