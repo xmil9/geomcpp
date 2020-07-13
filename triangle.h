@@ -5,6 +5,7 @@
 // Jul-2020, Michael Lindner
 // MIT license
 //
+#pragma once
 #include "circle.h"
 #include "line_inf2_ct.h"
 #include "line_intersection2_ct.h"
