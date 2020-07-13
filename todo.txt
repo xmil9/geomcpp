@@ -1,1 +1,2 @@
 - Add 'Fp' as type definition to each class.
+- Rename value_type to Value.
