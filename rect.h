@@ -33,10 +33,10 @@ template <typename T> class Rect
    Rect& operator=(const Rect&) = default;
    Rect& operator=(Rect&&) = default;
 
-   T left() const noexcept { return m_l; }
-   T top() const noexcept { return m_t; }
-   T right() const noexcept { return m_r; }
-   T bottom() const noexcept { return m_b; }
+   constexpr T left() const noexcept { return m_l; }
+   constexpr T top() const noexcept { return m_t; }
+   constexpr T right() const noexcept { return m_r; }
+   constexpr T bottom() const noexcept { return m_b; }
    void setLeft(T l);
    void setTop(T t);
    void setRight(T r);

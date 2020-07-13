@@ -29,8 +29,8 @@ template <typename T> class Point2
    Point2& operator=(const Point2&) = default;
    Point2& operator=(Point2&&) = default;
 
-   T x() const noexcept { return m_x; }
-   T y() const noexcept { return m_y; }
+   constexpr T x() const noexcept { return m_x; }
+   constexpr T y() const noexcept { return m_y; }
    Point2 operator-() const;
    template <typename U>[[nodiscard]] Point2 offset(U dx, U dy) const;
    template <typename U>[[nodiscard]] Point2 scale(U factor) const;
