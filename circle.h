@@ -24,6 +24,7 @@ template <typename T> class Circle
 
    Circle() = default;
    constexpr Circle(const Point2<T>& center, T radius);
+   constexpr Circle(Point2<T>&& center, T radius);
    Circle(const Circle&) = default;
    Circle(Circle&&) = default;
 
@@ -48,7 +49,14 @@ template <typename T> class Circle
 
 template <typename T>
 constexpr Circle<T>::Circle(const Point2<T>& center, T radius)
-: m_center{center}, m_radius{static_cast<T>(radius)}
+: m_center{center}, m_radius{radius}
+{
+}
+
+
+template <typename T>
+constexpr Circle<T>::Circle(Point2<T>&& center, T radius)
+   : m_center{std::move(center)}, m_radius{radius}
 {
 }
 

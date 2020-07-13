@@ -10,7 +10,7 @@
 #include "test_util.h"
 #include "essentutils/fputil.h"
 #define _USE_MATH_DEFINES
-#include <math.h> 
+#include <math.h>
 
 using namespace geom;
 using namespace sutil;
@@ -27,7 +27,7 @@ void testCircleDefaultCtor()
 
       const Circle<float> c;
       VERIFY((c.center() == Point2{0.0f, 0.0f}), caseLabel);
-      VERIFY(equal(c.radius(),0.0f), caseLabel);
+      VERIFY(equal(c.radius(), 0.0f), caseLabel);
    }
 }
 
@@ -48,6 +48,25 @@ void testCircleValueCtor()
       constexpr Point2 center{2, 3};
       // Needs to compile.
       constexpr Circle c{center, 1};
+   }
+}
+
+
+void testCircleValueCtorForRValues()
+{
+   {
+      const std::string caseLabel = "Circle value ctor for r-values";
+
+      const Circle c{Point2{2, 3}, 1};
+      VERIFY((c.center() == Point2{2, 3}), caseLabel);
+      VERIFY(c.radius() == 1, caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "Circle value ctor for constexpr definitions with r-values";
+
+      // Needs to compile.
+      constexpr Circle c{Point2{2, 3}, 1};
    }
 }
 
@@ -156,7 +175,8 @@ void testCircleIsPointInsideCircle()
       VERIFY(!c.isPointInsideCircle(Point2{2, 7}), caseLabel);
    }
    {
-      const std::string caseLabel = "Circle::isPointInsideCircle for point exactly on circle";
+      const std::string caseLabel =
+         "Circle::isPointInsideCircle for point exactly on circle";
 
       const Circle c{Point2{1.0, 2.0}, 3.0};
       VERIFY(!c.isPointInsideCircle(Point2{1, 5}), caseLabel);
@@ -207,6 +227,7 @@ void testCircle()
 {
    testCircleDefaultCtor();
    testCircleValueCtor();
+   testCircleValueCtorForRValues();
    testCircleIsPoint();
    testCircleBounds();
    testCircleOffset();
