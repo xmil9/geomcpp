@@ -22,6 +22,7 @@ template <typename T> class Rect
 {
  public:
    using value_type = T;
+   using Fp = sutil::FpType<T>;
 
    Rect() = default;
    constexpr Rect(T l, T t, T r, T b);

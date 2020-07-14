@@ -20,6 +20,7 @@ template <typename T> class Point2
 {
  public:
    using value_type = T;
+   using Fp = sutil::FpType<T>;
 
    Point2() = default;
    constexpr Point2(T x, T y);
