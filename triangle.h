@@ -28,6 +28,12 @@ template <typename T> class Triangle
 
    Triangle() = default;
    Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c);
+   Triangle(Point2<T>&& a, Point2<T>&& b, Point2<T>&& c);
+   Triangle(const Triangle&) = default;
+   Triangle(Triangle&&) = default;
+
+   Triangle& operator=(const Triangle&) = default;
+   Triangle& operator=(Triangle&&) = default;
 
    const Point2<T>& operator[](std::size_t idx) const;
    // Checks if a given point is a vertex of the triangle.
@@ -61,6 +67,16 @@ Triangle<T>::Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c
    m_vertices[0] = a;
    m_vertices[1] = isCcw ? b : c;
    m_vertices[2] = isCcw ? c : b;
+}
+
+
+template <typename T>
+Triangle<T>::Triangle(Point2<T>&& a, Point2<T>&& b, Point2<T>&& c)
+{
+   const bool isCcw = ccw(Vec2<T>{a, b}, Vec2<T>{b, c});
+   m_vertices[0] = std::move(a);
+   m_vertices[1] = isCcw ? std::move(b) : std::move(c);
+   m_vertices[2] = isCcw ? std::move(c) : std::move(b);
 }
 
 

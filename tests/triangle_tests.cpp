@@ -61,6 +61,20 @@ void testTriangleValueCtor()
 }
 
 
+void testTriangleValueCtorForRValues()
+{
+   {
+      const std::string caseLabel = "Triangle construct with r-values";
+
+      const Triangle t(Point2(1, 2), Point2(3, 4), Point2(7, 1));
+
+      VERIFY(t[0] == Point2(1, 2), caseLabel);
+      VERIFY(t[1] == Point2(3, 4), caseLabel);
+      VERIFY(t[2] == Point2(7, 1), caseLabel);
+   }
+}
+
+
 void testTriangleSubscriptOperator()
 {
    {
@@ -516,6 +530,7 @@ void testTriangle()
 {
    testTriangleDefaultCtor();
    testTriangleValueCtor();
+   testTriangleValueCtorForRValues();
    testTriangleSubscriptOperator();
    testTriangleHasVertex();
    testTriangleVertexArray();
