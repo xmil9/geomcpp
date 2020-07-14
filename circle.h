@@ -21,6 +21,7 @@ template <typename T> class Circle
 {
  public:
    using value_type = T;
+   using Fp = sutil::FpType<T>;
 
    Circle() = default;
    constexpr Circle(const Point2<T>& center, T radius);
@@ -113,11 +114,10 @@ template <typename T>
 template <typename U>
 Point2<T> Circle<T>::pointAtAngle(U angleInRadians) const
 {
-   using FP = sutil::FpType<T>;
-   const FP angle = static_cast<FP>(angleInRadians);
-   const FP r = static_cast<FP>(radius());
-   const FP x = m_center.x() + r * std::cos(angle);
-   const FP y = m_center.y() + r * std::sin(angle);
+   const Fp angle = static_cast<Fp>(angleInRadians);
+   const Fp r = static_cast<Fp>(radius());
+   const Fp x = m_center.x() + r * std::cos(angle);
+   const Fp y = m_center.y() + r * std::sin(angle);
    return Point2<T>(static_cast<T>(x), static_cast<T>(y));
 }
 
