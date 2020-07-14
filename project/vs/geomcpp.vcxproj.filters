@@ -5,26 +5,68 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\geomcpp_api.h" />
-    <ClInclude Include="..\..\interval_dec.h" />
-    <ClInclude Include="..\..\interval_types.h" />
-    <ClInclude Include="..\..\interval_tec.h" />
     <ClInclude Include="..\..\vec2.h" />
     <ClInclude Include="..\..\point2.h" />
     <ClInclude Include="..\..\coordsys.h" />
     <ClInclude Include="..\..\rect.h" />
     <ClInclude Include="..\..\circle.h" />
-    <ClInclude Include="..\..\line2_rt.h" />
-    <ClInclude Include="..\..\line_seg2_rt.h" />
-    <ClInclude Include="..\..\line_ray2_rt.h" />
-    <ClInclude Include="..\..\line_intersection2_rt.h" />
-    <ClInclude Include="..\..\line2_types.h" />
-    <ClInclude Include="..\..\line_seg2_ct.h" />
-    <ClInclude Include="..\..\line_ray2_ct.h" />
-    <ClInclude Include="..\..\line_inf2_ct.h" />
-    <ClInclude Include="..\..\line2_ct.h" />
-    <ClInclude Include="..\..\line_intersection2_ct.h" />
-    <ClInclude Include="..\..\line_inf2_rt.h" />
     <ClInclude Include="..\..\triangle.h" />
     <ClInclude Include="..\..\poly2.h" />
+    <ClInclude Include="..\..\line_inf2_ct.h">
+      <Filter>Lines\Compile-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_intersection2_ct.h">
+      <Filter>Lines\Compile-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_ray2_ct.h">
+      <Filter>Lines\Compile-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_seg2_ct.h">
+      <Filter>Lines\Compile-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line2_ct.h">
+      <Filter>Lines\Compile-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_inf2_rt.h">
+      <Filter>Lines\Run-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_intersection2_rt.h">
+      <Filter>Lines\Run-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_ray2_rt.h">
+      <Filter>Lines\Run-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line_seg2_rt.h">
+      <Filter>Lines\Run-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line2_rt.h">
+      <Filter>Lines\Run-time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\line2_types.h">
+      <Filter>Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interval_dec.h">
+      <Filter>Intervals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interval_tec.h">
+      <Filter>Intervals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interval_types.h">
+      <Filter>Intervals</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Lines">
+      <UniqueIdentifier>{e6989984-f507-45f8-ab48-277872dac9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lines\Compile-time">
+      <UniqueIdentifier>{e9caa019-04a8-4412-9c9c-9bd2c736411b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lines\Run-time">
+      <UniqueIdentifier>{df3af4c4-1c11-434e-a913-858036394afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intervals">
+      <UniqueIdentifier>{a2debe52-6ceb-46b5-9d60-e3d630415bf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
