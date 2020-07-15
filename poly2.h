@@ -55,6 +55,9 @@ template <typename T> class Poly2
    Poly2 reversed() const;
    bool isConvex() const;
 
+   template <typename T, typename U>
+   friend bool operator==(const Poly2<T>& a, const Poly2<U>& b);
+
  private:
    std::vector<Point2<T>> m_vertices;
 };
@@ -180,6 +183,24 @@ template <typename T> Poly2<T> Poly2<T>::reversed() const
 template <typename T> bool Poly2<T>::isConvex() const
 {
    return isConvexPath(m_vertices);
+}
+
+
+///////////////////
+
+// Comparisions.
+
+template <typename T, typename U>
+bool operator==(const Poly2<T>& a, const Poly2<U>& b)
+{
+   return a.m_vertices == b.m_vertices;
+}
+
+
+template <typename T, typename U>
+bool operator!=(const Poly2<T>& a, const Poly2<U>& b)
+{
+   return !(a == b);
 }
 
 
