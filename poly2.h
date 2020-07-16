@@ -101,7 +101,7 @@ template <typename T> const Point2<T>& Poly2<T>::operator[](std::size_t idx) con
 
 template <typename T>
 template <typename U>
-Poly2<T>::iterator Poly2<T>::contains(const Point2<U>& pt)
+typename Poly2<T>::iterator Poly2<T>::contains(const Point2<U>& pt)
 {
    return std::find(begin(), end(), pt);
 }
@@ -109,44 +109,45 @@ Poly2<T>::iterator Poly2<T>::contains(const Point2<U>& pt)
 
 template <typename T>
 template <typename U>
-Poly2<T>::const_iterator Poly2<T>::contains(const Point2<U>& pt) const
+typename Poly2<T>::const_iterator Poly2<T>::contains(const Point2<U>& pt) const
 {
    return std::find(begin(), end(), pt);
 }
 
 
-template <typename T> Poly2<T>::iterator Poly2<T>::begin()
+template <typename T> typename Poly2<T>::iterator Poly2<T>::begin()
 {
    return m_vertices.begin();
 }
 
 
-template <typename T> Poly2<T>::const_iterator Poly2<T>::begin() const
+template <typename T> typename Poly2<T>::const_iterator Poly2<T>::begin() const
 {
    return m_vertices.begin();
 }
 
 
-template <typename T> Poly2<T>::iterator Poly2<T>::end()
+template <typename T> typename Poly2<T>::iterator Poly2<T>::end()
 {
    return m_vertices.end();
 }
 
 
-template <typename T> Poly2<T>::const_iterator Poly2<T>::end() const
+template <typename T> typename Poly2<T>::const_iterator Poly2<T>::end() const
 {
    return m_vertices.end();
 }
 
 
-template <typename T> Poly2<T>::iterator Poly2<T>::add(Point2<T> pt)
+template <typename T> typename Poly2<T>::iterator Poly2<T>::add(Point2<T> pt)
 {
    m_vertices.push_back(std::move(pt));
    return m_vertices.rbegin().base();
 }
 
 
-template <typename T> Poly2<T>::iterator Poly2<T>::insert(Point2<T> pt, std::size_t pos)
+template <typename T>
+typename Poly2<T>::iterator Poly2<T>::insert(Point2<T> pt, std::size_t pos)
 {
    return m_vertices.insert(begin() + pos, std::move(pt));
 }
@@ -163,8 +164,8 @@ template <typename T> std::size_t Poly2<T>::numEdges() const
 template <typename T> ct::LineSeg2<T> Poly2<T>::edge(std::size_t idx) const
 {
    if (idx == numEdges() - 1)
-      return LineSeg2<T>(m_vertices[idx], m_vertices[0]);
-   return LineSeg2<T>(m_vertices[idx], m_vertices[idx + 1]);
+      return ct::LineSeg2<T>(m_vertices[idx], m_vertices[0]);
+   return ct::LineSeg2<T>(m_vertices[idx], m_vertices[idx + 1]);
 }
 
 
@@ -190,15 +191,13 @@ template <typename T> bool Poly2<T>::isConvex() const
 
 // Comparisions.
 
-template <typename T, typename U>
-bool operator==(const Poly2<T>& a, const Poly2<U>& b)
+template <typename T, typename U> bool operator==(const Poly2<T>& a, const Poly2<U>& b)
 {
    return a.m_vertices == b.m_vertices;
 }
 
 
-template <typename T, typename U>
-bool operator!=(const Poly2<T>& a, const Poly2<U>& b)
+template <typename T, typename U> bool operator!=(const Poly2<T>& a, const Poly2<U>& b)
 {
    return !(a == b);
 }
