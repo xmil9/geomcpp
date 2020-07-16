@@ -26,11 +26,13 @@ template <typename T> class Poly2
    using Fp = sutil::FpType<T>;
    using iterator = typename std::vector<Point2<T>>::iterator;
    using const_iterator = typename std::vector<Point2<T>>::const_iterator;
+   using Vertex = Point2<T>;
+   using Edge = ct::LineSeg2<T>;
 
    Poly2() = default;
    template <typename Iter, typename = std::enable_if_t<sutil::IsIterator_v<Iter>>>
    Poly2(Iter first, Iter last);
-   template <typename Point> Poly2(std::initializer_list<Point> ilist);
+   Poly2(std::initializer_list<Point2<T>> ilist);
    Poly2(const Poly2&) = default;
    Poly2(Poly2&&) = default;
 
@@ -50,7 +52,7 @@ template <typename T> class Poly2
    iterator insert(Point2<T> pt, std::size_t pos);
 
    std::size_t numEdges() const;
-   ct::LineSeg2<T> edge(std::size_t idx) const;
+   Edge edge(std::size_t idx) const;
 
    Rect<T> bounds() const;
    Poly2 reversed() const;
@@ -72,8 +74,7 @@ Poly2<T>::Poly2(Iter first, Iter last) : m_vertices{first, last}
 
 
 template <typename T>
-template <typename Point>
-Poly2<T>::Poly2(std::initializer_list<Point> ilist) : m_vertices{ilist}
+Poly2<T>::Poly2(std::initializer_list<Point2<T>> ilist) : m_vertices{ilist}
 {
 }
 
@@ -158,11 +159,11 @@ template <typename T> std::size_t Poly2<T>::numEdges() const
 }
 
 
-template <typename T> ct::LineSeg2<T> Poly2<T>::edge(std::size_t idx) const
+template <typename T> typename Poly2<T>::Edge Poly2<T>::edge(std::size_t idx) const
 {
    if (idx == numEdges() - 1)
-      return ct::LineSeg2<T>(m_vertices[idx], m_vertices[0]);
-   return ct::LineSeg2<T>(m_vertices[idx], m_vertices[idx + 1]);
+      return Edge(m_vertices[idx], m_vertices[0]);
+   return Edge(m_vertices[idx], m_vertices[idx + 1]);
 }
 
 
