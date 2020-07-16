@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\math_util.h" />
     <ClInclude Include="..\..\string_util.h" />
     <ClInclude Include="..\..\sutils_api.h" />
+    <ClInclude Include="..\..\type_traits_util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\filesys_win32.cpp" />
