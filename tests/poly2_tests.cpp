@@ -71,6 +71,92 @@ void testPoly2InitializerListCtor()
    }
 }
 
+
+void testPoly2Size()
+{
+   {
+      const std::string caseLabel = "Poly2::size";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f},
+                              Point2{7.0f, -2.0f}, Point2{3.0f, 1.0f}};
+
+      VERIFY(poly.size() == 4, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::size for empty polygon";
+
+      const Poly2<float> poly;
+
+      VERIFY(poly.size() == 0, caseLabel);
+   }
+}
+
+
+void testPoly2SubscriptOperator()
+{
+   {
+      const std::string caseLabel = "Poly2::operator[]";
+
+      Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f}, Point2{7.0f, -2.0f},
+                        Point2{3.0f, 1.0f}};
+
+      VERIFY(poly[0] == Point2(1.0f, 2.0f), caseLabel);
+      VERIFY(poly[1] == Point2(-3.0f, 4.0f), caseLabel);
+      VERIFY(poly[2] == Point2(7.0f, -2.0f), caseLabel);
+      VERIFY(poly[3] == Point2(3.0f, 1.0f), caseLabel);
+
+      poly[0] = Point2{100.0f, -100.0f};
+
+      VERIFY(poly[0] == Point2(100.0f, -100.0f), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::operator[] const";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f},
+                              Point2{7.0f, -2.0f}, Point2{3.0f, 1.0f}};
+
+      VERIFY(poly[0] == Point2(1.0f, 2.0f), caseLabel);
+      VERIFY(poly[1] == Point2(-3.0f, 4.0f), caseLabel);
+      VERIFY(poly[2] == Point2(7.0f, -2.0f), caseLabel);
+      VERIFY(poly[3] == Point2(3.0f, 1.0f), caseLabel);
+   }
+}
+
+
+void testPoly2Contains()
+{
+   {
+      const std::string caseLabel = "Poly2::contains";
+
+      Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f}, Point2{7.0f, -2.0f},
+                        Point2{3.0f, 1.0f}};
+
+      VERIFY(poly.contains(Point2(1.0f, 2.0f)) != poly.end(), caseLabel);
+      VERIFY(poly.contains(Point2(3.0f, 1.0f)) != poly.end(), caseLabel);
+      VERIFY(poly.contains(Point2(111.0f, 222.0f)) == poly.end(), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::contains and edit point through iterator";
+
+      Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f}, Point2{7.0f, -2.0f},
+                        Point2{3.0f, 1.0f}};
+
+      auto pos = poly.contains(Point2(-3.0f, 4.0f));
+      *pos = Point2(111.0f, 222.0f);
+      VERIFY(poly.contains(Point2(111.0f, 222.0f)) != poly.end(), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::contains const";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{-3.0f, 4.0f},
+                              Point2{7.0f, -2.0f}, Point2{3.0f, 1.0f}};
+
+      VERIFY(poly.contains(Point2(1.0f, 2.0f)) != poly.end(), caseLabel);
+      VERIFY(poly.contains(Point2(3.0f, 1.0f)) != poly.end(), caseLabel);
+      VERIFY(poly.contains(Point2(111.0f, 222.0f)) == poly.end(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -81,4 +167,7 @@ void testPoly2()
    testPoly2DefaultCtor();
    testPoly2SequenceCtor();
    testPoly2InitializerListCtor();
+   testPoly2Size();
+   testPoly2SubscriptOperator();
+   testPoly2Contains();
 }
