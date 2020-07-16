@@ -10,6 +10,7 @@
 #include "line_seg2_ct.h"
 #include "rect.h"
 #include "essentutils/math_util.h"
+#include "essentutils/type_traits_util.h"
 #include <vector>
 
 
@@ -27,9 +28,9 @@ template <typename T> class Poly2
    using const_iterator = typename std::vector<Point2<T>>::const_iterator;
 
    Poly2() = default;
-   explicit constexpr Poly2(Point2<T> pt);
-   template <typename Iter> Poly2(Iter first, Iter last);
-   Poly2(std::initializer_list<T> ilist);
+   template <typename Iter, typename = std::enable_if_t<sutil::IsIterator_v<Iter>>>
+   Poly2(Iter first, Iter last);
+   template <typename Point> Poly2(std::initializer_list<Point> ilist);
    Poly2(const Poly2&) = default;
    Poly2(Poly2&&) = default;
 
@@ -63,20 +64,16 @@ template <typename T> class Poly2
 };
 
 
-template <typename T> constexpr Poly2<T>::Poly2(Point2<T> pt)
-{
-   m_vertices.push_back(std::move(pt));
-}
-
-
 template <typename T>
-template <typename Iter>
+template <typename Iter, typename>
 Poly2<T>::Poly2(Iter first, Iter last) : m_vertices{first, last}
 {
 }
 
 
-template <typename T> Poly2<T>::Poly2(std::initializer_list<T> ilist) : m_vertices{ilist}
+template <typename T>
+template <typename Point>
+Poly2<T>::Poly2(std::initializer_list<Point> ilist) : m_vertices{ilist}
 {
 }
 
