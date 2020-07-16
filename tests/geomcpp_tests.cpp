@@ -16,6 +16,7 @@
 #include "line_seg2_ct_tests.h"
 #include "line_seg2_rt_tests.h"
 #include "point2_tests.h"
+#include "poly2_tests.h"
 #include "rect_tests.h"
 #include "triangle_tests.h"
 #include "vec2_tests.h"
@@ -25,18 +26,19 @@
 int main()
 {
    testCircle();
-   testDecInterval();
-   testPoint2D();
-   testTecInterval();
-   testRect();
    testCtLineInf2();
    testCtLineIntersection2();
    testCtLineRay2();
    testCtLineSeg2();
+   testDecInterval();
+   testPoint2D();
+   testPoly2();
+   testRect();
    testRtLineInf2();
    testRtLineIntersection2();
    testRtLineRay2();
    testRtLineSeg2();
+   testTecInterval();
    testTriangle();
    testVector2D();
 
