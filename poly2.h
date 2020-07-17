@@ -147,6 +147,8 @@ template <typename T> typename Poly2<T>::iterator Poly2<T>::add(Point2<T> pt)
 template <typename T>
 typename Poly2<T>::iterator Poly2<T>::insert(Point2<T> pt, std::size_t pos)
 {
+   if (pos > size())
+      pos = size();
    return m_vertices.insert(begin() + pos, std::move(pt));
 }
 
