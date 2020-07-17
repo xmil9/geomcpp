@@ -167,7 +167,7 @@ void testPoly2BeginEnd()
 
       for (auto it = poly.begin(); it != poly.end(); ++it)
          *it = Point2{it->x() + 1, it->y() - 1};
-      
+
       VERIFY(poly[0] == Point2(2, 1), caseLabel);
       VERIFY(poly[1] == Point2(-2, 3), caseLabel);
       VERIFY(poly[2] == Point2(8, -3), caseLabel);
@@ -198,7 +198,7 @@ void testPoly2Add()
       const std::string caseLabel = "Poly2::add";
 
       Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
-      
+
       const Point2 added{100, 200};
       poly.add(added);
 
@@ -209,7 +209,7 @@ void testPoly2Add()
       const std::string caseLabel = "Poly2::add first vertex";
 
       Poly2<int> poly;
-      
+
       const Point2 added{100, 200};
       poly.add(added);
 
@@ -225,7 +225,7 @@ void testPoly2Insert()
       const std::string caseLabel = "Poly2::insert at beginning";
 
       Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
-      
+
       const Point2 inserted{100, 200};
       poly.insert(inserted, 0);
 
@@ -237,7 +237,7 @@ void testPoly2Insert()
       const std::string caseLabel = "Poly2::insert in middle";
 
       Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
-      
+
       const Point2 inserted{100, 200};
       poly.insert(inserted, 2);
 
@@ -250,7 +250,7 @@ void testPoly2Insert()
       const std::string caseLabel = "Poly2::insert at end";
 
       Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
-      
+
       const Point2 inserted{100, 200};
       poly.insert(inserted, 4);
 
@@ -262,13 +262,51 @@ void testPoly2Insert()
       const std::string caseLabel = "Poly2::insert past the end";
 
       Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
-      
+
       const Point2 inserted{100, 200};
       poly.insert(inserted, 20);
 
       VERIFY(poly.size() == 5, caseLabel);
       VERIFY(poly[3] == Point2(3, 1), caseLabel);
       VERIFY(poly[4] == inserted, caseLabel);
+   }
+}
+
+
+void testPoly2NumEdges()
+{
+   {
+      const std::string caseLabel = "Poly2::numEdges";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      VERIFY(poly.numEdges() == 4, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::numEdges for empty polygon";
+
+      Poly2<int> poly;
+      VERIFY(poly.numEdges() == 0, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::numEdges for one vertex";
+
+      Poly2<int> poly{Point2{1, 2}};
+      VERIFY(poly.numEdges() == 0, caseLabel);
+   }
+}
+
+
+void testPoly2Edge()
+{
+   {
+      const std::string caseLabel = "Poly2::edge";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+
+      VERIFY(poly.edge(0) == Poly2<int>::Edge(Point2{1, 2}, Point2{-3, 4}), caseLabel);
+      VERIFY(poly.edge(1) == Poly2<int>::Edge(Point2{-3, 4}, Point2{7, -2}), caseLabel);
+      VERIFY(poly.edge(2) == Poly2<int>::Edge(Point2{7, -2}, Point2{3, 1}), caseLabel);
+      VERIFY(poly.edge(3) == Poly2<int>::Edge(Point2{3, 1}, Point2{1, 2}), caseLabel);
    }
 }
 
@@ -288,4 +326,6 @@ void testPoly2()
    testPoly2BeginEnd();
    testPoly2Add();
    testPoly2Insert();
+   testPoly2NumEdges();
+   testPoly2Edge();
 }
