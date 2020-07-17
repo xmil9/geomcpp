@@ -191,6 +191,87 @@ void testPoly2BeginEnd()
    }
 }
 
+
+void testPoly2Add()
+{
+   {
+      const std::string caseLabel = "Poly2::add";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      
+      const Point2 added{100, 200};
+      poly.add(added);
+
+      VERIFY(poly.size() == 5, caseLabel);
+      VERIFY(poly[4] == added, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::add first vertex";
+
+      Poly2<int> poly;
+      
+      const Point2 added{100, 200};
+      poly.add(added);
+
+      VERIFY(poly.size() == 1, caseLabel);
+      VERIFY(poly[0] == added, caseLabel);
+   }
+}
+
+
+void testPoly2Insert()
+{
+   {
+      const std::string caseLabel = "Poly2::insert at beginning";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      
+      const Point2 inserted{100, 200};
+      poly.insert(inserted, 0);
+
+      VERIFY(poly.size() == 5, caseLabel);
+      VERIFY(poly[0] == inserted, caseLabel);
+      VERIFY(poly[1] == Point2(1, 2), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::insert in middle";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      
+      const Point2 inserted{100, 200};
+      poly.insert(inserted, 2);
+
+      VERIFY(poly.size() == 5, caseLabel);
+      VERIFY(poly[1] == Point2(-3, 4), caseLabel);
+      VERIFY(poly[2] == inserted, caseLabel);
+      VERIFY(poly[3] == Point2(7, -2), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::insert at end";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      
+      const Point2 inserted{100, 200};
+      poly.insert(inserted, 4);
+
+      VERIFY(poly.size() == 5, caseLabel);
+      VERIFY(poly[3] == Point2(3, 1), caseLabel);
+      VERIFY(poly[4] == inserted, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::insert past the end";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+      
+      const Point2 inserted{100, 200};
+      poly.insert(inserted, 20);
+
+      VERIFY(poly.size() == 5, caseLabel);
+      VERIFY(poly[3] == Point2(3, 1), caseLabel);
+      VERIFY(poly[4] == inserted, caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -205,4 +286,6 @@ void testPoly2()
    testPoly2SubscriptOperator();
    testPoly2Contains();
    testPoly2BeginEnd();
+   testPoly2Add();
+   testPoly2Insert();
 }
