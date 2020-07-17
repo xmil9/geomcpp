@@ -157,6 +157,40 @@ void testPoly2Contains()
    }
 }
 
+
+void testPoly2BeginEnd()
+{
+   {
+      const std::string caseLabel = "Poly2::begin/end non-const";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+
+      for (auto it = poly.begin(); it != poly.end(); ++it)
+         *it = Point2{it->x() + 1, it->y() - 1};
+      
+      VERIFY(poly[0] == Point2(2, 1), caseLabel);
+      VERIFY(poly[1] == Point2(-2, 3), caseLabel);
+      VERIFY(poly[2] == Point2(8, -3), caseLabel);
+      VERIFY(poly[3] == Point2(4, 0), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::begin/end const";
+
+      const Poly2<int> poly{Point2{1, 2}, Point2{-3, 4}, Point2{7, -2}, Point2{3, 1}};
+
+      std::size_t i = 0;
+      for (auto it = poly.begin(); it != poly.end(); ++it, ++i)
+         VERIFY(*it == poly[i], caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::begin/end for empty polygon";
+
+      Poly2<short> poly;
+
+      VERIFY(poly.begin() == poly.end(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -170,4 +204,5 @@ void testPoly2()
    testPoly2Size();
    testPoly2SubscriptOperator();
    testPoly2Contains();
+   testPoly2BeginEnd();
 }
