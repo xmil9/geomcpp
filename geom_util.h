@@ -16,7 +16,7 @@ namespace geom
 
 // Calculates a minimal rectangle around given points.
 template <typename T, typename PointIter>
-std::optional<Rect<T>> calcBounds(PointIter first, PointIter last)
+std::optional<Rect<T>> calcPathBounds(PointIter first, PointIter last)
 {
    // No points.
 	if (first == last)
