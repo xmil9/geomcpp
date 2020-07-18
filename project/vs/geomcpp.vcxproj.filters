@@ -7,7 +7,6 @@
     <ClInclude Include="..\..\geomcpp_api.h" />
     <ClInclude Include="..\..\vec2.h" />
     <ClInclude Include="..\..\point2.h" />
-    <ClInclude Include="..\..\coordsys.h" />
     <ClInclude Include="..\..\rect.h" />
     <ClInclude Include="..\..\circle.h" />
     <ClInclude Include="..\..\triangle.h" />
@@ -55,6 +54,7 @@
       <Filter>Intervals</Filter>
     </ClInclude>
     <ClInclude Include="..\..\geom_util.h" />
+    <ClInclude Include="..\..\geom_types.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">

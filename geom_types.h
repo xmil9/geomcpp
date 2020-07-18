@@ -1,6 +1,6 @@
 //
 // geomcpp
-// Coordinate system types.
+// Geometry types.
 //
 // Jun-2020, Michael Lindner
 // MIT license
@@ -17,6 +17,14 @@ enum class CoordSys
 {
    Screen,
    Cartesian
+};
+
+
+enum class Orientation
+{
+   Cw,
+   Ccw,
+   None
 };
 
 } // namespace geom

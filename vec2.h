@@ -6,7 +6,7 @@
 // MIT license
 //
 #pragma once
-#include "coordsys.h"
+#include "geom_types.h"
 #include "point2.h"
 #include "essentutils/fputil.h"
 #include <stdexcept>
