@@ -5,6 +5,7 @@
 // MIT license
 //
 #include "circle_tests.h"
+#include "geom_util_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
 #include "line_inf2_ct_tests.h"
@@ -31,6 +32,7 @@ int main()
    testCtLineRay2();
    testCtLineSeg2();
    testDecInterval();
+   testGeometryUtilities();
    testPoint2D();
    testPoly2();
    testRect();

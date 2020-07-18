@@ -54,6 +54,7 @@
     <ClInclude Include="..\..\interval_types.h">
       <Filter>Intervals</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\geom_util.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">
