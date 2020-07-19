@@ -6,8 +6,9 @@
 // MIT license
 //
 #pragma once
-#include "point2.h"
+#include "geom_util.h"
 #include "line_seg2_ct.h"
+#include "point2.h"
 #include "rect.h"
 #include "essentutils/math_util.h"
 #include "essentutils/type_traits_util.h"
@@ -54,7 +55,7 @@ template <typename T> class Poly2
    std::size_t numEdges() const;
    Edge edge(std::size_t idx) const;
 
-   Rect<T> bounds() const;
+   std::optional<Rect<T>> bounds() const;
    Poly2 reversed() const;
    bool isConvex() const;
 
@@ -169,9 +170,9 @@ template <typename T> typename Poly2<T>::Edge Poly2<T>::edge(std::size_t idx) co
 }
 
 
-template <typename T> Rect<T> Poly2<T>::bounds() const
+template <typename T> std::optional<Rect<T>> Poly2<T>::bounds() const
 {
-   return calcBoundingBox(m_vertices);
+   return calcPathBounds<T>(m_vertices.begin(), m_vertices.end());
 }
 
 
