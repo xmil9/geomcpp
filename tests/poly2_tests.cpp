@@ -366,6 +366,27 @@ void testPoly2Reversed()
    }
 }
 
+
+void testPoly2IsConvex()
+{
+   {
+      const std::string caseLabel = "Poly2::isConvex for convex polygon";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{3.0f, 0.0f}, Point2{4.0f, -2.0f},
+                              Point2{2.0f, -3.0f}};
+
+      VERIFY(poly.isConvex(), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::isConvex for concave polygon";
+
+      const Poly2<float> poly{Point2{1.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                              Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+
+      VERIFY(!poly.isConvex(), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -386,4 +407,5 @@ void testPoly2()
    testPoly2Edge();
    testPoly2Bounds();
    testPoly2Reversed();
+   testPoly2IsConvex();
 }

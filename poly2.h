@@ -184,7 +184,7 @@ template <typename T> Poly2<T> Poly2<T>::reversed() const
 
 template <typename T> bool Poly2<T>::isConvex() const
 {
-   return isConvexPath(m_vertices);
+   return isConvexPath(m_vertices.begin(), m_vertices.end());
 }
 
 
