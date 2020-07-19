@@ -49,24 +49,24 @@ std::optional<Rect<T>> calcPathBounds(PointIter first, PointIter last)
 
 // Checks if given points form a convex path.
 // Convex path - All edges bend in the same direction and don't cross.
-template <typename T, typename PointIter>
-bool isConvexPath(PointIter first, PointIter last)
+template <typename PointIter> bool isConvexPath(PointIter first, PointIter last)
 {
-   using Fp = sutil::FpType<T>;
+   using Coord = typename std::iterator_traits<PointIter>::value_type::value_type;
+   using Fp = sutil::FpType<Coord>;
 
    const std::size_t numPts = std::distance(first, last);
    if (numPts <= 3)
       return true;
 
-   std::optional<Vec2<T>> prev;
-   std::optional<Vec2<T>> next;
+   std::optional<Vec2<Coord>> prev;
+   std::optional<Vec2<Coord>> next;
    Orientation orient = Orientation::None;
 
    for (PointIter it = first; it != last; ++it)
    {
       PointIter nextIt = (it + 1 == last) ? first : it + 1;
       prev = next;
-      next = std::make_optional(Vec2<T>(*it, *nextIt));
+      next = std::make_optional(Vec2<Coord>(*it, *nextIt));
       if (!prev)
          continue;
 
