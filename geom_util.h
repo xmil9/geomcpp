@@ -52,6 +52,8 @@ std::optional<Rect<T>> calcPathBounds(PointIter first, PointIter last)
 template <typename T, typename PointIter>
 bool isConvexPath(PointIter first, PointIter last)
 {
+   using Fp = sutil::FpType<T>;
+
    const std::size_t numPts = std::distance(first, last);
    if (numPts <= 3)
       return true;
@@ -68,16 +70,16 @@ bool isConvexPath(PointIter first, PointIter last)
       if (!prev)
          continue;
 
-      auto val = perpDot(prev, next);
-      if (sutil::equal(val, 0))
+      auto val = perpDot(*prev, *next);
+      if (sutil::equal<Fp>(val, 0))
          continue;
 
       if (orient == Orientation::None)
-         orient = sutil::greater(val, 0) ? Orientation::Cw : Orientation::Ccw;
+         orient = sutil::greater<Fp>(val, 0) ? Orientation::Cw : Orientation::Ccw;
 
       // Orientation cannot change for convex paths.
       Orientation edgeOrient =
-         sutil::greater(val, 0) ? Orientation::Cw : Orientation::Ccw;
+         sutil::greater<Fp>(val, 0) ? Orientation::Cw : Orientation::Ccw;
       if (edgeOrient != orient)
          return false;
    }
