@@ -431,6 +431,73 @@ void testPoly2Inequality()
    }
 }
 
+
+void testPoly2IsPointInsideConvexPolygon()
+{
+   {
+      const std::string caseLabel =
+         "isPointInsideConvexPolygon for polygon with one vertex";
+
+      const Poly2<int> poly{Point2{1, 2}};
+      VERIFY(isPointInsideConvexPolygon(poly, Point2(1, 2)), caseLabel);
+      VERIFY(!isPointInsideConvexPolygon(poly, Point2(2, 2)), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "isPointInsideConvexPolygon for polygon with two vertices";
+
+      const Poly2<float> poly{Point2{1.0f, 1.0f}, Point2{2.0f, 2.0f}};
+      VERIFY(isPointInsideConvexPolygon(poly, Point2(1.5f, 1.5f)), caseLabel);
+      VERIFY(!isPointInsideConvexPolygon(poly, Point2(2.0f, 3.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideConvexPolygon for ccw convex polygon";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{3.0f, 0.0f}, Point2{4.0f, -2.0f},
+                              Point2{2.0f, -3.0f}};
+      VERIFY(isPointInsideConvexPolygon(poly, Point2(2.0f, -1.0f)), caseLabel);
+      VERIFY(!isPointInsideConvexPolygon(poly, Point2(2.0f, 3.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideConvexPolygon for cw convex polygon";
+
+      const Poly2<float> poly{Point2{1.0f, 2.0f}, Point2{2.0f, -3.0f},
+                              Point2{4.0f, -2.0f}, Point2{3.0f, 0.0f}};
+      VERIFY(isPointInsideConvexPolygon(poly, Point2(2.0f, -1.0f)), caseLabel);
+      VERIFY(!isPointInsideConvexPolygon(poly, Point2(2.0f, 3.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideConvexPolygon for point on edge";
+
+      const Poly2<double> octagon{Point2{6.0, 8.0},  Point2{8.0, 8.0}, Point2{10.0, 6.0},
+                                  Point2{10.0, 4.0}, Point2{8.0, 2.0}, Point2{6.0, 2.0},
+                                  Point2{4.0, 4.0},  Point2{4.0, 6.0}};
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(7.0, 8.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(9.0, 7.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(10.0, 5.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(9.0, 3.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(7.0, 2.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(5.0, 5.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(4.0, 5.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(5.0, 7.0)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideConvexPolygon for point on vertex";
+
+      const Poly2<double> octagon{Point2{6.0, 8.0},  Point2{8.0, 8.0}, Point2{10.0, 6.0},
+                                  Point2{10.0, 4.0}, Point2{8.0, 2.0}, Point2{6.0, 2.0},
+                                  Point2{4.0, 4.0},  Point2{4.0, 6.0}};
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(6.0, 8.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(8.0, 8.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(10.0, 6.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(10.0, 4.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(8.0, 2.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(6.0, 2.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(4.0, 4.0)), caseLabel);
+      VERIFY(isPointInsideConvexPolygon(octagon, Point2(4.0, 6.0)), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -454,4 +521,5 @@ void testPoly2()
    testPoly2IsConvex();
    testPoly2Equality();
    testPoly2Inequality();
+   testPoly2IsPointInsideConvexPolygon();
 }

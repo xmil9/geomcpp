@@ -230,7 +230,7 @@ bool isPointInsideConvexPolygon(const Poly2<T>& poly, const Point2<U>& pt)
    {
       Vec2<T> v(pt, poly[i]);
       const std::size_t next = (i + 1) % numVert;
-      Vec2 w(pt, poly[next]);
+      Vec2<T> w(pt, poly[next]);
 
       Sign curOrientation = sutil::sign(perpDot(v, w));
 
