@@ -310,6 +310,39 @@ void testPoly2Edge()
    }
 }
 
+
+void testPoly2Bounds()
+{
+   {
+      const std::string caseLabel = "Poly2::bounds";
+
+      Poly2<int> poly{Point2{1, 2}, Point2{2, -2}, Point2{3, 2}, Point2{4, -2}};
+
+      const auto bounds = poly.bounds();
+      VERIFY(bounds.has_value(), caseLabel);
+      if (bounds)
+         VERIFY(*poly.bounds() == Rect(1, -2, 4, 2), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::bounds for empty polygon";
+
+      Poly2<float> poly;
+
+      const auto bounds = poly.bounds();
+      VERIFY(!bounds.has_value(), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::bounds for polygon with single vertex";
+
+      Poly2<double> poly{Point2{1.0, 2.0}};
+
+      const auto bounds = poly.bounds();
+      VERIFY(bounds.has_value(), caseLabel);
+      if (bounds)
+         VERIFY(*poly.bounds() == Rect<double>(poly[0], poly[0]), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -328,4 +361,5 @@ void testPoly2()
    testPoly2Insert();
    testPoly2NumEdges();
    testPoly2Edge();
+   testPoly2Bounds();
 }
