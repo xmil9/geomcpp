@@ -387,6 +387,50 @@ void testPoly2IsConvex()
    }
 }
 
+
+void testPoly2Equality()
+{
+   {
+      const std::string caseLabel = "Equality for equal polygons";
+
+      const Poly2<float> a{Point2{1.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      const auto b = a;
+      VERIFY(a == b, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for unequal polygons";
+
+      const Poly2<float> a{Point2{1.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      const Poly2<float> b{Point2{2.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      VERIFY(!(a == b), caseLabel);
+   }
+}
+
+
+void testPoly2Inequality()
+{
+   {
+      const std::string caseLabel = "Equality for equal polygons";
+
+      const Poly2<float> a{Point2{1.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      const auto b = a;
+      VERIFY(!(a != b), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Equality for unequal polygons";
+
+      const Poly2<float> a{Point2{1.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      const Poly2<float> b{Point2{2.0f, 0.0f}, Point2{3.0f, 1.0f}, Point2{4.0f, 3.0f},
+                           Point2{2.0f, 2.0f}, Point2{0.0f, 5.0f}};
+      VERIFY(a != b, caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -408,4 +452,6 @@ void testPoly2()
    testPoly2Bounds();
    testPoly2Reversed();
    testPoly2IsConvex();
+   testPoly2Equality();
+   testPoly2Inequality();
 }
