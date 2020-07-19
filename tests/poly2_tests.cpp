@@ -343,6 +343,29 @@ void testPoly2Bounds()
    }
 }
 
+
+void testPoly2Reversed()
+{
+   {
+      const std::string caseLabel = "Poly2::reversed";
+
+      const Poly2<int> poly{Point2{1, 2}, Point2{3, 0}, Point2{4, -2}, Point2{2, -3}};
+      const Poly2<int> rev = poly.reversed();
+
+      const Poly2<int> expected = {Point2{2, -3}, Point2{4, -2}, Point2{3, 0},
+                                   Point2{1, 2}};
+      VERIFY(rev == expected, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Poly2::reversed for empty polygon";
+
+      const Poly2<int> empty;
+      const Poly2<int> rev = empty.reversed();
+
+      VERIFY(rev == empty, caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -362,4 +385,5 @@ void testPoly2()
    testPoly2NumEdges();
    testPoly2Edge();
    testPoly2Bounds();
+   testPoly2Reversed();
 }
