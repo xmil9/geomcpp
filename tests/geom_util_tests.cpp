@@ -61,6 +61,81 @@ void testCalcPathBounds()
    }
 }
 
+
+void testIsConvexPath()
+{
+   {
+      const std::string caseLabel = "isConvexPath for no points";
+
+      const std::vector<Point2<double>> path;
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for one point";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for two points";
+
+      const std::vector<Point2<int>> path{Point2{1, 2}, Point2{5, 3}};
+      VERIFY(isConvexPath<int>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for three points";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}, Point2{5.0, 3.0},
+                                             Point2{3.0, 2.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for cw points";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}, Point2{3.0, 1.0},
+                                             Point2{4.0, 4.0}, Point2{2.0, 3.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for ccw points";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}, Point2{3.0, 0.0},
+                                             Point2{4.0, -2.0}, Point2{2.0, -3.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for points with crossing edges";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}, Point2{3.0, 0.0},
+                                             Point2{4.0, -2.0}, Point2{5.0, 2.0}};
+      VERIFY(!isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for points with concave edges";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 2.0}, Point2{3.0, 1.0},
+                                             Point2{4.0, 3.0}, Point2{2.0, 2.0},
+                                             Point2{0.0, 5.0}};
+      VERIFY(!isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isConvexPath for points in straight line";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 0.0}, Point2{2.0, 1.0},
+                                             Point2{3.0, 2.0}, Point2{4.0, 3.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+   {
+      const std::string caseLabel =
+         "isConvexPath for path with duplicate consecutive points";
+
+      const std::vector<Point2<double>> path{Point2{1.0, 0.0}, Point2{2.0, 1.0},
+                                             Point2{2.0, 1.0}, Point2{3.0, 2.0},
+                                             Point2{4.0, 3.0}};
+      VERIFY(isConvexPath<double>(path.begin(), path.end()), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -69,4 +144,5 @@ void testCalcPathBounds()
 void testGeometryUtilities()
 {
    testCalcPathBounds();
+   testIsConvexPath();
 }
