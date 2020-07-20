@@ -33,16 +33,34 @@ template <typename T> class Ring
    constexpr Point2<T> center() const noexcept { return m_inner.center(); }
    constexpr Fp innerRadius() const noexcept { return m_inner.radius(); }
    constexpr Fp outerRadius() const noexcept { return m_outer.radius(); }
-   constexpr Rect<T> bounds const;
+   constexpr Rect<T> bounds() const;
    template <typename U>[[nodiscard]] Ring offset(const Vec2<U>& v) const;
 
-   friend template <typename U, typename V>
-   bool operator==(const Ring<U>& a, const Ring<V>& b);
+   template <typename U, typename V>
+   friend bool operator==(const Ring<U>& a, const Ring<V>& b);
+   template <typename U, typename V>
+   friend bool isPointInRing(const Ring<U>& r, const Point2<V>& pt);
 
  private:
    Circle<T> m_inner;
    Circle<T> m_outer;
 };
+
+
+template <typename T> constexpr Rect<T> Ring<T>::bounds() const
+{
+   return new Rect<T>(
+      m_inner.center().x() - m_outer.radius(), m_inner.center().y() - m_outer.radius(),
+      m_inner.center().x() + m_outer.radius(), m_inner.center().y() + m_outer.radius());
+}
+
+
+template <typename T>
+template <typename U>
+Ring<T> Ring<T>::offset(const Vec2<U>& v) const
+{
+   return Ring(m_inner.center().offset(v), m_inner.radius(), m_outer.radius());
+}
 
 
 ///////////////////
@@ -64,9 +82,10 @@ template <typename U, typename V> bool operator!=(const Ring<U>& a, const Ring<V
 ///////////////////
 
 // Checks if a given point is in the ring (between or on the circles).
-template <typename T, typename U>
-bool isPointInRing(const Ring<T>& r, const Point2<U>& pt)
+template <typename U, typename V>
+bool isPointInRing(const Ring<U>& r, const Point2<V>& pt)
 {
+   return isPointInCircle(r.m_outer, pt) && !isPointInsideCircle(r.m_inner, pt);
 }
 
 } // namespace geom
