@@ -32,8 +32,8 @@ template <typename T> class Circle
    Circle& operator=(const Circle&) = default;
    Circle& operator=(Circle&&) = default;
 
-   Point2<T> center() const noexcept { return m_center; }
-   T radius() const noexcept { return m_radius; }
+   constexpr Point2<T> center() const noexcept { return m_center; }
+   constexpr T radius() const noexcept { return m_radius; }
    bool isPoint() const;
    Rect<T> bounds() const;
    template <typename U>[[nodiscard]] Circle offset(const Vec2<U>& v) const;
