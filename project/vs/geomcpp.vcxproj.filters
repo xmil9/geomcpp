@@ -55,6 +55,7 @@
     </ClInclude>
     <ClInclude Include="..\..\geom_util.h" />
     <ClInclude Include="..\..\geom_types.h" />
+    <ClInclude Include="..\..\ring.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">

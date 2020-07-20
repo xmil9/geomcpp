@@ -59,6 +59,7 @@
     <ClInclude Include="..\..\point2.h" />
     <ClInclude Include="..\..\poly2.h" />
     <ClInclude Include="..\..\rect.h" />
+    <ClInclude Include="..\..\ring.h" />
     <ClInclude Include="..\..\triangle.h" />
     <ClInclude Include="..\..\vec2.h" />
   </ItemGroup>
