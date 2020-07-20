@@ -37,9 +37,6 @@ template <typename T> class Circle
    bool isPoint() const;
    Rect<T> bounds() const;
    template <typename U>[[nodiscard]] Circle offset(const Vec2<U>& v) const;
-   template <typename U> bool isPointInCircle(const Point2<U>& pt) const;
-   template <typename U> bool isPointOnCircle(const Point2<U>& pt) const;
-   template <typename U> bool isPointInsideCircle(const Point2<U>& pt) const;
    template <typename U> Point2<T> pointAtAngle(U angleInRadians) const;
 
  private:
@@ -57,7 +54,7 @@ constexpr Circle<T>::Circle(const Point2<T>& center, T radius)
 
 template <typename T>
 constexpr Circle<T>::Circle(Point2<T>&& center, T radius)
-   : m_center{std::move(center)}, m_radius{radius}
+: m_center{std::move(center)}, m_radius{radius}
 {
 }
 
@@ -80,33 +77,6 @@ template <typename U>
 Circle<T> Circle<T>::offset(const Vec2<U>& v) const
 {
    return Circle{center() + v, radius()};
-}
-
-
-// Checks if a given point is in the circle (inside or on the circle).
-template <typename T>
-template <typename U>
-bool Circle<T>::isPointInCircle(const Point2<U>& pt) const
-{
-   return sutil::lessEqual(distSquared(pt, center()), radius() * radius());
-}
-
-
-// Checks if a given point is on the circle.
-template <typename T>
-template <typename U>
-bool Circle<T>::isPointOnCircle(const Point2<U>& pt) const
-{
-   return sutil::equal(distSquared(pt, center()), radius() * radius());
-}
-
-
-// Checks if a given point is strictly inside the circle (not on the circle).
-template <typename T>
-template <typename U>
-bool Circle<T>::isPointInsideCircle(const Point2<U>& pt) const
-{
-   return sutil::less(distSquared(pt, center()), radius() * radius());
 }
 
 
@@ -135,6 +105,32 @@ template <typename T, typename U> bool operator==(const Circle<T>& a, const Circ
 template <typename T, typename U> bool operator!=(const Circle<T>& a, const Circle<U>& b)
 {
    return !(a == b);
+}
+
+
+///////////////////
+
+// Checks if a given point is in a given circle (inside or on the circle).
+template <typename T, typename U>
+bool isPointInCircle(const Circle<T>& c, const Point2<U>& pt)
+{
+   return sutil::lessEqual(distSquared(pt, c.center()), c.radius() * c.radius());
+}
+
+
+// Checks if a given point is on a given circle.
+template <typename T, typename U>
+bool isPointOnCircle(const Circle<T>& c, const Point2<U>& pt)
+{
+   return sutil::equal(distSquared(pt, c.center()), c.radius() * c.radius());
+}
+
+
+// Checks if a given point is strictly inside a given circle (not on the circle).
+template <typename T, typename U>
+bool isPointInsideCircle(const Circle<T>& c, const Point2<U>& pt)
+{
+   return sutil::less(distSquared(pt, c.center()), c.radius() * c.radius());
 }
 
 } // namespace geom

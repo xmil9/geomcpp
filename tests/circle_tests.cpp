@@ -114,76 +114,6 @@ void testCircleOffset()
 }
 
 
-void testCircleIsPointInCircle()
-{
-   {
-      const std::string caseLabel = "Circle::isPointInCircle for point inside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(c.isPointInCircle(Point2{2, 2}), caseLabel);
-   }
-   {
-      const std::string caseLabel = "Circle::isPointInCircle for point outside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(!c.isPointInCircle(Point2{2, 7}), caseLabel);
-   }
-   {
-      const std::string caseLabel = "Circle::isPointInCircle for point exactly on circle";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(c.isPointInCircle(Point2{1, 5}), caseLabel);
-   }
-}
-
-
-void testCircleIsPointOnCircle()
-{
-   {
-      const std::string caseLabel = "Circle::isPointOnCircle for point inside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(!c.isPointOnCircle(Point2{2, 2}), caseLabel);
-   }
-   {
-      const std::string caseLabel = "Circle::isPointOnCircle for point outside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(!c.isPointOnCircle(Point2{2, 7}), caseLabel);
-   }
-   {
-      const std::string caseLabel = "Circle::isPointOnCircle for point exactly on circle";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(c.isPointOnCircle(Point2{1, 5}), caseLabel);
-   }
-}
-
-
-void testCircleIsPointInsideCircle()
-{
-   {
-      const std::string caseLabel = "Circle::isPointInsideCircle for point inside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(c.isPointInsideCircle(Point2{2, 2}), caseLabel);
-   }
-   {
-      const std::string caseLabel = "Circle::isPointInsideCircle for point outside";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(!c.isPointInsideCircle(Point2{2, 7}), caseLabel);
-   }
-   {
-      const std::string caseLabel =
-         "Circle::isPointInsideCircle for point exactly on circle";
-
-      const Circle c{Point2{1.0, 2.0}, 3.0};
-      VERIFY(!c.isPointInsideCircle(Point2{1, 5}), caseLabel);
-   }
-}
-
-
 void testCirclePointAtAngle()
 {
    {
@@ -218,6 +148,75 @@ void testCirclePointAtAngle()
    }
 }
 
+
+void testCircleIsPointInCircle()
+{
+   {
+      const std::string caseLabel = "isPointInCircle for point inside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(isPointInCircle(c, Point2{2, 2}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInCircle for point outside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(!isPointInCircle(c, Point2{2, 7}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInCircle for point exactly on circle";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(isPointInCircle(c, Point2{1, 5}), caseLabel);
+   }
+}
+
+
+void testCircleIsPointOnCircle()
+{
+   {
+      const std::string caseLabel = "isPointOnCircle for point inside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(!isPointOnCircle(c, Point2{2, 2}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointOnCircle for point outside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(!isPointOnCircle(c, Point2{2, 7}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointOnCircle for point exactly on circle";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(isPointOnCircle(c, Point2{1, 5}), caseLabel);
+   }
+}
+
+
+void testCircleIsPointInsideCircle()
+{
+   {
+      const std::string caseLabel = "isPointInsideCircle for point inside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(isPointInsideCircle(c, Point2{2, 2}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideCircle for point outside";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(!isPointInsideCircle(c, Point2{2, 7}), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInsideCircle for point exactly on circle";
+
+      const Circle c{Point2{1.0, 2.0}, 3.0};
+      VERIFY(!isPointInsideCircle(c, Point2{1, 5}), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -231,8 +230,8 @@ void testCircle()
    testCircleIsPoint();
    testCircleBounds();
    testCircleOffset();
+   testCirclePointAtAngle();
    testCircleIsPointInCircle();
    testCircleIsPointOnCircle();
    testCircleIsPointInsideCircle();
-   testCirclePointAtAngle();
 }
