@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\triangle_tests.cpp" />
     <ClCompile Include="..\..\poly2_tests.cpp" />
     <ClCompile Include="..\..\geom_util_tests.cpp" />
+    <ClCompile Include="..\..\ring_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test_util.h" />
@@ -39,5 +40,6 @@
     <ClInclude Include="..\..\triangle_tests.h" />
     <ClInclude Include="..\..\poly2_tests.h" />
     <ClInclude Include="..\..\geom_util_tests.h" />
+    <ClInclude Include="..\..\ring_tests.h" />
   </ItemGroup>
 </Project>
