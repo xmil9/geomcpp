@@ -47,9 +47,19 @@ template <typename T> class Ring
 };
 
 
+template <typename T>
+constexpr Ring<T>::Ring(const Point2<T>& center, Fp innerRadius, Fp outerRadius)
+: m_inner{center, static_cast<T>(innerRadius)}, m_outer{center,
+                                                        static_cast<T>(outerRadius)}
+{
+   if (innerRadius > outerRadius)
+      std::swap(m_inner, m_outer);
+}
+
+
 template <typename T> constexpr Rect<T> Ring<T>::bounds() const
 {
-   return new Rect<T>(
+   return Rect<T>(
       m_inner.center().x() - m_outer.radius(), m_inner.center().y() - m_outer.radius(),
       m_inner.center().x() + m_outer.radius(), m_inner.center().y() + m_outer.radius());
 }
@@ -59,7 +69,7 @@ template <typename T>
 template <typename U>
 Ring<T> Ring<T>::offset(const Vec2<U>& v) const
 {
-   return Ring(m_inner.center().offset(v), m_inner.radius(), m_outer.radius());
+   return Ring<T>(m_inner.center() + v, m_inner.radius(), m_outer.radius());
 }
 
 
@@ -69,7 +79,7 @@ Ring<T> Ring<T>::offset(const Vec2<U>& v) const
 
 template <typename U, typename V> bool operator==(const Ring<U>& a, const Ring<V>& b)
 {
-   return a.m_inner == b.m_inner && a.outer == b.outer;
+   return a.m_inner == b.m_inner && a.m_outer == b.m_outer;
 }
 
 
