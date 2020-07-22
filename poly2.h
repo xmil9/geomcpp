@@ -211,12 +211,16 @@ template <typename T, typename U> bool operator!=(const Poly2<T>& a, const Poly2
 template <typename T, typename U>
 bool isPointInsideConvexPolygon(const Poly2<T>& poly, const Point2<U>& pt)
 {
+   // For efficiency reasons don't check whether the given polygon is in fact
+   // convex. The caller is responsible for that.
+   //if (!poly.isConvex())
+   //   return false;
+
    // Special cases.
    if (poly.size() == 0)
       return false;
    if (poly.size() == 1)
       return poly[0] == pt;
-
    // If the point is inside the convex polygon all vectors between the point
    // and the vertices of the polygon must wind around the point in a continuous
    // cw or ccw manner, i.e. the orientation between vectors will not change
