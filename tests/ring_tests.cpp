@@ -186,6 +186,46 @@ void testRingInequality()
    }
 }
 
+
+void testIsPointInRing()
+{
+   {
+      const std::string caseLabel = "isPointInRing for point inside inner circle";
+
+      const Point2 center{1.0f, 2.0f};
+      const Ring r{center, 3.0f, 4.0f};
+      VERIFY(!isPointInRing(r, Point2(2.0f, 2.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInRing for point between circles";
+
+      const Point2 center{1.0f, 2.0f};
+      const Ring r{center, 3.0f, 4.0f};
+      VERIFY(isPointInRing(r, Point2(-2.5f, 2.2f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInRing for point outside outer circle";
+
+      const Point2 center{1.0f, 2.0f};
+      const Ring r{center, 3.0f, 4.0f};
+      VERIFY(!isPointInRing(r, Point2(6.0f, -3.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInRing for point exactly on inner circle";
+
+      const Point2 center{1.0f, 2.0f};
+      const Ring r{center, 3.0f, 4.0f};
+      VERIFY(isPointInRing(r, Point2(1.0f, 5.0f)), caseLabel);
+   }
+   {
+      const std::string caseLabel = "isPointInRing for point exactly on outer circle";
+
+      const Point2 center{1.0f, 2.0f};
+      const Ring r{center, 3.0f, 4.0f};
+      VERIFY(isPointInRing(r, Point2(1.0f, -2.0f)), caseLabel);
+   }
+}
+
 } // namespace
 
 
@@ -199,4 +239,5 @@ void testRing()
    testRingOffset();
    testRingEquality();
    testRingInequality();
+   testIsPointInRing();
 }
