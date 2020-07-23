@@ -279,22 +279,24 @@ enum Side
 
 
 // Calculates which side of a line a given point is on.
-template<typename T>
-Side calcSideOfLine(const ct::LineInf2<T>& l, const Point2<T>& pt)
+template <typename T> Side calcSideOfLine(const ct::LineInf2<T>& l, const Point2<T>& pt)
 {
-	const auto perpDotResult = perpDot(l.direction(), Vec2(l.anchorPoint(), pt));
-	if (sutil::equal(perpDotResult, 0))
-		return Side.Left;
-	else if (sutil::greater(perpDotResult, 0))
-		return Side.Right;
-	return Side.Center;
+   using Fp = sutil::FpType<T>;
+
+   const auto perpDotResult = perpDot(l.direction(), Vec2<T>(l.anchor(), pt));
+   if (sutil::less<Fp>(perpDotResult, 0))
+      return Side::Left;
+   else if (sutil::greater<Fp>(perpDotResult, 0))
+      return Side::Right;
+   return Side::Center;
 }
 
 
 // Checks if the intersecting line was crossed by two consecutive vertices.
-inline bool wasLineCrossed(Side prev, Side now) {
-	return (now == Side::Left && prev == Side::Right ) ||
-			(now == Side::Right && prev == Side::Left);
+inline bool wasLineCrossed(Side prev, Side now)
+{
+   return (now == Side::Left && prev == Side::Right) ||
+          (now == Side::Right && prev == Side::Left);
 }
 
 } // namespace internals
@@ -316,8 +318,8 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
    bool haveStrictlyLeftPoints = false;
    bool haveStrictlyRightPoints = false;
    // Keep track of changes from one side of the line to another.
-   Side side = Side.None;
-   Side prevSide = Side.None;
+   Side side = Side::None;
+   Side prevSide = Side::None;
 
    // Place the polygon vertices into two separate polygons depending on whether
    // a vertex is left or right of the cut line.
@@ -338,21 +340,21 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
       {
          ct::LineSeg2<T> edge(poly[i - 1], pt);
          const auto x = ct::intersect(l, edge);
-         if (x && std::holds_alternative<Point2<T>>(x))
+         if (x && std::holds_alternative<Point2<T>>(*x))
          {
-            leftPoly.add(*x);
-            rightPoly.add(*x);
+            leftPoly.add(std::get<Point2<T>>(*x));
+            rightPoly.add(std::get<Point2<T>>(*x));
          }
       }
 
       // Now we can add the current vertex to the output polygons depending on
       // which side of the line it is on.
-      if (side == Side.Left)
+      if (side == Side::Left)
       {
          leftPoly.add(pt);
          haveStrictlyLeftPoints = true;
       }
-      else if (side == Side.Right)
+      else if (side == Side::Right)
       {
          rightPoly.add(pt);
          haveStrictlyRightPoints = true;
@@ -375,10 +377,10 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
       {
          const ct::LineSeg2<T> edge(poly[poly.size() - 1], pt);
          const auto x = ct::intersect(l, edge);
-         if (x && std::holds_alternative<Point2<T>>(x))
+         if (x && std::holds_alternative<Point2<T>>(*x))
          {
-            leftPoly.add(*x);
-            rightPoly.add(*x);
+            leftPoly.add(std::get<Point2<T>>(*x));
+            rightPoly.add(std::get<Point2<T>>(*x));
          }
       }
    }
