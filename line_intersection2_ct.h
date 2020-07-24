@@ -220,6 +220,7 @@ intersectSkewLines(const LineA& a, const LineB& b)
 
 ///////////////////
 
+// Intersect two given lines.
 template <typename LineA, typename LineB>
 std::optional<LineIntersection2<typename LineA::value_type>> intersect(const LineA& a,
                                                                        const LineB& b)
