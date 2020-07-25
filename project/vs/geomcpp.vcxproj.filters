@@ -56,6 +56,7 @@
     <ClInclude Include="..\..\geom_util.h" />
     <ClInclude Include="..\..\geom_types.h" />
     <ClInclude Include="..\..\ring.h" />
+    <ClInclude Include="..\..\poly_intersection2.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">
