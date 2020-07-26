@@ -34,28 +34,28 @@ template <typename T> class Traversal
    {
       m_poly = poly;
       m_ptIdx = start;
-      m_curPt = poly[ptIdx];
-      m_curEdge = poly.edge(edgeIndex(ptIdx));
+      m_curPt = poly[m_ptIdx];
+      m_curEdge = poly.edge(edgeIndex(m_ptIdx));
       m_insideFlag = inside;
    }
 
-   Point2<T> point() const { return curPt; }
-   ct::LineSeg2<T> edge() const { return curEdge; }
+   Point2<T> point() const { return m_curPt; }
+   ct::LineSeg2<T> edge() const { return m_curEdge; }
 
    // Advance to next point and edge.
    void advance()
    {
       m_ptIdx = (m_ptIdx + 1) % m_poly.size();
-      curPt = poly[ptIdx];
-      curEdge = poly.edge(edgeIndex(ptIdx));
+      m_curPt = m_poly[m_ptIdx];
+      m_curEdge = m_poly.edge(edgeIndex(m_ptIdx));
    }
 
    // If this traversed polygon is the inside one, add its current point to
    // the output.
    void collectPointIfInside(InsideFlag curInside, Poly2<T>& out)
    {
-      if (curInside == insideFlag)
-         addUniquePoint(out, curPt);
+      if (curInside == m_insideFlag)
+         addUniquePoint(out, m_curPt);
    }
 
    // Checks if a given point lies on the side of the current edge that is
@@ -63,18 +63,18 @@ template <typename T> class Traversal
    // considered 'inside'.
    bool isPointOnInside(const Point2<T>& pt)
    {
-      const Vec2<T> v(curEdge.startPoint(), pt);
-      return sutil::lessEqual<Fp>(perpDot(curEdge.direction(), v), 0.0);
+      const Vec2<T> v(m_curEdge.startPoint(), pt);
+      return sutil::lessEqual<Fp>(perpDot(m_curEdge.direction(), v), 0.0);
    }
 
-   bool isEdgeCcwOrCollinear(const LineSeg2<T>& e)
+   bool isEdgeCcwOrCollinear(const ct::LineSeg2<T>& e)
    {
-      return sutil::lessEqual<Fp>(perpDot(curEdge.direction(), e.direction()), 0.0);
+      return sutil::lessEqual<Fp>(perpDot(m_curEdge.direction(), e.direction()), 0.0);
    }
 
    // Returns the index of the edge that the algorithm associates with a
    // given point index.
-   int edgeIndex(int ptIdx) { return (ptIdx != 0) ? ptIdx - 1 : poly.numEdges() - 1; }
+   int edgeIndex(int ptIdx) { return (ptIdx != 0) ? ptIdx - 1 : m_poly.numEdges() - 1; }
 
  private:
    using Fp = sutil::FpType<T>;
@@ -163,11 +163,11 @@ Poly2<T> intersectWithLine(const ct::Line2<T, LineT>& line, const Poly2<T>& poly
    for (std::size_t i = 0; i < poly.numEdges(); ++i)
    {
       const auto x = intersect(line, poly.edge(i));
-      if (x && std::holds_alternative<Point2<T>>(*x)))
+      if (x && std::holds_alternative<Point2<T>>(*x))
       {
 			addUniquePoint(resultPoly, std::get<Point2<T>>(*x));
 		}
-      else if (x && std::holds_alternative<ct::LineSeg2<T>>(*x)))
+      else if (x && std::holds_alternative<ct::LineSeg2<T>>(*x))
          {
             const ct::LineSeg2<T>& xLine = std::get<ct::LineSeg2<T>>(*x);
             addUniquePoint(resultPoly, xLine.startPoint());
