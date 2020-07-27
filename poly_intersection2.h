@@ -10,6 +10,7 @@
 #include "line_seg2_ct.h"
 #include "point2.h"
 #include "poly2.h"
+#include "vec2.h"
 
 namespace geom
 {
@@ -17,6 +18,44 @@ namespace geom
 namespace internals
 {
 ///////////////////
+
+// Adds a given point to a given polygon if the polygon does not contain it already.
+template <typename T> void addUniquePoint(Poly2<T>& poly, const Point2<T>& pt)
+{
+   const bool hasVertex = poly.contains(pt) != poly.end();
+   if (!hasVertex)
+      poly.add(pt);
+}
+
+
+// Inserts a given point to a given polygon if the polygon does not contain it
+// already.
+template <typename T>
+void insertUniquePoint(Poly2<T>& poly, const Point2<T>& pt, std::size_t idx)
+{
+   const bool hasVertex = poly.contains(pt) != poly.end();
+   if (!hasVertex)
+      poly.insert(pt, idx);
+}
+
+// Checks if a given convex polygon's orientation is counter-clockwise.
+// Assumes the polygon is not degenerate.
+template <typename T> bool isCcw(const Poly2<T>& poly)
+{
+   // Since we know it's a convex polygon we only have to check the
+   // orientation of the first two edges.
+   return ccw(poly.edge(0).direction(), poly.edge(1).direction());
+}
+
+
+// Changes the orientation of a given polygon to counter-clockwise.
+template <typename T> Poly2<T> makeCcw(const Poly2<T>& poly)
+{
+   if (!isCcw(poly))
+      return poly.reversed();
+   return poly;
+}
+
 
 // Indicates which polygon's edge is inside the other polygon.
 enum class InsideFlag
@@ -63,7 +102,7 @@ template <typename T> class Traversal
    // considered 'inside'.
    bool isPointOnInside(const Point2<T>& pt)
    {
-      const Vec2<T> v(m_curEdge.startPoint(), pt);
+      const Vec2<T> v(m_curEdge.anchor(), pt);
       return sutil::lessEqual<Fp>(perpDot(m_curEdge.direction(), v), 0.0);
    }
 
@@ -74,7 +113,10 @@ template <typename T> class Traversal
 
    // Returns the index of the edge that the algorithm associates with a
    // given point index.
-   int edgeIndex(int ptIdx) { return (ptIdx != 0) ? ptIdx - 1 : m_poly.numEdges() - 1; }
+   std::size_t edgeIndex(std::size_t ptIdx)
+   {
+      return (ptIdx != 0) ? ptIdx - 1 : m_poly.numEdges() - 1;
+   }
 
  private:
    using Fp = sutil::FpType<T>;
@@ -114,44 +156,6 @@ Poly2<T> intersectWithPoint(const Point2<T>& pt, const Poly2<T>& poly)
 }
 
 
-// Adds a given point to a given polygon if the polygon does not contain it already.
-template <typename T> void addUniquePoint(Poly2<T>& poly, const Point2<T>& pt)
-{
-   const bool hasVertex = poly.contains(pt) != poly.end();
-   if (!hasVertex)
-      poly.add(pt);
-}
-
-
-// Inserts a given point to a given polygon if the polygon does not contain it
-// already.
-template <typename T>
-void insertUniquePoint(Poly2<T>& poly, const Point2<T>& pt, std::size_t idx)
-{
-   const bool hasVertex = poly.contains(pt) != poly.end();
-   if (!hasVertex)
-      poly.insert(pt, idx);
-}
-
-// Checks if a given convex polygon's orientation is counter-clockwise.
-// Assumes the polygon is not degenerate.
-template <typename T> bool isCcw(const Poly2<T>& poly)
-{
-   // Since we know it's a convex polygon we only have to check the
-   // orientation of the first two edges.
-   return poly.edge(0).direction().isCcw(poly.edge(1).direction());
-}
-
-
-// Changes the orientation of a given polygon to counter-clockwise.
-template <typename T> Poly2<T> makeCcw(const Poly2<T>& poly)
-{
-   if (!isCcw(poly))
-      return poly.reversed();
-   return poly;
-}
-
-
 // Intersects a given line with a given polygon and returns the result as
 // a polygon.
 template <typename T, template <typename> typename LineT>
@@ -165,14 +169,14 @@ Poly2<T> intersectWithLine(const ct::Line2<T, LineT>& line, const Poly2<T>& poly
       const auto x = intersect(line, poly.edge(i));
       if (x && std::holds_alternative<Point2<T>>(*x))
       {
-			addUniquePoint(resultPoly, std::get<Point2<T>>(*x));
-		}
+         addUniquePoint(resultPoly, std::get<Point2<T>>(*x));
+      }
       else if (x && std::holds_alternative<ct::LineSeg2<T>>(*x))
-         {
-            const ct::LineSeg2<T>& xLine = std::get<ct::LineSeg2<T>>(*x);
-            addUniquePoint(resultPoly, xLine.startPoint());
-            addUniquePoint(resultPoly, xLine.endPoint());
-         }
+      {
+         const ct::LineSeg2<T>& xLine = std::get<ct::LineSeg2<T>>(*x);
+         addUniquePoint(resultPoly, *xLine.startPoint());
+         addUniquePoint(resultPoly, *xLine.endPoint());
+      }
    }
 
    // Add the line end points that are inside the polygon to the result.
@@ -181,7 +185,8 @@ Poly2<T> intersectWithLine(const ct::Line2<T, LineT>& line, const Poly2<T>& poly
    const std::size_t numVert = resultPoly.size();
    if (numVert == 0 || numVert == 1)
    {
-      const std::optional<Point2<T>> vert = (numVert == 1) ? resultPoly[0] : std::nullopt;
+      const std::optional<Point2<T>> vert =
+         (numVert == 1) ? std::make_optional(resultPoly[0]) : std::nullopt;
       const std::optional<Point2<T>> lineStart = line.startPoint();
       const std::optional<Point2<T>> lineEnd = line.endPoint();
 
@@ -207,7 +212,8 @@ Poly2<T> intersectWithLine(const ct::Line2<T, LineT>& line, const Poly2<T>& poly
 
 // Intersects two convex polygons.
 // Source: https://www.cs.jhu.edu/~misha/Spring16/ORourke82.pdf
-template <typename T> Poly2<T> intersect(const Poly2<T>& PIn, const Poly2<T>& QIn)
+template <typename T>
+Poly2<T> intersectConvexPolygons(const Poly2<T>& PIn, const Poly2<T>& QIn)
 {
    using internals::InsideFlag;
    using internals::Traversal;
@@ -218,21 +224,21 @@ template <typename T> Poly2<T> intersect(const Poly2<T>& PIn, const Poly2<T>& QI
    if (PIn.size() == 0 || QIn.size() == 0)
       return resultPoly;
    if (PIn.size() == 1)
-      return intersectWithPoint(PIn.vertex(0), QIn);
+      return internals::intersectWithPoint(PIn[0], QIn);
    if (QIn.size() == 1)
-      return intersectWithPoint(QIn.vertex(0), PIn);
+      return internals::intersectWithPoint(QIn[0], PIn);
    if (PIn.size() == 2)
-      return intersectWithLine(PIn.edge(0), QIn);
+      return internals::intersectWithLine(PIn.edge(0), QIn);
    if (QIn.size() == 2)
-      return intersectWithLine(QIn.edge(0), PIn);
+      return internals::intersectWithLine(QIn.edge(0), PIn);
    if (!PIn.isConvex() || !QIn.isConvex())
       return resultPoly;
 
-   Poly2<T> P = makeCcw(PIn);
-   Poly2<T> Q = makeCcw(QIn);
+   Poly2<T> P = internals::makeCcw(PIn);
+   Poly2<T> Q = internals::makeCcw(QIn);
 
-   std::size_t maxIter = 2 * (P.numEdges() + Q.numEdges());
-   std::size_t numIter = 0;
+   int maxIter = 2 * static_cast<int>(P.numEdges() + Q.numEdges());
+   int numIter = 0;
 
    std::optional<Point2<T>> firstIsectPt;
    int firstIsectFoundIter = -1;
@@ -263,7 +269,7 @@ template <typename T> Poly2<T> intersect(const Poly2<T>& PIn, const Poly2<T>& QI
             return resultPoly;
          }
 
-         addUniquePoint(resultPoly, isectPt);
+         internals::addUniquePoint(resultPoly, isectPt);
 
          if (q.isPointOnInside(p.point()))
             curInside = InsideFlag::PInside;
@@ -272,7 +278,7 @@ template <typename T> Poly2<T> intersect(const Poly2<T>& PIn, const Poly2<T>& QI
       }
 
       // Advance.
-      advance(p, q, curInside, resultPoly);
+      internals::advance(p, q, curInside, resultPoly);
       ++numIter;
    }
 
@@ -282,7 +288,7 @@ template <typename T> Poly2<T> intersect(const Poly2<T>& PIn, const Poly2<T>& QI
       return P;
    else if (isPointInsideConvexPolygon(P, q.point()))
       return Q;
-   return Poly2{};
+   return Poly2<T>{};
 }
 
 } // namespace geom
