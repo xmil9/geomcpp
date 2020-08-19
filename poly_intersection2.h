@@ -258,7 +258,7 @@ Poly2<T> intersectConvexPolygons(const Poly2<T>& PIn, const Poly2<T>& QIn)
       if (x && std::holds_alternative<Point2<T>>(*x))
       {
          Point2<T> isectPt = std::get<Point2<T>>(*x);
-         if (firstIsectPt)
+         if (!firstIsectPt)
          {
             // Keep track of first intersection and the iteration it was
             // found in to detect a complete loop around the polygons.
