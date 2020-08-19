@@ -135,11 +135,13 @@ template <typename T> class Traversal
 template <typename T>
 void advance(Traversal<T>& p, Traversal<T>& q, InsideFlag curInside, Poly2<T>& out)
 {
-   Traversal<T> rear = q.isEdgeCcwOrCollinear(p.edge())
-                          ? (q.isPointOnInside(p.point()) ? q : p)
-                          : (p.isPointOnInside(q.point()) ? p : q);
+   Traversal<T>& rear = q.isEdgeCcwOrCollinear(p.edge())
+                           ? (q.isPointOnInside(p.point()) ? q : p)
+                           : (p.isPointOnInside(q.point()) ? p : q);
 
    rear.collectPointIfInside(curInside, out);
+   // Caution, this operates on references! The assign Traversal reference gets
+   // changed.
    rear.advance();
 }
 
