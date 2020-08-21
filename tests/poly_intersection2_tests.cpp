@@ -313,14 +313,83 @@ void testIsectForGeneralPolygons()
       Poly2<double> Q = makeRect<double>(-1.0, 3.0, 8.0, 4.0);
 
       Poly2<double> expected;
-		expected.add(Point2(1.0, 7.0));
-		expected.add(Point2(5.0, 7.0));
-		expected.add(Point2(6.0, 6.0));
-		expected.add(Point2(6.0, 4.0));
-		expected.add(Point2(5.0, 3.0));
-		expected.add(Point2(1.0, 3.0));
-		expected.add(Point2(0.0, 4.0));
-		expected.add(Point2(0.0, 6.0));
+      expected.add(Point2(1.0, 7.0));
+      expected.add(Point2(5.0, 7.0));
+      expected.add(Point2(6.0, 6.0));
+      expected.add(Point2(6.0, 4.0));
+      expected.add(Point2(5.0, 3.0));
+      expected.add(Point2(1.0, 3.0));
+      expected.add(Point2(0.0, 4.0));
+      expected.add(Point2(0.0, 6.0));
+
+      VERIFY(expected == intersectConvexPolygons(P, Q), caseLabel);
+      VERIFY(expected == intersectConvexPolygons(Q, P), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Convex polygon intersection case 2";
+
+      Poly2<double> P = makeOctagon<double>(2.0, 2.0, 2.0);
+      Poly2<double> Q = makeDiamond<double>(2.5, 4.0, 3.0);
+
+      Poly2<double> expected;
+      expected.add(Point2(0.25, 6.25));
+      expected.add(Point2(2.0, 8.0));
+      expected.add(Point2(4.0, 8.0));
+      expected.add(Point2(5.25, 6.75));
+      expected.add(Point2(2.5, 4.0));
+
+      VERIFY(expected == intersectConvexPolygons(P, Q), caseLabel);
+      VERIFY(expected == intersectConvexPolygons(Q, P), caseLabel);
+   }
+   {
+      const std::string caseLabel = "Convex polygon intersection case 3";
+
+      Poly2<double> P = makeOctagon<double>(2.0, 2.0, 2.0);
+      Poly2<double> Q = makeDiamond<double>(3.0, 1.0, 3.0);
+
+      Poly2<double> expected;
+      expected.add(Point2(0.0, 4.0));
+      expected.add(Point2(3.0, 7.0));
+      expected.add(Point2(6.0, 4.0));
+      expected.add(Point2(4.0, 2.0));
+      expected.add(Point2(2.0, 2.0));
+
+      VERIFY(expected == intersectConvexPolygons(P, Q), caseLabel);
+      VERIFY(expected == intersectConvexPolygons(Q, P), caseLabel);
+   }
+}
+
+
+void testIsectForPolygonsTouchingAtEdge()
+{
+   {
+      const std::string caseLabel =
+         "Convex polygon intersection for polygons touching at edge";
+
+      Poly2<double> P = makeOctagon<double>(2.0, 2.0, 2.0);
+      Poly2<double> Q = makeDiamond<double>(-1.0, -1.0, 3.0);
+
+      Poly2<double> expected;
+      expected.add(Point2(0.0, 4.0));
+      expected.add(Point2(2.0, 2.0));
+
+      VERIFY(expected == intersectConvexPolygons(P, Q), caseLabel);
+      VERIFY(expected == intersectConvexPolygons(Q, P), caseLabel);
+   }
+}
+
+
+void testIsectForPolygonsTouchingAtPoint()
+{
+   {
+      const std::string caseLabel =
+         "Convex polygon intersection for polygons touching at point";
+
+      Poly2<double> P = makeOctagon<double>(2.0, 2.0, 2.0);
+      Poly2<double> Q = makeRect<double>(5.0, 1.0, 2.0, 2.0);
+
+      Poly2<double> expected;
+      expected.add(Point2(5.0, 3.0));
 
       VERIFY(expected == intersectConvexPolygons(P, Q), caseLabel);
       VERIFY(expected == intersectConvexPolygons(Q, P), caseLabel);
@@ -338,4 +407,6 @@ void testPolygonIntersection2()
    testIsectForPolygonWithSinglePoint();
    testIsectForPolygonWithTwoPoints();
    testIsectForGeneralPolygons();
+   testIsectForPolygonsTouchingAtEdge();
+   testIsectForPolygonsTouchingAtPoint();
 }
