@@ -159,7 +159,8 @@ Poly2<T> intersectWithPoint(const Point2<T>& pt, const Poly2<T>& poly)
 
 
 // Intersects a given line with a given polygon and returns the result as
-// a polygon.
+// a polygon. Line end points that are inside the polygon are added as
+// intersection points to the result.
 template <typename T, template <typename> typename LineT>
 Poly2<T> intersectWithLine(const ct::Line2<T, LineT>& line, const Poly2<T>& poly)
 {
