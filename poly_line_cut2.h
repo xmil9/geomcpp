@@ -39,10 +39,10 @@ template <typename T> Side calcSideOfLine(const ct::LineInf2<T>& l, const Point2
 {
    using Fp = sutil::FpType<T>;
 
-   const Fp perpDotResult = perpDot(l.direction(), {l.anchorPoint(), pt});
-   if (sutil::less(perpDotResult, 0))
+   const auto perpDotResult = perpDot(l.direction(), Vec2<T>(l.anchor(), pt));
+   if (sutil::less<Fp>(perpDotResult, 0))
       return Side::Left;
-   else if (sutil::greater(perpDotResult, 0))
+   else if (sutil::greater<Fp>(perpDotResult, 0))
       return Side::Right;
    return Side::Center;
 }
@@ -56,30 +56,17 @@ bool wasLineCrossed(Side prev, Side now)
 }
 
 
-// Returns the intersection point of two lines if it exists. Assumes the lines
-// intersect at one point.
-template <typename T>
-std::optional<Point2<T>> intersectLines(const ct::LineInf2<T>& a,
-                                        const ct::LineSeg2<T>& b)
-{
-   const auto x = intersect(a, b);
-   if (x && std::holds_alternative<Point2<T>>(*x))
-      return std::get<Point2<T>>(*x);
-   return std::nullopt;
-}
-
-
 // Adds the intersection point of the cutting line and a polygon edge to the output
 // polygons.
 template <typename T>
 void collectIntersection(const ct::LineInf2<T>& line, const ct::LineSeg2<T> edge,
                          Poly2<T>& leftPoly, Poly2<T>& rightPoly)
 {
-   const auto xPt = intersectLines(line, edge);
-   if (xPt)
+   const auto x = ct::intersect(line, edge);
+   if (x && std::holds_alternative<Point2<T>>(*x))
    {
-      leftPoly.add(*xPt);
-      rightPoly.add(*xPt);
+      leftPoly.add(std::get<Point2<T>>(*x));
+      rightPoly.add(std::get<Point2<T>>(*x));
    }
 }
 
@@ -94,12 +81,12 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
 {
    using internals::Side;
 
-   std::vector<Poly2<T>> result;
+   std::vector<Poly2<T>> res;
 
    // Create the output polygons.
    Poly2<T> leftPoly;
    Poly2<T> rightPoly;
-   // Keep track of whether any points lie strictly each side. Helps identifying
+   // Keep track of whether any points lie strictly on each side. Helps identifying
    // cases where the line only touches the polygon.
    bool haveStrictlyLeftPoints = false;
    bool haveStrictlyRightPoints = false;
@@ -108,14 +95,14 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
    Side prevSide = Side::None;
 
    // Place the polygon vertices into two separate polygons depending on whether
-   // a vertex is left or right of the cutting line.
-   for (int i = 0; i < poly.countVertices(); ++i)
+   // a vertex is left or right of the cut line.
+   for (int i = 0; i < poly.size(); ++i)
    {
       const Point2<T> pt = poly[i];
 
       // First determine the side the current vertex is on.
       prevSide = side;
-      side = internals::calcSideOfLine(l, pt);
+      side = internals::calcSideOfLine(line, pt);
 
       // If the vertices switched from one side of the line to the other, we need
       // to find the intersection point and add it to both output polygons. Since
@@ -124,8 +111,8 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
       // current vertex otherwise the vertices will be out of order.
       if (internals::wasLineCrossed(prevSide, side))
       {
-         const ct::LineSeg2<T> edge{poly[i - 1], pt};
-         collectIntersection(l, edge, leftPoly, rightPoly);
+         ct::LineSeg2<T> edge(poly[i - 1], pt);
+         internals::collectIntersection(line, edge, leftPoly, rightPoly);
       }
 
       // Now we can add the current vertex to the output polygons depending on
@@ -153,12 +140,12 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
       const Point2<T> firstPt = poly[0];
       const Point2<T> lastPt = poly[poly.size() - 1];
       prevSide = side;
-      side = internals::calcSideOfLine(l, firstPt);
+      side = internals::calcSideOfLine(line, firstPt);
 
       if (internals::wasLineCrossed(prevSide, side))
       {
-         const ct::LineSeg2<T> edge{lastPt, firstPt};
-         collectIntersection(l, edge, leftPoly, rightPoly);
+         const ct::LineSeg2<T> edge(lastPt, firstPt);
+         internals::collectIntersection(line, edge, leftPoly, rightPoly);
       }
    }
 
@@ -166,24 +153,24 @@ std::vector<Poly2<T>> cutConvexPolygon(const Poly2<T>& poly, const ct::LineInf2<
    // Special case: The input polygon was empty.
    if (leftPoly.size() == 0 && rightPoly.size() == 0)
    {
-      result.add(leftPoly);
+      res.push_back(leftPoly);
    }
    // Special case: The entire (degenerate) polygon lies on the line.
    else if (!haveStrictlyLeftPoints && !haveStrictlyRightPoints)
    {
-      result.add(leftPoly);
+      res.push_back(leftPoly);
    }
    // Normal case: Polygon is not degenerate.
    // Keep the output polygons that have any dedicated (not shared) points.
    else
    {
       if (leftPoly.size() > 0 && haveStrictlyLeftPoints)
-         result.add(leftPoly);
+         res.push_back(leftPoly);
       if (rightPoly.size() > 0 && haveStrictlyRightPoints)
-         result.add(rightPoly);
+         res.push_back(rightPoly);
    }
 
-   return result;
+   return res;
 }
 
 } // namespace geom

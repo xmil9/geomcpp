@@ -51,6 +51,7 @@
     <ClCompile Include="..\..\point2_tests.cpp" />
     <ClCompile Include="..\..\poly2_tests.cpp" />
     <ClCompile Include="..\..\poly_intersection2_tests.cpp" />
+    <ClCompile Include="..\..\poly_line_cut2_tests.cpp" />
     <ClCompile Include="..\..\rect_tests.cpp" />
     <ClCompile Include="..\..\ring_tests.cpp" />
     <ClCompile Include="..\..\triangle_tests.cpp" />
@@ -77,6 +78,7 @@
     <ClInclude Include="..\..\point2_tests.h" />
     <ClInclude Include="..\..\poly2_tests.h" />
     <ClInclude Include="..\..\poly_intersection2_tests.h" />
+    <ClInclude Include="..\..\poly_line_cut2_tests.h" />
     <ClInclude Include="..\..\rect_tests.h" />
     <ClInclude Include="..\..\ring_tests.h" />
     <ClInclude Include="..\..\test_util.h" />

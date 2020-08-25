@@ -19,6 +19,7 @@
 #include "point2_tests.h"
 #include "poly2_tests.h"
 #include "poly_intersection2_tests.h"
+#include "poly_line_cut2_tests.h"
 #include "rect_tests.h"
 #include "ring_tests.h"
 #include "triangle_tests.h"
@@ -38,6 +39,7 @@ int main()
    testPoint2D();
    testPoly2();
    testPolygonIntersection2();
+   testPolygonLineCutting2();
    testRect();
    testRing();
    testRtLineInf2();
