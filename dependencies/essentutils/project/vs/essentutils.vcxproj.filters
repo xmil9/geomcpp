@@ -9,6 +9,7 @@
     <ClInclude Include="..\..\fputil.h" />
     <ClInclude Include="..\..\math_util.h" />
     <ClInclude Include="..\..\type_traits_util.h" />
+    <ClInclude Include="..\..\rand_util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\string_util.cpp" />
