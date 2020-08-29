@@ -7,7 +7,7 @@ setlocal
 set thisDir=%~dp0
 set depDir=%thisDir%..\..\dependencies
 
-:: essentutils
+ essentutils
 rmdir %depDir%\essentutils /S /Q
 set depProj=%thisDir%..\..\..\essentutils
 call %depProj%\project\vs\deploy_as_sources.bat %depDir%
