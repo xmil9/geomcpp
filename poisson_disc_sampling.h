@@ -94,10 +94,10 @@ bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
    const int testRow = calcRow(test.y);
    const int testCol = calcCol(test.x);
 
-   const int topMostRow = calcRow(test.y - minDist);
-   const int bottomMostRow = calcRow(test.y + minDist);
-   const int leftMostCol = calcCol(test.x - minDist);
-   const int rightMostCol = calcCol(test.x + minDist);
+   const int topMostRow = calcRow(test.y - m_minDist);
+   const int bottomMostRow = calcRow(test.y + m_minDist);
+   const int leftMostCol = calcCol(test.x - m_minDist);
+   const int rightMostCol = calcCol(test.x + m_minDist);
 
    // Depending on where within its cell the test point is located we have to
    // check one or two cells into each direction, e.g. if the test point is
@@ -197,7 +197,7 @@ template <typename T> class Annulus
 template <typename T>
 Annulus<T>::Annulus(const Point2<T>& center, T innerRadius, T outerRadius,
 const Rect<T>& domain, sutil::Random<T>& rand)
-: m_ring{center, innerRadius, outerRadius}, m_bounds{intersect(m_ring.bounds(), domain}, m_rand{rand}
+: m_ring{center, innerRadius, outerRadius}, m_bounds{intersect(m_ring.bounds(), domain)}, m_rand{rand}
 {
 }
 
@@ -213,8 +213,8 @@ template <typename T> Point2<T> Annulus<T>::generatePointInRing()
 
 template <typename T> Point2<T> Annulus<T>::generatePointInBounds()
 {
-   const T x = bounds.left() + m_rand.next() * bounds.width();
-   const T y = bounds.top() + m_rand.next() * bounds.height();
+   const T x = m_bounds.left() + m_rand.next() * m_bounds.width();
+   const T y = m_bounds.top() + m_rand.next() * m_bounds.height();
    return {x, y};
 }
 
@@ -264,7 +264,7 @@ private:
    sutil::Random<T>& m_rand;
    std::vector<Point2<T>> m_samples;
    std::vector<int> m_active;
-   internals::BackgroundGrid m_grid;
+   internals::BackgroundGrid<T> m_grid;
 };
 
 
@@ -290,10 +290,10 @@ std::vector<Point2<T>> PoissonDiscSampling<T>::generate(const Point2<T>& initial
 {
 	storeSample(initialSample);
 
-	while (!active.isEmpty())
+	while (!m_active.isEmpty())
    {
 		int seedIdx = chooseSeed();
-		const Point2<T> seedSample = samples.get(seedIdx);
+		const Point2<T> seedSample = m_samples.get(seedIdx);
 		const auto newSample = findNewSample(seedSample);
 		if (!newSample)
 			deactivateSample(seedIdx);
@@ -301,7 +301,7 @@ std::vector<Point2<T>> PoissonDiscSampling<T>::generate(const Point2<T>& initial
 			storeSample(*newSample);
 	}
 		
-	return samples;
+	return m_samples;
 }
 
 
@@ -325,7 +325,7 @@ template <typename T>
 void PoissonDiscSampling<T>::storeSample(const Point2<T>& sample)
 {
 	m_samples.push_back(sample);
-	const int sampleIdx = samples.size() - 1;
+	const int sampleIdx = m_samples.size() - 1;
 	m_active.push_back(sampleIdx);
 	m_grid.insert(sample, sampleIdx);
 }
@@ -341,16 +341,16 @@ void PoissonDiscSampling<T>::deactivateSample(int sampleIdx)
 template <typename T>
 std::optional<Point2<T>> PoissonDiscSampling<T>::findNewSample(const Point2<T>& seedSample) const
 {
-   Annulus annulus{seedSample, m_minDist, m_maxCandidateDist, m_domain, m_rand};
+   internals::Annulus annulus{seedSample, m_minDist, m_maxCandidateDist, m_domain, m_rand};
 		
-	for (std::size_t i = 0; i < numCandidates; ++i)
+	for (std::size_t i = 0; i < m_numCandidates; ++i)
    {
 		const Point2<T> candidate = annulus.generatePointInRing();
 		if (!m_grid.haveSampleWithinMinDistance(candidate))
 			return candidate;
 	}
 
-	return std:::nullopt;
+	return std::nullopt;
 }
 
 } // namespace geom
