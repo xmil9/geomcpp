@@ -49,6 +49,7 @@
     <ClCompile Include="..\..\line_seg2_ct_tests.cpp" />
     <ClCompile Include="..\..\line_seg2_rt_tests.cpp" />
     <ClCompile Include="..\..\point2_tests.cpp" />
+    <ClCompile Include="..\..\poisson_disc_sampling_tests.cpp" />
     <ClCompile Include="..\..\poly2_tests.cpp" />
     <ClCompile Include="..\..\poly_intersection2_tests.cpp" />
     <ClCompile Include="..\..\poly_line_cut2_tests.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="..\..\line_seg2_ct_tests.h" />
     <ClInclude Include="..\..\line_seg2_rt_tests.h" />
     <ClInclude Include="..\..\point2_tests.h" />
+    <ClInclude Include="..\..\poisson_disc_sampling_tests.h" />
     <ClInclude Include="..\..\poly2_tests.h" />
     <ClInclude Include="..\..\poly_intersection2_tests.h" />
     <ClInclude Include="..\..\poly_line_cut2_tests.h" />

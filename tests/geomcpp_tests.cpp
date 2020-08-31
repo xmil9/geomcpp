@@ -17,6 +17,7 @@
 #include "line_seg2_ct_tests.h"
 #include "line_seg2_rt_tests.h"
 #include "point2_tests.h"
+#include "poisson_disc_sampling_tests.h"
 #include "poly2_tests.h"
 #include "poly_intersection2_tests.h"
 #include "poly_line_cut2_tests.h"
@@ -37,6 +38,7 @@ int main()
    testDecInterval();
    testGeometryUtilities();
    testPoint2D();
+   testPoissonDiscSampling();
    testPoly2();
    testPolygonIntersection2();
    testPolygonLineCutting2();
