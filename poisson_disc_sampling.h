@@ -253,6 +253,8 @@ template <typename T> class PoissonDiscSampling
    void storeSample(const Point2<T>& sample);
    // Marks a given sample as not active anymore
    void deactivateSample(std::size_t sampleIdx);
+   // Checks if it is possible to find new samples around the given seed.
+   bool canFindSamples(const Point2<T>& seedSample) const;
    // Finds a new sample for a given seed sample.
    std::optional<Point2<T>> findNewSample(const Point2<T>& seedSample) const;
 
@@ -337,9 +339,22 @@ template <typename T> void PoissonDiscSampling<T>::deactivateSample(std::size_t 
 
 
 template <typename T>
+bool PoissonDiscSampling<T>::canFindSamples(const Point2<T>& seedSample) const
+{
+   return seedSample.x() - m_minDist > m_domain.left() ||
+          seedSample.x() + m_minDist < m_domain.right() ||
+          seedSample.y() - m_minDist > m_domain.top() ||
+          seedSample.y() + m_minDist < m_domain.bottom();
+}
+
+
+template <typename T>
 std::optional<Point2<T>>
 PoissonDiscSampling<T>::findNewSample(const Point2<T>& seedSample) const
 {
+   if (!canFindSamples(seedSample))
+      return std::nullopt;
+
    internals::Annulus annulus{seedSample, m_minDist, m_maxCandidateDist, m_domain,
                               m_rand};
 
