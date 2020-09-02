@@ -31,23 +31,23 @@ template <typename T> class BackgroundGrid
    BackgroundGrid(const Rect<T>& domain, T minDist);
 
    // Inserts the given index of a given sample into the grid.
-   void insert(const Point2<T>& sample, int sampleIdx);
+   void insert(const Point2<T>& sample, std::size_t sampleIdx);
    // Checks whether another sample is within the minimal distance of a given
    // test point.
    bool haveSampleWithinMinDistance(const Point2<T>& test) const;
 
  private:
-   static int calcGridRows(const Rect<T>& domain, T cellSize);
-   static int calcGridColumns(const Rect<T>& domain, T cellSize);
-   int calcRow(T y) const;
-   int calcCol(T x) const;
-   bool isCellOccupied(int r, int c) const;
+   static std::size_t calcGridRows(const Rect<T>& domain, T cellSize);
+   static std::size_t calcGridColumns(const Rect<T>& domain, T cellSize);
+   std::size_t calcRow(T y) const;
+   std::size_t calcCol(T x) const;
+   bool isCellOccupied(std::size_t r, std::size_t c) const;
 
  private:
-   using Grid = std::vector<std::vector<int>>;
+   using Grid = std::vector<std::vector<std::size_t>>;
 
    static constexpr T SqrtOfTwo = static_cast<T>(1.414213562373);
-   static constexpr int EmptyCell = -1;
+   static constexpr std::size_t EmptyCell = std::numeric_limits<std::size_t>::max();
 
    const Rect<T> m_domain;
    const T m_minDist;
@@ -74,16 +74,16 @@ BackgroundGrid<T>::BackgroundGrid(const Rect<T>& domain, T minDist)
   //   - 1 cell in each diagonal (because len(diagonal) == minDist)
   m_cellSize{minDist / SqrtOfTwo},
   m_grid(calcGridRows(m_domain, m_cellSize),
-         std::vector<int>(calcGridColumns(m_domain, m_cellSize), EmptyCell))
+         std::vector<std::size_t>(calcGridColumns(m_domain, m_cellSize), EmptyCell))
 {
 }
 
 
 template <typename T>
-void BackgroundGrid<T>::insert(const Point2<T>& sample, int sampleIdx)
+void BackgroundGrid<T>::insert(const Point2<T>& sample, std::size_t sampleIdx)
 {
-   const int r = calcRow(sample.y());
-   const int c = calcCol(sample.x());
+   const std::size_t r = calcRow(sample.y());
+   const std::size_t c = calcCol(sample.x());
    m_grid[r][c] = sampleIdx;
 }
 
@@ -91,13 +91,13 @@ void BackgroundGrid<T>::insert(const Point2<T>& sample, int sampleIdx)
 template <typename T>
 bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
 {
-   const int testRow = calcRow(test.y);
-   const int testCol = calcCol(test.x);
+   const std::size_t testRow = calcRow(test.y());
+   const std::size_t testCol = calcCol(test.x());
 
-   const int topMostRow = calcRow(test.y - m_minDist);
-   const int bottomMostRow = calcRow(test.y + m_minDist);
-   const int leftMostCol = calcCol(test.x - m_minDist);
-   const int rightMostCol = calcCol(test.x + m_minDist);
+   const std::size_t topMostRow = calcRow(test.y() - m_minDist);
+   const std::size_t bottomMostRow = calcRow(test.y() + m_minDist);
+   const std::size_t leftMostCol = calcCol(test.x() - m_minDist);
+   const std::size_t rightMostCol = calcCol(test.x() + m_minDist);
 
    // Depending on where within its cell the test point is located we have to
    // check one or two cells into each direction, e.g. if the test point is
@@ -111,21 +111,21 @@ bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
    // If necessary, row of cells two cells above the test cell.
    if (topMostRow < testRow - 1)
    {
-      for (int c = testCol - 1; c <= testCol + 1; ++c)
+      for (std::size_t c = testCol - 1; c <= testCol + 1; ++c)
          if (isCellOccupied(topMostRow, c))
             return true;
    }
    // Center block of rows.
-   for (int r = testRow - 1; r <= testRow + 1; ++r)
+   for (std::size_t r = testRow - 1; r <= testRow + 1; ++r)
    {
-      for (int c = leftMostCol; c <= rightMostCol; ++c)
+      for (std::size_t c = leftMostCol; c <= rightMostCol; ++c)
          if (isCellOccupied(r, c))
             return true;
    }
    // If necessary, row of cells two cells below the test cell.
    if (bottomMostRow > testRow + 1)
    {
-      for (int c = testCol - 1; c <= testCol + 1; ++c)
+      for (std::size_t c = testCol - 1; c <= testCol + 1; ++c)
          if (isCellOccupied(bottomMostRow, c))
             return true;
    }
@@ -135,33 +135,34 @@ bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
 
 
 template <typename T>
-int BackgroundGrid<T>::calcGridRows(const Rect<T>& domain, T cellSize)
+std::size_t BackgroundGrid<T>::calcGridRows(const Rect<T>& domain, T cellSize)
 {
-   return static_cast<int>(std::ceil(m_domain.height() / m_cellSize));
+   return static_cast<std::size_t>(std::ceil(domain.height() / cellSize));
 }
 
 
 template <typename T>
-int BackgroundGrid<T>::calcGridColumns(const Rect<T>& domain, T cellSize)
+std::size_t BackgroundGrid<T>::calcGridColumns(const Rect<T>& domain, T cellSize)
 {
-   return static_cast<int>(std::ceil(m_domain.width() / m_cellSize));
+   return static_cast<std::size_t>(std::ceil(domain.width() / cellSize));
 }
 
 
-template <typename T> int BackgroundGrid<T>::calcRow(T y) const
+template <typename T> std::size_t BackgroundGrid<T>::calcRow(T y) const
 {
-   return static_cast<int>(std::floor((y - m_domain.top()) / m_cellSize));
+   return static_cast<std::size_t>(std::floor((y - m_domain.top()) / m_cellSize));
 }
 
 
-template <typename T> int BackgroundGrid<T>::calcCol(T x) const
+template <typename T> std::size_t BackgroundGrid<T>::calcCol(T x) const
 {
-   return static_cast<int>(std::floor((x - m_domain.left()) / m_cellSize));
+   return static_cast<std::size_t>(std::floor((x - m_domain.left()) / m_cellSize));
 }
 
 
 // Checks if a cell at given coordinates is occupied.
-template <typename T> bool BackgroundGrid<T>::isCellOccupied(int r, int c) const
+template <typename T>
+bool BackgroundGrid<T>::isCellOccupied(std::size_t r, std::size_t c) const
 {
    if (r < 0 || r >= m_grid.size())
       return false;
@@ -196,8 +197,9 @@ template <typename T> class Annulus
 
 template <typename T>
 Annulus<T>::Annulus(const Point2<T>& center, T innerRadius, T outerRadius,
-const Rect<T>& domain, sutil::Random<T>& rand)
-: m_ring{center, innerRadius, outerRadius}, m_bounds{intersect(m_ring.bounds(), domain)}, m_rand{rand}
+                    const Rect<T>& domain, sutil::Random<T>& rand)
+: m_ring{center, innerRadius, outerRadius}, m_bounds{intersect(m_ring.bounds(), domain)},
+  m_rand{rand}
 {
 }
 
@@ -231,9 +233,9 @@ template <typename T> class PoissonDiscSampling
 {
  public:
    // Number of candidates that are generated when trying to find a new sample.
-   static constexpr int NumCandidatesDefault = 30;
+   static constexpr std::size_t NumCandidatesDefault = 30;
 
-   PoissonDiscSampling(const Rect<T>& domain, T minDist, int numCandidatePoints,
+   PoissonDiscSampling(const Rect<T>& domain, T minDist, std::size_t numCandidatePoints,
                        sutil::Random<T>& rand);
 
    // Generates samples by picking a random initial samples.
@@ -241,36 +243,37 @@ template <typename T> class PoissonDiscSampling
    // Generates samples with given initial sample.
    std::vector<Point2<T>> generate(const Point2<T>& initialSample);
 
-private:
+ private:
    // Generates random sample.
    Point2<T> generateSample();
-	// Abstracts the process of choosing the next seed sample to generate
-	// candidates for. Returns index into sample array.
-   int chooseSeed() const;
+   // Abstracts the process of choosing the next seed sample to generate
+   // candidates for. Returns index into sample array.
+   std::size_t chooseSeed() const;
    // Stores a given sample in the internal data structures.
    void storeSample(const Point2<T>& sample);
-	// Marks a given sample as not active anymore
-	void deactivateSample(int sampleIdx);
-	// Finds a new sample for a given seed sample.
-	std::optional<Point2<T>> findNewSample(const Point2<T>& seedSample) const;
+   // Marks a given sample as not active anymore
+   void deactivateSample(std::size_t sampleIdx);
+   // Finds a new sample for a given seed sample.
+   std::optional<Point2<T>> findNewSample(const Point2<T>& seedSample) const;
 
  private:
    Rect<T> m_domain;
    // Min distance that samples are allowed to be from each other.
    T m_minDist;
-   int m_numCandidates;
+   std::size_t m_numCandidates;
    // Max distance from seed sample that candidate samples are looked for.
    T m_maxCandidateDist;
    sutil::Random<T>& m_rand;
    std::vector<Point2<T>> m_samples;
-   std::vector<int> m_active;
+   // Active samples. Holds indices into sample collection.
+   std::vector<std::size_t> m_active;
    internals::BackgroundGrid<T> m_grid;
 };
 
 
 template <typename T>
 PoissonDiscSampling<T>::PoissonDiscSampling(const Rect<T>& domain, T minDist,
-                                            int numCandidatePoints,
+                                            std::size_t numCandidatePoints,
                                             sutil::Random<T>& rand)
 : m_domain{domain}, m_minDist{minDist}, m_numCandidates{numCandidatePoints},
   m_maxCandidateDist{2 * minDist}, m_rand{rand}, m_grid{domain, minDist}
@@ -278,8 +281,7 @@ PoissonDiscSampling<T>::PoissonDiscSampling(const Rect<T>& domain, T minDist,
 }
 
 
-template <typename T>
-std::vector<Point2<T>> PoissonDiscSampling<T>::generate()
+template <typename T> std::vector<Point2<T>> PoissonDiscSampling<T>::generate()
 {
    return generate(generateSample());
 }
@@ -288,69 +290,67 @@ std::vector<Point2<T>> PoissonDiscSampling<T>::generate()
 template <typename T>
 std::vector<Point2<T>> PoissonDiscSampling<T>::generate(const Point2<T>& initialSample)
 {
-	storeSample(initialSample);
+   storeSample(initialSample);
 
-	while (!m_active.isEmpty())
+   while (!m_active.empty())
    {
-		int seedIdx = chooseSeed();
-		const Point2<T> seedSample = m_samples.get(seedIdx);
-		const auto newSample = findNewSample(seedSample);
-		if (!newSample)
-			deactivateSample(seedIdx);
-		else
-			storeSample(*newSample);
-	}
-		
-	return m_samples;
+      const std::size_t seedIdx = chooseSeed();
+      const Point2<T> seedSample = m_samples[seedIdx];
+      const auto newSample = findNewSample(seedSample);
+      if (!newSample)
+         deactivateSample(seedIdx);
+      else
+         storeSample(*newSample);
+   }
+
+   return m_samples;
 }
 
 
-template <typename T>
-Point2<T> PoissonDiscSampling<T>::generateSample()
+template <typename T> Point2<T> PoissonDiscSampling<T>::generateSample()
 {
-	const T x = m_domain.left() + m_rand.next() * m_domain.width();
-	const T y = m_domain.top() + m_rand.next() * m_domain.height();
+   const T x = m_domain.left() + m_rand.next() * m_domain.width();
+   const T y = m_domain.top() + m_rand.next() * m_domain.height();
    return {x, y};
 }
 
 
-template <typename T>
-int PoissonDiscSampling<T>::chooseSeed() const
+template <typename T> std::size_t PoissonDiscSampling<T>::chooseSeed() const
 {
    return m_active[0];
 }
 
 
-template <typename T>
-void PoissonDiscSampling<T>::storeSample(const Point2<T>& sample)
+template <typename T> void PoissonDiscSampling<T>::storeSample(const Point2<T>& sample)
 {
-	m_samples.push_back(sample);
-	const int sampleIdx = m_samples.size() - 1;
-	m_active.push_back(sampleIdx);
-	m_grid.insert(sample, sampleIdx);
+   m_samples.push_back(sample);
+   const std::size_t sampleIdx = m_samples.size() - 1;
+   m_active.push_back(sampleIdx);
+   m_grid.insert(sample, sampleIdx);
 }
 
 
-template <typename T>
-void PoissonDiscSampling<T>::deactivateSample(int sampleIdx)
+template <typename T> void PoissonDiscSampling<T>::deactivateSample(std::size_t sampleIdx)
 {
    m_active.erase(m_active.begin() + sampleIdx);
 }
 
 
 template <typename T>
-std::optional<Point2<T>> PoissonDiscSampling<T>::findNewSample(const Point2<T>& seedSample) const
+std::optional<Point2<T>>
+PoissonDiscSampling<T>::findNewSample(const Point2<T>& seedSample) const
 {
-   internals::Annulus annulus{seedSample, m_minDist, m_maxCandidateDist, m_domain, m_rand};
-		
-	for (std::size_t i = 0; i < m_numCandidates; ++i)
-   {
-		const Point2<T> candidate = annulus.generatePointInRing();
-		if (!m_grid.haveSampleWithinMinDistance(candidate))
-			return candidate;
-	}
+   internals::Annulus annulus{seedSample, m_minDist, m_maxCandidateDist, m_domain,
+                              m_rand};
 
-	return std::nullopt;
+   for (std::size_t i = 0; i < m_numCandidates; ++i)
+   {
+      const Point2<T> candidate = annulus.generatePointInRing();
+      if (!m_grid.haveSampleWithinMinDistance(candidate))
+         return candidate;
+   }
+
+   return std::nullopt;
 }
 
 } // namespace geom
