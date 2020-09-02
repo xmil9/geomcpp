@@ -47,18 +47,14 @@ void testGenerateForMinDistanceLargerThanDomainBounds()
       const Rect<Fp> domain{0.0, 0.0, 2.0, 2.0};
       const Fp minDist = 3.0;
 
-      const int numRuns = 10;
-      for (int i = 0; i < numRuns; ++i)
-      {
-         Random<Fp> rand{1111};
-         PoissonDiscSampling<Fp> sampler{
-            domain, minDist, PoissonDiscSampling<Fp>::NumCandidatesDefault, rand};
-         std::vector<Point2<Fp>> samples = sampler.generate();
+      Random<Fp> rand{1111};
+      PoissonDiscSampling<Fp> sampler{
+         domain, minDist, PoissonDiscSampling<Fp>::NumCandidatesDefault, rand};
+      std::vector<Point2<Fp>> samples = sampler.generate();
 
-         VERIFY(samples.size() == 1, caseLabel);
-         if (!samples.empty())
-            VERIFY(domain.isPointInRect(samples[0]), caseLabel);
-      }
+      VERIFY(samples.size() == 1, caseLabel);
+      if (!samples.empty())
+         VERIFY(domain.isPointInRect(samples[0]), caseLabel);
    }
 }
 
