@@ -22,6 +22,11 @@ namespace internals
 {
 ///////////////////
 
+using SampleIdx = int;
+
+
+///////////////////
+
 // Grid that divides the domain into cells each containing either the index of a
 // sample that lies within the cell or an empty marker. Allows to quickly lookup
 // if another sample is nearby.
@@ -31,23 +36,24 @@ template <typename T> class BackgroundGrid
    BackgroundGrid(const Rect<T>& domain, T minDist);
 
    // Inserts the given index of a given sample into the grid.
-   void insert(const Point2<T>& sample, std::size_t sampleIdx);
+   void insert(const Point2<T>& sample, SampleIdx sampleIdx);
    // Checks whether another sample is within the minimal distance of a given
    // test point.
    bool haveSampleWithinMinDistance(const Point2<T>& test) const;
 
  private:
-   static std::size_t calcGridRows(const Rect<T>& domain, T cellSize);
-   static std::size_t calcGridColumns(const Rect<T>& domain, T cellSize);
-   std::size_t calcRow(T y) const;
-   std::size_t calcCol(T x) const;
-   bool isCellOccupied(std::size_t r, std::size_t c) const;
+   using Grid = std::vector<std::vector<SampleIdx>>;
+   using CellIdx = int;
+
+   static CellIdx calcGridRows(const Rect<T>& domain, T cellSize);
+   static CellIdx calcGridColumns(const Rect<T>& domain, T cellSize);
+   CellIdx calcRow(T y) const;
+   CellIdx calcCol(T x) const;
+   bool isCellOccupied(CellIdx r, CellIdx c) const;
 
  private:
-   using Grid = std::vector<std::vector<std::size_t>>;
-
    static constexpr T SqrtOfTwo = static_cast<T>(1.414213562373);
-   static constexpr std::size_t EmptyCell = std::numeric_limits<std::size_t>::max();
+   static constexpr SampleIdx EmptyCell = -1;
 
    const Rect<T> m_domain;
    const T m_minDist;
@@ -74,16 +80,16 @@ BackgroundGrid<T>::BackgroundGrid(const Rect<T>& domain, T minDist)
   //   - 1 cell in each diagonal (because len(diagonal) == minDist)
   m_cellSize{minDist / SqrtOfTwo},
   m_grid(calcGridRows(m_domain, m_cellSize),
-         std::vector<std::size_t>(calcGridColumns(m_domain, m_cellSize), EmptyCell))
+         std::vector<SampleIdx>(calcGridColumns(m_domain, m_cellSize), EmptyCell))
 {
 }
 
 
 template <typename T>
-void BackgroundGrid<T>::insert(const Point2<T>& sample, std::size_t sampleIdx)
+void BackgroundGrid<T>::insert(const Point2<T>& sample, SampleIdx sampleIdx)
 {
-   const std::size_t r = calcRow(sample.y());
-   const std::size_t c = calcCol(sample.x());
+   const CellIdx r = calcRow(sample.y());
+   const CellIdx c = calcCol(sample.x());
    m_grid[r][c] = sampleIdx;
 }
 
@@ -91,13 +97,13 @@ void BackgroundGrid<T>::insert(const Point2<T>& sample, std::size_t sampleIdx)
 template <typename T>
 bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
 {
-   const std::size_t testRow = calcRow(test.y());
-   const std::size_t testCol = calcCol(test.x());
+   const CellIdx testRow = calcRow(test.y());
+   const CellIdx testCol = calcCol(test.x());
 
-   const std::size_t topMostRow = calcRow(test.y() - m_minDist);
-   const std::size_t bottomMostRow = calcRow(test.y() + m_minDist);
-   const std::size_t leftMostCol = calcCol(test.x() - m_minDist);
-   const std::size_t rightMostCol = calcCol(test.x() + m_minDist);
+   const CellIdx topMostRow = calcRow(test.y() - m_minDist);
+   const CellIdx bottomMostRow = calcRow(test.y() + m_minDist);
+   const CellIdx leftMostCol = calcCol(test.x() - m_minDist);
+   const CellIdx rightMostCol = calcCol(test.x() + m_minDist);
 
    // Depending on where within its cell the test point is located we have to
    // check one or two cells into each direction, e.g. if the test point is
@@ -111,21 +117,21 @@ bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
    // If necessary, row of cells two cells above the test cell.
    if (topMostRow < testRow - 1)
    {
-      for (std::size_t c = testCol - 1; c <= testCol + 1; ++c)
+      for (CellIdx c = testCol - 1; c <= testCol + 1; ++c)
          if (isCellOccupied(topMostRow, c))
             return true;
    }
    // Center block of rows.
-   for (std::size_t r = testRow - 1; r <= testRow + 1; ++r)
+   for (CellIdx r = testRow - 1; r <= testRow + 1; ++r)
    {
-      for (std::size_t c = leftMostCol; c <= rightMostCol; ++c)
+      for (CellIdx c = leftMostCol; c <= rightMostCol; ++c)
          if (isCellOccupied(r, c))
             return true;
    }
    // If necessary, row of cells two cells below the test cell.
    if (bottomMostRow > testRow + 1)
    {
-      for (std::size_t c = testCol - 1; c <= testCol + 1; ++c)
+      for (CellIdx c = testCol - 1; c <= testCol + 1; ++c)
          if (isCellOccupied(bottomMostRow, c))
             return true;
    }
@@ -135,34 +141,37 @@ bool BackgroundGrid<T>::haveSampleWithinMinDistance(const Point2<T>& test) const
 
 
 template <typename T>
-std::size_t BackgroundGrid<T>::calcGridRows(const Rect<T>& domain, T cellSize)
+typename BackgroundGrid<T>::CellIdx BackgroundGrid<T>::calcGridRows(const Rect<T>& domain,
+                                                                    T cellSize)
 {
-   return static_cast<std::size_t>(std::ceil(domain.height() / cellSize));
+   return static_cast<CellIdx>(std::ceil(domain.height() / cellSize));
 }
 
 
 template <typename T>
-std::size_t BackgroundGrid<T>::calcGridColumns(const Rect<T>& domain, T cellSize)
+typename BackgroundGrid<T>::CellIdx
+BackgroundGrid<T>::calcGridColumns(const Rect<T>& domain, T cellSize)
 {
-   return static_cast<std::size_t>(std::ceil(domain.width() / cellSize));
+   return static_cast<CellIdx>(std::ceil(domain.width() / cellSize));
 }
 
 
-template <typename T> std::size_t BackgroundGrid<T>::calcRow(T y) const
+template <typename T>
+typename BackgroundGrid<T>::CellIdx BackgroundGrid<T>::calcRow(T y) const
 {
-   return static_cast<std::size_t>(std::floor((y - m_domain.top()) / m_cellSize));
+   return static_cast<CellIdx>(std::floor((y - m_domain.top()) / m_cellSize));
 }
 
 
-template <typename T> std::size_t BackgroundGrid<T>::calcCol(T x) const
+template <typename T>
+typename BackgroundGrid<T>::CellIdx BackgroundGrid<T>::calcCol(T x) const
 {
-   return static_cast<std::size_t>(std::floor((x - m_domain.left()) / m_cellSize));
+   return static_cast<CellIdx>(std::floor((x - m_domain.left()) / m_cellSize));
 }
 
 
 // Checks if a cell at given coordinates is occupied.
-template <typename T>
-bool BackgroundGrid<T>::isCellOccupied(std::size_t r, std::size_t c) const
+template <typename T> bool BackgroundGrid<T>::isCellOccupied(CellIdx r, CellIdx c) const
 {
    if (r < 0 || r >= m_grid.size())
       return false;
@@ -244,15 +253,17 @@ template <typename T> class PoissonDiscSampling
    std::vector<Point2<T>> generate(const Point2<T>& initialSample);
 
  private:
+   using SampleIdx = internals::SampleIdx;
+
    // Generates random sample.
    Point2<T> generateSample();
    // Abstracts the process of choosing the next seed sample to generate
    // candidates for. Returns index into sample array.
-   std::size_t chooseSeed() const;
+   SampleIdx chooseSeed() const;
    // Stores a given sample in the internal data structures.
    void storeSample(const Point2<T>& sample);
    // Marks a given sample as not active anymore
-   void deactivateSample(std::size_t sampleIdx);
+   void deactivateSample(SampleIdx sampleIdx);
    // Checks if it is possible to find new samples around the given seed.
    bool canFindSamples(const Point2<T>& seedSample) const;
    // Finds a new sample for a given seed sample.
@@ -268,7 +279,7 @@ template <typename T> class PoissonDiscSampling
    sutil::Random<T>& m_rand;
    std::vector<Point2<T>> m_samples;
    // Active samples. Holds indices into sample collection.
-   std::vector<std::size_t> m_active;
+   std::vector<SampleIdx> m_active;
    internals::BackgroundGrid<T> m_grid;
 };
 
@@ -296,7 +307,7 @@ std::vector<Point2<T>> PoissonDiscSampling<T>::generate(const Point2<T>& initial
 
    while (!m_active.empty())
    {
-      const std::size_t seedIdx = chooseSeed();
+      const SampleIdx seedIdx = chooseSeed();
       const Point2<T> seedSample = m_samples[seedIdx];
       const auto newSample = findNewSample(seedSample);
       if (!newSample)
@@ -317,7 +328,8 @@ template <typename T> Point2<T> PoissonDiscSampling<T>::generateSample()
 }
 
 
-template <typename T> std::size_t PoissonDiscSampling<T>::chooseSeed() const
+template <typename T>
+typename PoissonDiscSampling<T>::SampleIdx PoissonDiscSampling<T>::chooseSeed() const
 {
    return m_active[0];
 }
@@ -326,15 +338,16 @@ template <typename T> std::size_t PoissonDiscSampling<T>::chooseSeed() const
 template <typename T> void PoissonDiscSampling<T>::storeSample(const Point2<T>& sample)
 {
    m_samples.push_back(sample);
-   const std::size_t sampleIdx = m_samples.size() - 1;
+   const SampleIdx sampleIdx = static_cast<SampleIdx>(m_samples.size() - 1);
    m_active.push_back(sampleIdx);
    m_grid.insert(sample, sampleIdx);
 }
 
 
-template <typename T> void PoissonDiscSampling<T>::deactivateSample(std::size_t sampleIdx)
+template <typename T> void PoissonDiscSampling<T>::deactivateSample(SampleIdx sampleIdx)
 {
-   m_active.erase(m_active.begin() + sampleIdx);
+   const auto pos = std::find(m_active.begin(), m_active.end(), sampleIdx);
+   m_active.erase(pos);
 }
 
 
