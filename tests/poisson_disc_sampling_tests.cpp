@@ -82,6 +82,74 @@ void testGenerateForRandomInitialSample()
          VERIFY(verifyMinDistance(samples, minDist), caseLabel);
       }
    }
+   {
+      const std::string caseLabel =
+         "Poisson disc sampling for random initial sample (case 2)";
+
+      using Fp = float;
+
+      const Rect<Fp> domain{-30.0f, -50.0f, 100.0f, 200.0f};
+      const Fp minDist = 11.5f;
+
+      const std::size_t numRuns = 10;
+      for (std::size_t i = 0; i < numRuns; ++i)
+      {
+         Random<Fp> rand{2222};
+         PoissonDiscSampling<Fp> sampler{
+            domain, minDist, PoissonDiscSampling<Fp>::NumCandidatesDefault, rand};
+         std::vector<Point2<Fp>> samples = sampler.generate();
+
+         VERIFY(!samples.empty(), caseLabel);
+         VERIFY(verifyMinDistance(samples, minDist), caseLabel);
+      }
+   }
+}
+
+
+void testGenerateForGivenInitialSample()
+{
+   {
+      const std::string caseLabel =
+         "Poisson disc sampling for given initial sample (case 1)";
+
+      using Fp = float;
+
+      const Rect<Fp> domain{0.0f, 0.0f, 20.0f, 20.0f};
+      const Fp minDist = 3.0f;
+
+      const std::size_t numRuns = 10;
+      for (std::size_t i = 0; i < numRuns; ++i)
+      {
+         Random<Fp> rand{3333};
+         PoissonDiscSampling<Fp> sampler{
+            domain, minDist, PoissonDiscSampling<Fp>::NumCandidatesDefault, rand};
+         std::vector<Point2<Fp>> samples = sampler.generate({3.0f, 6.0f});
+
+         VERIFY(!samples.empty(), caseLabel);
+         VERIFY(verifyMinDistance(samples, minDist), caseLabel);
+      }
+   }
+   {
+      const std::string caseLabel =
+         "Poisson disc sampling for given initial sample (case 2)";
+
+      using Fp = double;
+
+      const Rect<Fp> domain{-30.0, -50.0, 100.0, 200.0};
+      const Fp minDist = 11.5;
+
+      const std::size_t numRuns = 10;
+      for (std::size_t i = 0; i < numRuns; ++i)
+      {
+         Random<Fp> rand{4444};
+         PoissonDiscSampling<Fp> sampler{
+            domain, minDist, PoissonDiscSampling<Fp>::NumCandidatesDefault, rand};
+         std::vector<Point2<Fp>> samples = sampler.generate({37.0, -3.0});
+
+         VERIFY(!samples.empty(), caseLabel);
+         VERIFY(verifyMinDistance(samples, minDist), caseLabel);
+      }
+   }
 }
 
 } // namespace
@@ -93,4 +161,5 @@ void testPoissonDiscSampling()
 {
    testGenerateForMinDistanceLargerThanDomainBounds();
    testGenerateForRandomInitialSample();
+   testGenerateForGivenInitialSample();
 }
