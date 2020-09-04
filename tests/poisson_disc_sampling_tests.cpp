@@ -70,8 +70,8 @@ void testGenerateForRandomInitialSample()
       const Rect<Fp> domain{0.0, 0.0, 20.0, 20.0};
       const Fp minDist = 3.0;
 
-      const int numRuns = 10;
-      for (int i = 0; i < numRuns; ++i)
+      const std::size_t numRuns = 10;
+      for (std::size_t i = 0; i < numRuns; ++i)
       {
          Random<Fp> rand{1111};
          PoissonDiscSampling<Fp> sampler{
