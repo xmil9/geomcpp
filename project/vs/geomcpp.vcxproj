@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\circle.h" />
+    <ClInclude Include="..\..\DelauneyTriangle.h" />
     <ClInclude Include="..\..\geom_types.h" />
     <ClInclude Include="..\..\geomcpp_api.h" />
     <ClInclude Include="..\..\geom_util.h" />
