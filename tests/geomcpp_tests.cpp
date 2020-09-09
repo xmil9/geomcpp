@@ -5,6 +5,7 @@
 // MIT license
 //
 #include "circle_tests.h"
+#include "delauney_triangle_tests.h"
 #include "geom_util_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
@@ -36,6 +37,7 @@ int main()
    testCtLineRay2();
    testCtLineSeg2();
    testDecInterval();
+   testDelauneyTriangle();
    testGeometryUtilities();
    testPoint2D();
    testPoissonDiscSampling();
