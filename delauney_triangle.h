@@ -38,7 +38,7 @@ template <typename T> class DelauneyTriangle
    
    bool isPointInCircumcircle(const Point2<T>& pt) const;
    constexpr Point2<T> circumcenter() const noexcept { return m_circumcircle.center(); }
-   constexpr T circumcircleRadius() const noexcept { return m_circumcircle.radius; }
+   constexpr T circumcircleRadius() const noexcept { return m_circumcircle.radius(); }
 
    template <typename T, typename U>
    friend bool operator==(const DelauneyTriangle<T>& a, const DelauneyTriangle<U>& b);
@@ -78,7 +78,7 @@ std::optional<std::size_t> DelauneyTriangle<T>::findVertex(const Point2<T>& pt) 
    if (!m_bounds.isPointInRect(pt))
       return std::nullopt;
    for (std::size_t i = 0; i < 3; ++i)
-      if (triangle[i] == pt)
+      if (m_triangle[i] == pt)
          return i;
    return std::nullopt;
 }
