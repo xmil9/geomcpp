@@ -75,6 +75,21 @@ void testTriangleValueCtorForRValues()
 }
 
 
+void testTriangleSize()
+{
+   {
+      const std::string caseLabel = "Triangle::size when default constructed";
+      const Triangle<int> t;
+      VERIFY(t.size() == 3, caseLabel);
+   }
+   {
+      const std::string caseLabel = "Triangle::size when populated";
+      const Triangle t(Point2(1, 2), Point2(3, 4), Point2(7, 1));
+      VERIFY(t.size() == 3, caseLabel);
+   }
+}
+
+
 void testTriangleSubscriptOperator()
 {
    {
@@ -88,6 +103,70 @@ void testTriangleSubscriptOperator()
       VERIFY(t[0] == a, caseLabel);
       VERIFY(t[1] == b, caseLabel);
       VERIFY(t[2] == c, caseLabel);
+   }
+}
+
+
+void testTriangleCBegin()
+{
+   {
+      const std::string caseLabel = "Triangle::cbegin";
+
+      const Point2<float> a(1, 2);
+      const Point2<float> b(3, 4);
+      const Point2<float> c(7, 1);
+      const Triangle t(a, b, c);
+
+      VERIFY(*t.cbegin() == a, caseLabel);
+      VERIFY(*(t.cbegin() + 1) == b, caseLabel);
+      VERIFY(*(t.cbegin() + 2) == c, caseLabel);
+   }
+}
+
+
+void testTriangleCEnd()
+{
+   {
+      const std::string caseLabel = "Triangle::cend";
+
+      const Point2<float> a(1, 2);
+      const Point2<float> b(3, 4);
+      const Point2<float> c(7, 1);
+      const Triangle t(a, b, c);
+
+      VERIFY(t.cbegin() + 3 == t.cend(), caseLabel);
+   }
+}
+
+
+void testTriangleBeginConst()
+{
+   {
+      const std::string caseLabel = "Triangle::begin";
+
+      const Point2<float> a(1, 2);
+      const Point2<float> b(3, 4);
+      const Point2<float> c(7, 1);
+      const Triangle t(a, b, c);
+
+      VERIFY(*t.begin() == a, caseLabel);
+      VERIFY(*(t.begin() + 1) == b, caseLabel);
+      VERIFY(*(t.begin() + 2) == c, caseLabel);
+   }
+}
+
+
+void testTriangleEndConst()
+{
+   {
+      const std::string caseLabel = "Triangle::cend";
+
+      const Point2<float> a(1, 2);
+      const Point2<float> b(3, 4);
+      const Point2<float> c(7, 1);
+      const Triangle t(a, b, c);
+
+      VERIFY(t.begin() + 3 == t.end(), caseLabel);
    }
 }
 
@@ -531,7 +610,12 @@ void testTriangle()
    testTriangleDefaultCtor();
    testTriangleValueCtor();
    testTriangleValueCtorForRValues();
+   testTriangleSize();
    testTriangleSubscriptOperator();
+   testTriangleCBegin();
+   testTriangleCEnd();
+   testTriangleBeginConst();
+   testTriangleEndConst();
    testTriangleHasVertex();
    testTriangleVertexArray();
    testTriangleEdge();

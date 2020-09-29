@@ -25,6 +25,7 @@ template <typename T> class Triangle
  public:
    using value_type = T;
    using Fp = sutil::FpType<T>;
+   using const_iterator = typename std::array<Point2<T>, 3>::const_iterator;
 
    Triangle() = default;
    Triangle(const Point2<T>& a, const Point2<T>& b, const Point2<T>& c);
@@ -35,7 +36,13 @@ template <typename T> class Triangle
    Triangle& operator=(const Triangle&) = default;
    Triangle& operator=(Triangle&&) = default;
 
+   constexpr std::size_t size() const { return 3; }
    const Point2<T>& operator[](std::size_t idx) const;
+   const_iterator cbegin() const { return m_vertices.cbegin(); }
+   const_iterator cend() const { return m_vertices.cend(); }
+   const_iterator begin() const { return cbegin(); }
+   const_iterator end() const { return cend(); }
+
    // Checks if a given point is a vertex of the triangle.
    template <typename U> bool hasVertex(const Point2<U>& pt) const;
    const Point2<T>* vertexArray() const;
