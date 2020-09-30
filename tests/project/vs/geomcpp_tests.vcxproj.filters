@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\poly_line_cut2_tests.cpp" />
     <ClCompile Include="..\..\poisson_disc_sampling_tests.cpp" />
     <ClCompile Include="..\..\delauney_triangle_tests.cpp" />
+    <ClCompile Include="..\..\delauney_triangulation_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test_util.h" />
@@ -49,5 +50,6 @@
     <ClInclude Include="..\..\poly_line_cut2_tests.h" />
     <ClInclude Include="..\..\poisson_disc_sampling_tests.h" />
     <ClInclude Include="..\..\delauney_triangle_tests.h" />
+    <ClInclude Include="..\..\delauney_triangulation_tests.h" />
   </ItemGroup>
 </Project>

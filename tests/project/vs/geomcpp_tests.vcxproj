@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\circle_tests.cpp" />
     <ClCompile Include="..\..\delauney_triangle_tests.cpp" />
+    <ClCompile Include="..\..\delauney_triangulation_tests.cpp" />
     <ClCompile Include="..\..\geomcpp_tests.cpp" />
     <ClCompile Include="..\..\geom_util_tests.cpp" />
     <ClCompile Include="..\..\interval_dec_tests.cpp" />
@@ -67,6 +68,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\circle_tests.h" />
     <ClInclude Include="..\..\delauney_triangle_tests.h" />
+    <ClInclude Include="..\..\delauney_triangulation_tests.h" />
     <ClInclude Include="..\..\geom_util_tests.h" />
     <ClInclude Include="..\..\interval_dec_tests.h" />
     <ClInclude Include="..\..\interval_tec_tests.h" />

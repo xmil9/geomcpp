@@ -6,6 +6,7 @@
 //
 #include "circle_tests.h"
 #include "delauney_triangle_tests.h"
+#include "delauney_triangulation_tests.h"
 #include "geom_util_tests.h"
 #include "interval_dec_tests.h"
 #include "interval_tec_tests.h"
@@ -38,6 +39,7 @@ int main()
    testCtLineSeg2();
    testDecInterval();
    testDelauneyTriangle();
+   testDelauneyTriangulation();
    testGeometryUtilities();
    testPoint2D();
    testPoissonDiscSampling();
