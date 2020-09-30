@@ -29,7 +29,7 @@ namespace internals
 template <typename T> class EdgeBuffer
 {
  public:
-   using const_iterator = std::vector<ct::LineSeg2<T>>::const_iterator;
+   using const_iterator = typename std::vector<ct::LineSeg2<T>>::const_iterator;
 
  public:
    void addEdges(const DelauneyTriangle<T>& t);
@@ -58,8 +58,7 @@ template <typename T> void EdgeBuffer<T>::addEdges(const DelauneyTriangle<T>& t)
 
 template <typename T> void EdgeBuffer<T>::removeDuplicates()
 {
-   using EdgeIter = typename std::vector<ct::LineSeg2<T>>::iterator;
-   using IterSet = std::set<EdgeIter>;
+   using IterSet = std::set<const_iterator>;
 
    IterSet duplicates;
    for (const_iterator i = begin(); i != end(); ++i)
@@ -76,7 +75,7 @@ template <typename T> void EdgeBuffer<T>::removeDuplicates()
    }
 
    std::for_each(duplicates.rbegin(), duplicates.rend(),
-                 [&](EdgeIter iter) { m_edges.erase(iter); });
+                 [&](const_iterator iter) { m_edges.erase(iter); });
 }
 
 
@@ -84,10 +83,10 @@ template <typename T>
 bool EdgeBuffer<T>::isDuplicateEdge(const ct::LineSeg2<T>& a,
                                     const ct::LineSeg2<T>& b) const
 {
-   const Point2<T> sa = a.startPoint();
-   const Point2<T> ea = a.endPoint();
-   const Point2<T> sb = b.startPoint();
-   const Point2<T> eb = b.endPoint();
+   const auto sa = a.startPoint();
+   const auto ea = a.endPoint();
+   const auto sb = b.startPoint();
+   const auto eb = b.endPoint();
    return (sa == sb && ea == eb) || (sa == eb && ea == sb);
 }
 
@@ -158,7 +157,7 @@ template <typename T> class DelauneyTriangulation
 
  private:
    // List of points that define the triangulation.
-   const std::vector<Point2<T>> m_samples;
+   std::vector<Point2<T>> m_samples;
    // Triangle that bounds all input points.
    Triangle<T> m_boundingTriangle;
    // Current state of the triangulation. Holds active triangles and some data
@@ -177,14 +176,14 @@ DelauneyTriangulation<T>::DelauneyTriangulation(std::vector<Point2<T>> samples)
    // Add bounding triangle vertices to the end of the vertex list.
    if (!m_boundingTriangle.isDegenerate())
    {
-      m_samples.add(m_boundingTriangle.vertex(0));
-      m_samples.add(m_boundingTriangle.vertex(1));
-      m_samples.add(m_boundingTriangle.vertex(2));
+      m_samples.push_back(m_boundingTriangle[0]);
+      m_samples.push_back(m_boundingTriangle[1]);
+      m_samples.push_back(m_boundingTriangle[2]);
    }
 
    // Sort all collected sample points by their x-coordinate to enable
    // detecting triangles that cannot affect the triangulation anymore.
-   std::sort(m_samples.begin(), m_sample.end(),
+   std::sort(m_samples.begin(), m_samples.end(),
              [](const Point2<T>& a, const Point2<T>& b) {
                 return sutil::lessEqual(a.x(), b.x());
              });
@@ -210,7 +209,7 @@ template <typename T> std::vector<Triangle<T>> DelauneyTriangulation<T>::triangu
    settleRemainingTriangles();
    removeTrianglesSharingVertices(m_boundingTriangle);
 
-   return prepareResult(settledTriangles);
+   return prepareResult(m_settledTriangles);
 }
 
 
@@ -245,7 +244,7 @@ void DelauneyTriangulation<T>::findEnclosingPolygonEdges(const Point2<T>& sample
    std::size_t i = 0;
    while (i < m_triangulation.size())
    {
-      const DelauneyTriangle<T>& t = triangulation[i];
+      const DelauneyTriangle<T>& t = m_triangulation[i];
       if (hasTriangleSettled(t, sample))
       {
          m_triangulation.erase(m_triangulation.begin() + i);
@@ -274,7 +273,12 @@ void DelauneyTriangulation<T>::generateNewTriangles(const Point2<T>& sample,
 {
    for (const ct::LineSeg2<T>& e : edges)
    {
-      const Triangle<T> t{sample, e.startPoint(), e.endPoint()};
+      const auto startPt = e.startPoint();
+      const auto endPt = e.endPoint();
+      if (!startPt || !endPt)
+         continue;
+
+      const Triangle<T> t(sample, *startPt, *endPt);
       // Skip triangles that are lines or points.
       if (!t.isDegenerate())
          m_triangulation.push_back(t);
@@ -301,7 +305,7 @@ void DelauneyTriangulation<T>::removeTrianglesSharingVertices(const Triangle<T>&
       bool wasRemoved = false;
       for (std::size_t j = 0; j < 3; ++j)
       {
-         if (master.hasVertex(t.vertex(j)))
+         if (master.hasVertex(t[j]))
          {
             m_settledTriangles.erase(m_settledTriangles.begin() + i);
             wasRemoved = true;
@@ -319,17 +323,17 @@ template <typename T>
 Triangle<T>
 DelauneyTriangulation<T>::calcBoundingTriangle(const std::vector<Point2<T>>& points)
 {
-   const auto bounds = calcPathBounds(points.begin(), points.end());
+   const auto bounds = calcPathBounds<T>(points.begin(), points.end());
    if (!bounds || bounds->isDegenerate())
-      return Triangle{};
+      return Triangle<T>{};
 
    const T dimMax = std::max(bounds->width(), bounds->height());
    const Point2<T> center = bounds->center();
    constexpr T Scale = 20;
 
-   const Point2<T> a{center.x - Scale * dimMax, center.y - dimMax};
-   const Point2<T> b{center.x, center.y + Scale * dimMax};
-   const Point2<T> c{center.x + Scale * dimMax, center.y - dimMax};
+   const Point2<T> a{center.x() - Scale * dimMax, center.y() - dimMax};
+   const Point2<T> b{center.x(), center.y() + Scale * dimMax};
+   const Point2<T> c{center.x() + Scale * dimMax, center.y() - dimMax};
    return Triangle{a, b, c};
 }
 
