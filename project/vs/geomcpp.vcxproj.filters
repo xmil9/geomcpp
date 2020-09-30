@@ -60,6 +60,7 @@
     <ClInclude Include="..\..\poly_line_cut2.h" />
     <ClInclude Include="..\..\poisson_disc_sampling.h" />
     <ClInclude Include="..\..\delauney_triangle.h" />
+    <ClInclude Include="..\..\delauney_triangulation.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">
