@@ -247,8 +247,8 @@ void DelauneyTriangulation<T>::findEnclosingPolygonEdges(const Point2<T>& sample
       const DelauneyTriangle<T>& t = m_triangulation[i];
       if (hasTriangleSettled(t, sample))
       {
-         m_triangulation.erase(m_triangulation.begin() + i);
          m_settledTriangles.push_back(t);
+         m_triangulation.erase(m_triangulation.begin() + i);
          continue;
       }
 
