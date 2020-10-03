@@ -6,6 +6,7 @@
 // MIT license
 //
 #pragma once
+#include "circle.h"
 #include "delauney_triangle.h"
 #include "geom_util.h"
 #include "line_seg2_ct.h"
@@ -123,6 +124,16 @@ template <typename T> class DelauneyTriangulation
    static bool isDelauneyConditionSatisfied(const std::vector<Triangle<T>>& triangles);
 
  private:
+   // Functor for less-than comparison of points. Ordering is meaningless. The operator
+   // is only used to allow points to be stored in a set.
+   struct pointLess
+   {
+      bool operator()(const Point2<T>& a, const Point2<T>& b) const;
+   };
+
+   template <typename T> using PointSet = std::set<Point2<T>, pointLess>;
+
+ private:
    // Adds the edges of active triangles whose circumcircle contains a given sample
    // point to a given edge buffer and removes the triangles from the given list.
    void findEnclosingPolygonEdges(const Point2<T>& sample,
@@ -153,7 +164,7 @@ template <typename T> class DelauneyTriangulation
    prepareResult(const std::vector<DelauneyTriangle<T>>& delauneyTriangles);
 
    // Returns a set of all unique vertices of a given list of triangles.
-   static std::set<Point2<T>> collectPoints(const std::vector<Triangle<T>>& triangles);
+   static PointSet<T> collectPoints(const std::vector<Triangle<T>>& triangles);
 
  private:
    // List of points that define the triangulation.
@@ -183,10 +194,7 @@ DelauneyTriangulation<T>::DelauneyTriangulation(std::vector<Point2<T>> samples)
 
    // Sort all collected sample points by their x-coordinate to enable
    // detecting triangles that cannot affect the triangulation anymore.
-   std::sort(m_samples.begin(), m_samples.end(),
-             [](const Point2<T>& a, const Point2<T>& b) {
-                return sutil::lessEqual(a.x(), b.x());
-             });
+   std::sort(m_samples.begin(), m_samples.end(), pointLess());
 }
 
 
@@ -224,13 +232,16 @@ template <typename T>
 bool DelauneyTriangulation<T>::isDelauneyConditionSatisfied(
    const std::vector<Triangle<T>>& triangles)
 {
-   std::set<Point2<T>> vertices = collectPoints(triangles);
+   PointSet<T> vertices = collectPoints(triangles);
    for (const auto& t : triangles)
    {
-      const Circle<T> ccircle = t.calcCircumcircle();
-      for (const auto& pt : vertices)
-         if (ccircle.isPointInsideCircle(pt))
-            return false;
+      const auto ccircle = t.calcCircumcircle();
+      if (ccircle)
+      {
+         for (const auto& pt : vertices)
+            if (isPointInsideCircle(*ccircle, pt))
+               return false;
+      }
    }
 
    return true;
@@ -358,13 +369,21 @@ std::vector<Triangle<T>> DelauneyTriangulation<T>::prepareResult(
 
 
 template <typename T>
-std::set<Point2<T>>
+DelauneyTriangulation<T>::PointSet<T>
 DelauneyTriangulation<T>::collectPoints(const std::vector<Triangle<T>>& triangles)
 {
-   std::set<Point2<T>> vertices;
+   PointSet<T> vertices;
    for (const auto& t : triangles)
-      std::copy(t.begin(), t.end(), std::inserter(vertices));
+      std::copy(t.begin(), t.end(), std::inserter(vertices, vertices.begin()));
    return vertices;
+}
+
+
+template <typename T>
+bool DelauneyTriangulation<T>::pointLess::operator()(const Point2<T>& a,
+                                                     const Point2<T>& b) const
+{
+   return (a.x() < b.x() || (sutil::equal(a.x(), b.x()) && a.y() < b.y()));
 }
 
 } // namespace geom
