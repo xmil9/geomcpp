@@ -21,6 +21,7 @@ template <typename T> class VoronoiTile
    ~VoronoiTile() = default;
    VoronoiTile(const VoronoiTile&) = default;
    VoronoiTile(VoronoiTile&&) = default;
+   
    VoronoiTile& operator=(const VoronoiTile&) = default;
    VoronoiTile& operator=(VoronoiTile&&) = default;
 
