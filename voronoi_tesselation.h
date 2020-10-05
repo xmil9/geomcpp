@@ -91,7 +91,7 @@ template <typename T> class DelauneyEdge
 
  private:
    ct::LineSeg2<T> m_edge;
-   std::pair<DelauneyTriangle, std::optional<DelauneyTriangle>> m_triangles;
+   std::pair<DelauneyTriangle<T>, std::optional<DelauneyTriangle<T>>> m_triangles;
 };
 
 
@@ -262,7 +262,7 @@ PolygonBuilder<T>::PolygonBuilder(std::vector<VoronoiEdge<T>> edges,
 template <typename T> Poly2<T> PolygonBuilder<T>::build()
 {
    Poly2<T> unclipped;
-   return intersectConvexPolygons(unclipped, clip);
+   return intersectConvexPolygons(unclipped, m_clip);
 }
 
 template <typename T> std::vector<Point2<T>> PolygonBuilder<T>::createVertexSequence()
@@ -305,7 +305,7 @@ template <typename T> std::vector<VoronoiEdge<T>> PolygonBuilder<T>::findEndEdge
    for (auto rpos = m_edges.rbegin(); rpos != rendFoundPos; ++rpos)
       m_edges.erase(rpos.base());
 
-   return res;
+   return result;
 }
 
 
@@ -450,7 +450,7 @@ bool areOnSameSideOf(const Point2<T>& pt, const Poly2<T>& poly,
                      const ct::LineInf2<T>& line)
 {
    const Vec2<T> lineDir = line.direction();
-   const bool isLeft = ccw(lineDir, Vect2<T>{line.anchor(), pt});
+   const bool isLeft = ccw(lineDir, Vec2<T>{line.anchor(), pt});
 
    for (const auto& polyPt : poly)
    {
@@ -584,14 +584,14 @@ template <typename T> std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tessela
          m_tiles.emplace_back(sample, voronoiPoly);
    }
 
-   return tiles;
+   return m_tiles;
 }
 
 
 template <typename T>
 std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoSingleTile()
 {
-   assert(m_sampled.size() == 1);
+   assert(m_samples.size() == 1);
    const Point2<T>& sample = m_samples[0];
 
    Poly2<T> outline;
@@ -603,10 +603,10 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoSingleTile()
    else
    {
       // Tile covers the entire area.
-      outline = makePolygon(border);
+      outline = makePolygon(m_border);
    }
 
-   m_tiles.emplace_back(samples, outline);
+   m_tiles.emplace_back(sample, outline);
    return m_tiles;
 }
 
@@ -614,7 +614,7 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoSingleTile()
 template <typename T>
 std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoTwoTiles()
 {
-   assert(m_sampled.size() == 2);
+   assert(m_samples.size() == 2);
    const Point2<T>& pa = m_samples[0];
    const Point2<T>& pb = m_samples[1];
 
@@ -625,7 +625,7 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoTwoTiles()
    const ct::LineInf2<T> bisection{sampleEdge.midPoint(), normal};
 
    const std::vector<Poly2<T>> tilePolys =
-      cutConvexPolygon(makePolygon(border), bisection);
+      cutConvexPolygon(makePolygon(m_border), bisection);
    if (tilePolys.size() == 2)
    {
       // Figure out which polygon belongs to which sample point.
@@ -663,7 +663,7 @@ std::vector<DelauneyTriangle<T>> VoronoiTesselation<T>::delauneyTriangulation()
 
 
 template <typename T>
-VoronoiTesselation<T>::EdgeMap VoronoiTesselation<T>::collectDelauneyEdges(
+typename VoronoiTesselation<T>::EdgeMap VoronoiTesselation<T>::collectDelauneyEdges(
    const std::vector<DelauneyTriangle<T>>& delauneyTriangles) const
 {
    EdgeMap edgeMap;
