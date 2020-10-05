@@ -27,6 +27,7 @@
 #include "ring_tests.h"
 #include "triangle_tests.h"
 #include "vec2_tests.h"
+#include "voronoi_tesselation_tests.h"
 #include <iostream>
 
 
@@ -55,6 +56,7 @@ int main()
    testTecInterval();
    testTriangle();
    testVector2D();
+   testVoronoiTesselation();
 
    std::cout << "geomcpp tests finished.\n";
    return EXIT_SUCCESS;
