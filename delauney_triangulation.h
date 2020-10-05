@@ -124,14 +124,7 @@ template <typename T> class DelauneyTriangulation
    static bool isDelauneyConditionSatisfied(const std::vector<Triangle<T>>& triangles);
 
  private:
-   // Functor for less-than comparison of points. Ordering is meaningless. The operator
-   // is only used to allow points to be stored in a set.
-   struct pointLess
-   {
-      bool operator()(const Point2<T>& a, const Point2<T>& b) const;
-   };
-
-   template <typename T> using PointSet = std::set<Point2<T>, pointLess>;
+   template <typename T> using PointSet = std::set<Point2<T>, pointLess<T>>;
 
  private:
    // Adds the edges of active triangles whose circumcircle contains a given sample
@@ -194,7 +187,7 @@ DelauneyTriangulation<T>::DelauneyTriangulation(std::vector<Point2<T>> samples)
 
    // Sort all collected sample points by their x-coordinate to enable
    // detecting triangles that cannot affect the triangulation anymore.
-   std::sort(m_samples.begin(), m_samples.end(), pointLess());
+   std::sort(m_samples.begin(), m_samples.end(), pointLess<T>());
 }
 
 
@@ -376,14 +369,6 @@ DelauneyTriangulation<T>::collectPoints(const std::vector<Triangle<T>>& triangle
    for (const auto& t : triangles)
       std::copy(t.begin(), t.end(), std::inserter(vertices, vertices.begin()));
    return vertices;
-}
-
-
-template <typename T>
-bool DelauneyTriangulation<T>::pointLess::operator()(const Point2<T>& a,
-                                                     const Point2<T>& b) const
-{
-   return (a.x() < b.x() || (sutil::equal(a.x(), b.x()) && a.y() < b.y()));
 }
 
 } // namespace geom

@@ -83,6 +83,18 @@ template <typename T, typename U> bool operator!=(const Point2<T>& a, const Poin
 }
 
 
+// Functor for less-than comparison of points. Ordering is meaningless. The operator
+// is only used to allow points to be stored in a set or map.
+template <typename T>
+struct pointLess
+{
+   bool operator()(const Point2<T>& a, const Point2<T>& b) const
+   {
+      return (a.x() < b.x() || (sutil::equal(a.x(), b.x()) && a.y() < b.y()));
+   }
+};
+
+
 ///////////////////
 
 // Distance between points.
