@@ -10,7 +10,6 @@
     <ClInclude Include="..\..\rect.h" />
     <ClInclude Include="..\..\circle.h" />
     <ClInclude Include="..\..\triangle.h" />
-    <ClInclude Include="..\..\poly2.h" />
     <ClInclude Include="..\..\line_inf2_ct.h">
       <Filter>Lines\Compile-time</Filter>
     </ClInclude>
@@ -56,11 +55,20 @@
     <ClInclude Include="..\..\geom_util.h" />
     <ClInclude Include="..\..\geom_types.h" />
     <ClInclude Include="..\..\ring.h" />
-    <ClInclude Include="..\..\poly_intersection2.h" />
-    <ClInclude Include="..\..\poly_line_cut2.h" />
     <ClInclude Include="..\..\poisson_disc_sampling.h" />
     <ClInclude Include="..\..\delauney_triangle.h" />
     <ClInclude Include="..\..\delauney_triangulation.h" />
+    <ClInclude Include="..\..\voronoi_tile.h" />
+    <ClInclude Include="..\..\voronoi_tesselation.h" />
+    <ClInclude Include="..\..\poly_intersection2.h">
+      <Filter>Polygons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\poly_line_cut2.h">
+      <Filter>Polygons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\poly2.h">
+      <Filter>Polygons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lines">
@@ -74,6 +82,9 @@
     </Filter>
     <Filter Include="Intervals">
       <UniqueIdentifier>{a2debe52-6ceb-46b5-9d60-e3d630415bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Polygons">
+      <UniqueIdentifier>{34df6a60-f992-4c25-82a4-b64292dd6c84}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
