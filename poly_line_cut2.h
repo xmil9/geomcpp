@@ -49,7 +49,7 @@ template <typename T> Side calcSideOfLine(const ct::LineInf2<T>& l, const Point2
 
 
 // Checks if the intersecting line was crossed by two consecutive vertices.
-bool wasLineCrossed(Side prev, Side now)
+inline bool wasLineCrossed(Side prev, Side now)
 {
    return (now == Side::Left && prev == Side::Right) ||
           (now == Side::Right && prev == Side::Left);
