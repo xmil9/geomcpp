@@ -14,6 +14,7 @@
 #include "line_ray2_ct.h"
 #include "line_seg2_ct.h"
 #include "poly_intersection2.h"
+#include "poly_line_cut2.h"
 #include "poly2.h"
 #include "rect.h"
 #include "vec2.h"
@@ -32,6 +33,22 @@ namespace internals
 {
 ///////////////////
 
+// Creates a polygon from a given rectangle.
+// Overload for a collection of edges is further down.
+template <typename T> Poly2<T> makePolygon(const Rect<T>& r)
+{
+   Poly2<T> poly;
+   poly.add(r.leftTop());
+   poly.add(r.leftBottom());
+   poly.add(r.rightBottom());
+   poly.add(r.rightTop());
+   return poly;
+}
+
+
+///////////////////
+
+// An edge of the Voronoi tesselation can either be a line segment or a line ray.
 template <typename T> using VoronoiEdge = std::variant<ct::LineSeg2<T>, ct::LineRay2<T>>;
 
 template <typename T> Vec2<T> direction(const VoronoiEdge<T>& e)
@@ -120,7 +137,7 @@ std::optional<VoronoiEdge<T>> DelauneyEdge<T>::makeVoronoiEdge() const
 {
    if (!m_triangles.second)
       return makeInfiniteVoronoiEdge(m_edge, m_triangles.first);
-   return makeVoronoiEdgeBetweenTriangles(m_triangles.first, m_triangles.second);
+   return makeVoronoiEdgeBetweenTriangles(m_triangles.first, *m_triangles.second);
 }
 
 
@@ -132,7 +149,7 @@ DelauneyEdge<T>::makeVoronoiEdgeBetweenTriangles(const DelauneyTriangle<T>& a,
    const Point2<T> ca = a.circumcenter();
    const Point2<T> cb = b.circumcenter();
    if (ca != cb)
-      return std::make_optional<VoronoiEdge<T>>(std::variant<ct::LineSeg2<T>>(ca, cb));
+      return std::make_optional<VoronoiEdge<T>>(ct::LineSeg2<T>(ca, cb));
    // Degenerate edge.
    return std::nullopt;
 }
@@ -147,8 +164,11 @@ DelauneyEdge<T>::makeInfiniteVoronoiEdge(const ct::LineSeg2<T>& delauneyEdge,
    // edge and the edge travels in the direction away from the triangle.
    // Since the triangle is oriented ccw, a cw normal to any of its edges
    // points away from it.
-   return std::make_optional<VoronoiEdge<T>>(std::variant<ct::LineRay2<T>>(
-      triangle.circumcenter(), delauneyEdge.direction().cwNormal()));
+   const VoronoiEdge<T> ve =
+      ct::LineRay2<T>{triangle.circumcenter(), delauneyEdge.direction().cwNormal()};
+   // Optional will always be filled here. The return type is only optional to match
+   // the signature of the other 'make Voronoi edge' functions.
+   return std::make_optional(ve);
 }
 
 
@@ -422,19 +442,8 @@ void PolygonBuilder<T>::fixIntersectingEndEdges(std::vector<Point2<T>> vertices)
 
 ///////////////////
 
-// Creates a polygon from a given rectangle.
-template <typename T> Poly2<T> makePolygon(const Rect<T>& r)
-{
-   Poly2<T> poly;
-   poly.add(r.leftTop());
-   poly.add(r.leftBottom());
-   poly.add(r.rightBottom());
-   poly.add(r.rightTop());
-   return poly;
-}
-
-
 // Creates a polygon from given unordered edges.
+// Overload for a simple rectangle is further up.
 template <typename T>
 Poly2<T> makePolygon(const std::vector<VoronoiEdge<T>>& edges,
                      const Rect<T>& borderBounds)
@@ -579,7 +588,7 @@ template <typename T> std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tessela
       const std::vector<internals::VoronoiEdge<T>> voronoiEdges =
          delauneyEdges.makeVoronoiEdges();
 
-      const Poly2<T> voronoiPoly = makePolygon(voronoiEdges, m_border);
+      const Poly2<T> voronoiPoly = internals::makePolygon(voronoiEdges, m_border);
       if (voronoiPoly.size() > 0)
          m_tiles.emplace_back(sample, voronoiPoly);
    }
@@ -603,7 +612,7 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoSingleTile()
    else
    {
       // Tile covers the entire area.
-      outline = makePolygon(m_border);
+      outline = internals::makePolygon(m_border);
    }
 
    m_tiles.emplace_back(sample, outline);
@@ -625,7 +634,7 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoTwoTiles()
    const ct::LineInf2<T> bisection{sampleEdge.midPoint(), normal};
 
    const std::vector<Poly2<T>> tilePolys =
-      cutConvexPolygon(makePolygon(m_border), bisection);
+      cutConvexPolygon(internals::makePolygon(m_border), bisection);
    if (tilePolys.size() == 2)
    {
       // Figure out which polygon belongs to which sample point.
@@ -647,9 +656,12 @@ std::vector<VoronoiTile<T>> VoronoiTesselation<T>::tesselateIntoTwoTiles()
 template <typename T>
 Rect<T> VoronoiTesselation<T>::calcBorder(const std::vector<Point2<T>>& points, T offset)
 {
-   Rect<T> border = calcPathBounds(points.begin(), points.end());
-   border.inflate(offset);
-   return border;
+   auto border = calcPathBounds<T>(points.begin(), points.end());
+   if (!border)
+      return {};
+
+   border->inflate(offset);
+   return *border;
 }
 
 
@@ -677,12 +689,13 @@ typename VoronoiTesselation<T>::EdgeMap VoronoiTesselation<T>::collectDelauneyEd
          if (pos == edgeMap.end())
          {
             bool inserted = false;
-            std::tie(pos, inserted) = edgeMap.insert();
+            std::tie(pos, inserted) = edgeMap.insert(
+               EdgeMap::value_type(v, internals::DelauneyEdgeCollection<T>{}));
             assert(inserted);
          }
 
          // Keep edges ordered.
-         internals::DelauneyEdgeCollection<T>& edges = pos.second;
+         internals::DelauneyEdgeCollection<T>& edges = pos->second;
          edges.addEdge(ct::LineSeg2<T>{dt[i == 0 ? 2 : i - 1], v}, dt);
          edges.addEdge(ct::LineSeg2<T>{v, dt[i == 2 ? 0 : i + 1]}, dt);
       }
