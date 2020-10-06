@@ -18,10 +18,21 @@ namespace
 {
 ///////////////////
 
+void testNoPoint()
+{
+   const std::string caseLabel = "VoronoiTesselation for no points";
+
+   using Fp = float;
+
+   VoronoiTesselation<Fp> vt({});
+	const std::vector<VoronoiTile<Fp>> tiles = vt.tesselate();
+	VERIFY(tiles.empty(), caseLabel);
+}
 
 } // namespace
 
 
 void testVoronoiTesselation()
 {
+   testNoPoint();
 }
