@@ -309,17 +309,15 @@ template <typename T> std::vector<VoronoiEdge<T>> PolygonBuilder<T>::findEndEdge
    std::vector<VoronoiEdge<T>> result;
 
    // Keep track of found edges so that we can delete them later.
-   using EdgePos = typename std::vector<VoronoiEdge<T>>::const_iterator;
-   std::vector<EdgePos> foundEdges;
+   std::vector<int> foundEdges;
 
-   const auto endPos = m_edges.end();
-   for (auto pos = m_edges.begin(); pos != endPos; ++pos)
+   for (int i = 0; i < m_edges.size(); ++i)
    {
-      const VoronoiEdge<T>& e = *pos;
+      const VoronoiEdge<T>& e = m_edges[i];
       if (!hasEndPoint(e))
       {
          result.push_back(e);
-         foundEdges.push_back(pos);
+         foundEdges.push_back(i);
       }
 
       // We can stop after we found two.
@@ -328,8 +326,8 @@ template <typename T> std::vector<VoronoiEdge<T>> PolygonBuilder<T>::findEndEdge
    }
 
    // Remove the found end edges from the available edges.
-   for (std::size_t i = foundEdges.size() - 1; i >= 0; --i)
-      m_edges.erase(foundEdges[i]);
+   for (int i = static_cast<int>(foundEdges.size()) - 1; i >= 0; --i)
+      m_edges.erase(m_edges.begin() + foundEdges[i]);
 
    return result;
 }
