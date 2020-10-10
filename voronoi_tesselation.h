@@ -61,9 +61,15 @@ template <typename T> bool hasEndPoint(const VoronoiEdge<T>& e)
    return std::visit([&](const auto& line) { return line.endPoint().has_value(); }, e);
 }
 
-template <typename T> std::optional<Point2<T>> startPoint(const VoronoiEdge<T>& e)
+// Voronoi edges (either a line segment or ray) always have a start point.
+template <typename T> Point2<T> startPoint(const VoronoiEdge<T>& e)
 {
-   return std::visit([&](const auto& line) { return line.startPoint(); }, e);
+   return std::visit(
+      [&](const auto& line) {
+         assert(line.startPoint());
+         return *line.startPoint();
+      },
+      e);
 }
 
 template <typename T> std::optional<Point2<T>> endPoint(const VoronoiEdge<T>& e)
@@ -281,7 +287,8 @@ PolygonBuilder<T>::PolygonBuilder(std::vector<VoronoiEdge<T>> edges,
 
 template <typename T> Poly2<T> PolygonBuilder<T>::build()
 {
-   Poly2<T> unclipped;
+   const std::vector<Point2<T>> vertexSeq{createVertexSequence()};
+   const Poly2<T> unclipped{vertexSeq.cbegin(), vertexSeq.cend()};
    return intersectConvexPolygons(unclipped, m_clip);
 }
 
@@ -321,9 +328,8 @@ template <typename T> std::vector<VoronoiEdge<T>> PolygonBuilder<T>::findEndEdge
    }
 
    // Remove the found end edges from the available edges.
-   const auto rendFoundPos = foundEdges.rend();
-   for (auto rpos = m_edges.rbegin(); rpos != rendFoundPos; ++rpos)
-      m_edges.erase(rpos.base());
+   for (std::size_t i = foundEdges.size() - 1; i >= 0; --i)
+      m_edges.erase(foundEdges[i]);
 
    return result;
 }
@@ -356,8 +362,8 @@ PolygonBuilder<T>::orderEdges(const std::vector<VoronoiEdge<T>>& endEdges)
    // Concatenate the edges and store each start point.
    while (nextEdge)
    {
-      vertices.push_back(startPoint(nextEdge));
-      nextEdge = findNextEdge(endPoint(nextEdge));
+      vertices.push_back(startPoint(*nextEdge));
+      nextEdge = findNextEdge(endPoint(*nextEdge));
    }
 
    // Append the end points of the given end edge.
@@ -376,9 +382,10 @@ PolygonBuilder<T>::orderEdges(const std::vector<VoronoiEdge<T>>& endEdges)
 template <typename T>
 Point2<T> PolygonBuilder<T>::calcDistantPoint(const VoronoiEdge<T>& edge)
 {
-   static constexpr T Dist = 100000;
-   Vec2<T> normedDir = direction(edge).normalize();
-   return startPoint(edge).offset(normedDir.scale(Dist));
+   static constexpr T FarDist = 100000;
+   const Vec2<T> normedDir = direction(edge).normalize();
+   const Vec2<T> far = normedDir.scale(FarDist);
+   return startPoint(edge).offset(far.x(), far.y());
 }
 
 
@@ -397,10 +404,10 @@ PolygonBuilder<T>::findNextEdge(const std::optional<Point2<T>>& connector)
    m_edges.erase(m_edges.begin() + edgeIdx);
 
    // Make sure the end points of the edge are in the correct order.
-   if (connector == e.startPoint())
+   if (*connector == startPoint(e))
       return e;
    // Flip the found edge.
-   return std::variant<ct::LineSeg2<T>>(*endPoint(e), *startPoint(e));
+   return ct::LineSeg2<T>(*endPoint(e), startPoint(e));
 }
 
 
