@@ -84,7 +84,7 @@ template <typename T, typename U> bool operator!=(const Point2<T>& a, const Poin
 
 
 // Functor for less-than comparison of points. Ordering is meaningless. The operator
-// is only used to allow points to be stored in a set or map.
+// is only used to allow points to be stored in a set.
 template <typename T>
 struct pointLess
 {

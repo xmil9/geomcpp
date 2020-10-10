@@ -501,8 +501,7 @@ template <typename T> class VoronoiTesselation
    const std::vector<Triangle<T>>& getTriangulation() const { return m_triangulation; }
 
  private:
-   using EdgeMap = std::unordered_map<Point2<T>, internals::DelauneyEdgeCollection<T>,
-                                      std::hash<Point2<T>>, pointLess<T>>;
+   using EdgeMap = std::unordered_map<Point2<T>, internals::DelauneyEdgeCollection<T>>;
 
    // Degenerate tesselation into a single tile.
    std::vector<VoronoiTile<T>> tesselateIntoSingleTile();
