@@ -269,7 +269,7 @@ template <typename T> class PolygonBuilder
    // Make sures end edges do not intersect before they end at their distant
    // end points. The polygon would not be convex in that case, creating
    // problems when intersecting it with the border.
-   static void fixIntersectingEndEdges(std::vector<Point2<T>> vertices);
+   static void fixIntersectingEndEdges(std::vector<Point2<T>>& vertices);
 
  private:
    std::vector<VoronoiEdge<T>> m_edges;
@@ -426,7 +426,7 @@ int PolygonBuilder<T>::findEndpoint(const std::optional<Point2<T>>& pt,
 
 
 template <typename T>
-void PolygonBuilder<T>::fixIntersectingEndEdges(std::vector<Point2<T>> vertices)
+void PolygonBuilder<T>::fixIntersectingEndEdges(std::vector<Point2<T>>& vertices)
 {
    const auto x = intersect(
       ct::LineSeg2{vertices[1], vertices[0]},
@@ -438,7 +438,7 @@ void PolygonBuilder<T>::fixIntersectingEndEdges(std::vector<Point2<T>> vertices)
       // It's ok if the intersection is at the start points.
       if (xPt != vertices[1] && xPt != vertices[vertices.size() - 2])
       {
-         vertices[0] == xPt;
+         vertices[0] = xPt;
          vertices[vertices.size() - 1] = xPt;
       }
    }

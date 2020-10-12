@@ -51,7 +51,7 @@ bool hasTileWithVertices(const std::vector<VoronoiTile<T>>& tess,
 
 ///////////////////
 
-void testNoPoint()
+void testForNoPoints()
 {
    const std::string caseLabel = "VoronoiTesselation for no points";
 
@@ -63,7 +63,7 @@ void testNoPoint()
 }
 
 
-void testOnePoint()
+void testForOnePoint()
 {
    {
       const std::string caseLabel = "VoronoiTesselation for one point with border";
@@ -112,7 +112,7 @@ void testOnePoint()
 }
 
 
-void testTwoPoints()
+void testForTwoPoints()
 {
    {
       const std::string caseLabel = "VoronoiTesselation for two points with border";
@@ -167,7 +167,7 @@ void testTwoPoints()
 }
 
 
-void testThreePoints()
+void testForThreePoints()
 {
    {
       const std::string caseLabel = "VoronoiTesselation for three points";
@@ -192,6 +192,122 @@ void testThreePoints()
       const std::vector<Point2<Fp>> expectedTileC{{-0.5, 4.0}, {2.0, 4.0}, {2.0, 2.75}};
       VERIFY(hasTileWithVertices(tiles, expectedTileC), caseLabel);
    }
+   {
+      const std::string caseLabel = "VoronoiTesselation for three points with border";
+
+      using Fp = double;
+
+      const Rect<Fp> border{-3.0, -1.0, 4.0, 5.0};
+      VoronoiTesselation<Fp> vt({{1.0, 2.0}, {2.0, 4.0}, {-2.0, 1.4}}, border);
+      const std::vector<VoronoiTile<Fp>> tiles = vt.tesselate();
+
+      VERIFY(tiles.size() == 3, caseLabel);
+      const std::vector<Point2<Fp>> expectedTileA{
+         {4.0, 1.75}, {4.0, -1.0}, {0.04, -1.0}, {-1.01111111, 4.25555555}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileA), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileB{
+         {-1.49499999, 5.0}, {4.0, 5.0}, {3.99999999, 1.75}, {-1.01111111, 4.255555555}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileB), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileC{{-1.494999999, 5.0},
+                                                  {-1.011111111, 4.25555555},
+                                                  {0.04, -1.0},
+                                                  {-3.0, -1.0},
+                                                  {-3.0, 5.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileC), caseLabel);
+   }
+}
+
+
+void testForFourPoints()
+{
+   {
+      const std::string caseLabel = "VoronoiTesselation for four points";
+
+      using Fp = double;
+
+      VoronoiTesselation<Fp> vt({{-1.0, -2.0}, {0.0, 3.0}, {4.0, 1.0}, {3.0, -1.0}});
+      const std::vector<VoronoiTile<Fp>> tiles = vt.tesselate();
+
+      VERIFY(tiles.size() == 4, caseLabel);
+      const std::vector<Point2<Fp>> expectedTileA{
+         {-1.0, 0.6}, {0.5526315789, 0.2894736842}, {1.125, -2.0}, {-1.0, -2.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileA), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileB{
+         {-1.0, 0.6}, {-1.0, 3.0}, {2.5, 3.0}, {1.5, 1.0}, {0.5526315789, 0.2894736842}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileB), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileC{{4.0, -0.25},
+                                                  {4.0, -2.0},
+                                                  {1.125, -2.0},
+                                                  {0.5526315789, 0.2894736842},
+                                                  {1.5, 1.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileC), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileD{{2.5, 3.0},
+                                                  {4.0, 3.0},
+                                                  {4.0, -0.25},
+                                                  {1.5, 1.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileD), caseLabel);
+   }
+}
+
+
+void testForFivePoints()
+{
+   {
+      const std::string caseLabel = "VoronoiTesselation for five points";
+
+      using Fp = double;
+
+      VoronoiTesselation<Fp> vt(
+         {{-1.0, -1.0}, {-2.0, 1.0}, {0.0, 3.0}, {2.0, 2.0}, {2.0, 0.0}});
+      const std::vector<VoronoiTile<Fp>> tiles = vt.tesselate();
+
+      VERIFY(tiles.size() == 5, caseLabel);
+      const std::vector<Point2<Fp>> expectedTileA{{-2.0, -0.25},
+                                                  {0.07142857142, 0.7857142857},
+                                                  {0.6666666666, -0.9999999999},
+                                                  {-2.0, -1.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileA), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileB{
+         {-2.0, 3.0}, {0.1, 0.9}, {0.0714285714, 0.785714285}, {-2.0, -0.25}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileB), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileC{
+         {1.25, 3.0}, {2.0, 3.0}, {2.0, 1.0}, {0.25, 1.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileC), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileD{
+         {2.0, 1.0}, {2.0, -1.0}, {0.66666666, -1.0}, {0.0714285714, 0.7857142857},
+         {0.1, 0.9}, {0.25, 1.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileD), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileE{
+         {-2.0, 3.0}, {1.25, 3.0}, {0.25, 1.0}, {0.1, 0.9}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileE), caseLabel);
+   }
+}
+
+
+void testForRect()
+{
+   {
+      const std::string caseLabel = "VoronoiTesselation for rect";
+
+      using Fp = double;
+
+      VoronoiTesselation<Fp> vt({{-1.0, -2.0}, {-1.0, 3.0}, {5.0, 3.0}, {5.0, -2.0}});
+      const std::vector<VoronoiTile<Fp>> tiles = vt.tesselate();
+
+      VERIFY(tiles.size() == 4, caseLabel);
+      const std::vector<Point2<Fp>> expectedTileA{
+         {-1.0, 0.5}, {2.0, 0.5}, {2.0, -2.0}, {-1.0, -2.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileA), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileB{
+         {2.0, 3.0}, {5.0, 3.0}, {5.0, 0.5}, {2.0, 0.5}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileB), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileC{
+         {2.0, 3.0}, {2.0, 0.5}, {-1.0, 0.5}, {-1.0, 3.0}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileC), caseLabel);
+      const std::vector<Point2<Fp>> expectedTileD{
+         {5.0, 0.5}, {5.0, -2.0}, {2.0, -2.0}, {2.0, 0.5}};
+      VERIFY(hasTileWithVertices(tiles, expectedTileD), caseLabel);
+   }
 }
 
 } // namespace
@@ -199,8 +315,11 @@ void testThreePoints()
 
 void testVoronoiTesselation()
 {
-   testNoPoint();
-   testOnePoint();
-   testTwoPoints();
-   testThreePoints();
+   testForNoPoints();
+   testForOnePoint();
+   testForTwoPoints();
+   testForThreePoints();
+   testForFourPoints();
+   testForFivePoints();
+   testForRect();
 }
